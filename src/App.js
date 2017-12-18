@@ -1,7 +1,8 @@
 import React from 'react';
-import ReactSelectrix from 'components/ReactSelectrix';
+import ReactSelectrix from 'components/';
 
 export default class App extends React.Component {
+
 	constructor( props ) {
 		super( props );
 		this.state = {
@@ -40,7 +41,7 @@ export default class App extends React.Component {
 				label: 'Option E'
 			},
 			{
-				key: 'F',
+				key: 'f',
 				label: 'Option F'
 			}
 		];
@@ -56,7 +57,9 @@ export default class App extends React.Component {
 					placeHolderInside={ false }
 					disabled={ false }
 					className="custom-select"
-					selected={ 'b' }
+					selected={ 'f' }
+					isOpen={ false }
+					autoComplete={ false }
 				/>
 			</div>
 		)

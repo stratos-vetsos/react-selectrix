@@ -1,6 +1,5 @@
 const path = require( 'path' );
 const CommonsChunkPlugin = require( 'webpack/lib/optimize/CommonsChunkPlugin' );
-const ExtractTextPlugin = require( 'extract-text-webpack-plugin' );
 const webpack = require( 'webpack' );
 
 module.exports = {
@@ -28,6 +27,8 @@ module.exports = {
 			'components': path.resolve( __dirname, 'src/components' ),
 			'scss': path.resolve( __dirname, 'src/scss' ),
 			'helpers': path.resolve( __dirname, 'src/helpers' ),
+			'actions': path.resolve( __dirname, 'src/actions' ),
+			'reducers': path.resolve( __dirname, 'src/reducers' ),
 		}
     },
     output: {

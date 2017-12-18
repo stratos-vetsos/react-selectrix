@@ -19,3 +19,97 @@ export const isEmpty = ( variable ) => {
     }
     throw 'Incorrect variable type. Use object or array';
 }
+
+export const buildClassName = ( props, isOpen ) => {
+
+	let targetProps = [ 'disabled', 'multiple', 'placeHolderInside', 'arrow', 'customScrollbar', 'autoComplete' ],
+		className = '';
+
+	for( let [ key, value ] of Object.entries( props ) ) {
+		if( value === true && targetProps.includes( key ) ) {
+			className += `rs-base-${ key.toLowerCase() } `;
+		}
+	}
+
+	if( isOpen ) {
+		className += 'rs-base-open ';
+	}
+
+	if( props.className !== '' ) {
+		className += props.className;
+	}
+
+	className = className.trim();
+
+	return className !== '' ? ` ${ className }` : '';
+
+}
+
+export const getFocusedItemByKey = ( key, options ) => {
+	return options.filter( o => o.key === key )[ 0 ];
+}
+
+export const getSelectValue = ( selected, isMultiple = false ) => {
+	if( selected.length === 0 ) {
+		return '';
+	}
+	if( isMultiple === false ) {
+		return selected[ 0 ];
+	}
+	return '';
+}
+
+export const getSelectedIndex = ( selected, options ) => {
+	for( let [ index, option ] of options.entries() ) {
+		if( selected === option.key ) {
+			return index;
+		}
+	}
+	return false;
+}
+
+export const normalizeSelected = ( selected, options ) => {
+
+	const results = {
+		selected: [],
+		selectedIndex: []
+	};
+
+	for( let [ index, o ] of options.entries() ) {
+
+		if( isArray( selected ) ) {
+
+			if( selected.includes( o.key ) ) {
+				results.selected.push( o.key );
+				results.selectedIndex.push( index );
+			}
+
+		}
+		else {
+			if( selected === o.key ) {
+				results.selected.push( o.key );
+				results.selectedIndex.push( index );
+			}
+		}
+	}
+
+	return results;
+
+}
+
+export const isInViewport = ( selectEl, itemEl ) => {
+
+	if ( ! itemEl ) return false;
+	const top = itemEl.offsetTop;
+	const offset = selectEl.scrollTop;
+	const height = selectEl.clientHeight;
+	const elHeight = itemEl.clientHeight;
+
+	if( top - offset <= 0 || top - offset >= height ) {
+		const remainder = ( Math.round( ( ( top ) - height ) / 10 ) * 10 ) + elHeight;
+		return remainder;
+	}
+
+	return false;
+
+}

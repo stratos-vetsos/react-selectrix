@@ -20,11 +20,6 @@ html, body {
 
 	position: relative;
 
-	&:focus {
-		outline: 0;
-		box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(81, 152, 209, 0.6);
-	}
-
 	* {
 		box-sizing: border-box;
 	}
@@ -33,13 +28,28 @@ html, body {
 		display: none;
 	}
 
+	.vertical-align {
+
+		&:before {
+			content: '';
+			display: inline-block;
+			height: 100%;
+			vertical-align: middle;
+			margin-right: 0;
+		}
+
+		> * {
+			display: inline-block;
+  			vertical-align: middle;
+		}
+
+	}
+
 	.rs-header {
 		border: 1px solid #bdc8d5;
 		color: #6a7f9d;
 		border-radius: 2px;
 		background-color: white;
-		padding: 10px 15px;
-		cursor: pointer;
 		position: relative;
 		font-size: 14px;
 		margin: 0;
@@ -47,8 +57,23 @@ html, body {
 	}
 
 	&.rs-base-arrow {
-		.rs-reset {
+		.rs-reset-wrapper {
 			right: 25px;
+		}
+	}
+
+	&.rs-base-customscrollbar {
+		::-webkit-scrollbar {
+			width: 12px;
+			height: 12px;
+		}
+
+		::-webkit-scrollbar-thumb {
+			background: #6f747b;
+		}
+
+		::-webkit-scrollbar-track {
+			background: #dfdfdf;
 		}
 	}
 
@@ -57,14 +82,40 @@ html, body {
 		pointer-events: none;
 	}
 
+	&.rs-base-autocomplete {
+		.rs-header {
+			padding: 0;
+		}
+
+	}
+
 	.rs-reset {
-		position: absolute;
-		top: 7px;
-		right: 5px;
 		font-size: 20px;
 		color: #6a7f9d;
+		position: relative;
+		top: 1px;
 		&:hover {
 			color: #b90e0e;
+		}
+	}
+
+	.rs-arrow-wrapper {
+		position: absolute;
+		width: 10px;
+		height: 100%;
+		top: 0;
+		right: 10px;
+	}
+
+	.rs-reset-wrapper {
+		position: absolute;
+		width: 10px;
+		height: 100%;
+		top: 0;
+		right: 10px;
+		cursor: pointer;
+		&:before {
+			margin-right: -0.15em;
 		}
 	}
 
@@ -72,18 +123,11 @@ html, body {
 		width: 0;
 		height: 0;
 		border-style: solid;
-		position: absolute;
-		top: 15px;
-		right: 10px;
 		border-width: 5px 5px 0 5px;
 		border-color: #6a7f9d transparent transparent;
 		transition: .1s transform ease-in-out;
 		&.up {
 			transform: rotate( 180deg );
-		}
-		&.down {
-			border-width: 5px 5px 0 5px;
-			border-color: #6a7f9d transparent transparent;
 		}
 	}
 
@@ -128,4 +172,22 @@ html, body {
 
 		}
 	}
+
+	.rs-toggle {
+		border: none;
+		outline: none;
+		padding: 10px 15px;
+		width: 100%;
+		cursor: pointer;
+		&:focus {
+			outline: 0;
+			box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(81, 152, 209, 0.6);
+		}
+		&.rs-autocomplete {
+			&:focus {
+				cursor: text;
+			}
+		}
+	}
+
 }
