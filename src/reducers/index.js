@@ -9,7 +9,7 @@ const initialState = {
 		multiple: false,
 		disabled: false,
 		customScrollbar: false,
-		autoComplete: true
+		searchable: true
 	},
 	options: [],
 	isOpen: false,
@@ -27,7 +27,8 @@ const initialState = {
 	},
 	search: {
 		active: false,
-		queryString: ''
+		queryString: '',
+		resultSet: []
 	},
 	onChange: () => {}
 };
@@ -47,7 +48,7 @@ const reducer = ( state = initialState, action ) => {
 					multiple: action.props.multiple,
 					disabled: action.props.disabled,
 					customScrollbar: action.props.customScrollbar,
-					autoComplete: action.props.autoComplete
+					searchable: action.props.searchable
 				} ),
 				options: action.props.options,
 				isOpen: action.props.isOpen,
@@ -60,17 +61,27 @@ const reducer = ( state = initialState, action ) => {
 		}
 
 		case SEARCH_OPTIONS: {
+
+			const queryString = action.queryString.toLowerCase();
 			return Object.assign( {}, state, {
 				search: Object.assign( {}, state.search, {
 					active: true,
-					queryString: action.queryString
-				} )
+					queryString: action.queryString,
+					resultSet: state.options.filter( o =>
+						o.label.toLowerCase().includes( queryString ) || o.key.toLowerCase().includes( queryString )
+					)
+				} ),
+				isOpen: true,
+				focusedItem: null,
+				focusedItemIndex: null
 			} )
 		}
 
 		case CLOSE_SELECT: {
 			return Object.assign( {}, state, {
 				isOpen: false,
+				focusedItem: null,
+				focusedItemIndex: null,
 				search: Object.assign( {}, state.search, {
 					active: false,
 					queryString: ''
@@ -88,7 +99,9 @@ const reducer = ( state = initialState, action ) => {
 		case CLEAR_SELECT: {
 			return Object.assign( {}, state, {
 				selected: [],
-				focusItem: null,
+				selectedIndex: [],
+				focusedItem: null,
+				focusedItemIndex: null,
 				isOpen: false,
 				search: Object.assign( {}, state.search, {
 					active: false,
@@ -112,9 +125,10 @@ const reducer = ( state = initialState, action ) => {
 		case SELECT_ITEM: {
 
 			return Object.assign( {}, state, {
-				selected: [ ... action.item.key ],
+				selected: [ action.item.key ],
 				selectedIndex: [ action.index ],
 				focusedItem: null,
+				focusedItemIndex: null,
 				isOpen: false,
 				search: Object.assign( {}, state.search, {
 					active: false,

@@ -55,18 +55,17 @@ export default class App extends React.Component {
 
 	}
 
-	componentWillReceiveProps( nextProps ) {
-
-		if( this.props.checkForScroll && this.props.focusedItem !== nextProps.focusedItem && nextProps.focusedItemIndex !== null ) {
-			console.log( this.rsBodyRef.scrollTop );
-			this.props.maybeScroll( this.rsBodyRef, this[ `option-${ nextProps.focusedItemIndex.toString() }` ] );
-		}
-	}
-
 	componentDidUpdate() {
 
-		if( this.props.isOpen && this.props.checkForScroll && this.props.selected.length > 0 ) {
-			this.props.maybeScroll( this.rsBodyRef, this[ `option-${ this.props.selectedIndex[ 0 ].toString() }` ] );
+		if( this.props.isOpen && this.props.checkForScroll ) {
+
+			if( this.props.focusedItem !== null ) {
+				this.props.maybeScroll( this.rsBodyRef, this[ `option-${ this.props.focusedItemIndex.toString() }` ] );
+			}
+			else if( this.props.selected.length > 0 ) {
+				this.props.maybeScroll( this.rsBodyRef, this[ `option-${ this.props.selectedIndex[ 0 ].toString() }` ] );
+			}
+
 		}
 	}
 

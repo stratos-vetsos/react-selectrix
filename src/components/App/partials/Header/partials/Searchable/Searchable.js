@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export default class AutoComplete extends React.Component {
+export default class Searchable extends React.Component {
 
 	constructor( props ) {
 		super( props );
@@ -15,7 +15,7 @@ export default class AutoComplete extends React.Component {
 				onFocus={ this.props.focusSelect }
 				onBlur={ this.props.blurSelect }
 				type="text"
-				className="rs-toggle rs-autocomplete"
+				className="rs-toggle rs-searchable"
 				placeholder={ this.props.selected ? this.props.selected.label : this.props.settings.placeholder }
 				value={ this.props.queryString }
 				onChange={ ( e ) => this.props.searchOptions( e.target.value ) }
@@ -26,7 +26,7 @@ export default class AutoComplete extends React.Component {
 
 }
 
-AutoComplete.propTypes = {
+Searchable.propTypes = {
 	queryString: PropTypes.string,
 	searchOptions: PropTypes.func.isRequired,
 	focusSelect: PropTypes.func.isRequired,

@@ -22,7 +22,7 @@ export const isEmpty = ( variable ) => {
 
 export const buildClassName = ( props, isOpen ) => {
 
-	let targetProps = [ 'disabled', 'multiple', 'placeHolderInside', 'arrow', 'customScrollbar', 'autoComplete' ],
+	let targetProps = [ 'disabled', 'multiple', 'placeHolderInside', 'arrow', 'customScrollbar', 'searchable' ],
 		className = '';
 
 	for( let [ key, value ] of Object.entries( props ) ) {
@@ -106,8 +106,7 @@ export const isInViewport = ( selectEl, itemEl ) => {
 	const elHeight = itemEl.clientHeight;
 
 	if( top - offset <= 0 || top - offset >= height ) {
-		const remainder = ( Math.round( ( ( top ) - height ) / 10 ) * 10 ) + elHeight;
-		return remainder;
+		return ( top - height ) + elHeight;
 	}
 
 	return false;

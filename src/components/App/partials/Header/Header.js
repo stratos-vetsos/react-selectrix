@@ -1,5 +1,5 @@
 import React from 'react';
-import AutoComplete from './partials/AutoComplete/';
+import Searchable from './partials/Searchable/';
 import PropTypes from 'prop-types';
 
 const Header = ( props ) => {
@@ -20,8 +20,8 @@ const Header = ( props ) => {
 				</span>
 			}
 
-			{ settings.autoComplete
-				? <AutoComplete />
+			{ settings.searchable
+				? <Searchable />
 				: <div tabIndex="0" className="rs-toggle">
 					{ selected === null ? settings.placeholder : selected.label }
 				</div>

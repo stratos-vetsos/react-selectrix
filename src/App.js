@@ -43,6 +43,14 @@ export default class App extends React.Component {
 			{
 				key: 'f',
 				label: 'Option F'
+			},
+			{
+				key: 'stratos',
+				label: 'Stratos'
+			},
+			{
+				key: 'paok',
+				label: 'PAOK'
 			}
 		];
 
@@ -59,7 +67,7 @@ export default class App extends React.Component {
 					className="custom-select"
 					selected={ 'f' }
 					isOpen={ false }
-					autoComplete={ false }
+					searchable={ true }
 				/>
 			</div>
 		)

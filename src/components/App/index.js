@@ -11,9 +11,7 @@ const mapStateToProps = ( state ) => {
 		selected: state.selected,
 		selectedIndex: state.selectedIndex,
 		isOpen: state.isOpen,
-		options: ! state.search.active || queryString === '' ? state.options : state.options.filter( o =>
-			o.label.toLowerCase().includes( queryString ) || o.key.toLowerCase().includes( queryString )
-		),
+		options: ! state.search.active || queryString === '' ? state.options : state.search.resultSet,
 		focused: state.focused,
 		focusedItem: state.focusedItem,
 		focusedItemIndex: state.focusedItemIndex,

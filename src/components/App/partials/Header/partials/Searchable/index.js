@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import AutoComplete from './AutoComplete';
+import Searchable from './Searchable';
 import { searchOptions, focusSelect, blurSelect } from 'actions';
 
 const mapStateToProps = ( state ) => {
@@ -33,4 +33,4 @@ const mapDispatchToProps = ( dispatch ) => {
     }
 }
 
-export default connect( mapStateToProps, mapDispatchToProps )( AutoComplete );
+export default connect( mapStateToProps, mapDispatchToProps )( Searchable );
