@@ -6,7 +6,8 @@ export default class App extends React.Component {
 	constructor( props ) {
 		super( props );
 		this.state = {
-			value: ''
+			value: '',
+			multiple: true
 		};
 
 		this.setValue = this.setValue.bind( this );
@@ -56,7 +57,20 @@ export default class App extends React.Component {
 
 		return(
 			<div>
-				<p>Current value is <pre>{ this.state.value.label }</pre></p>
+				<div>Current value is
+					{ this.state.value !== '' &&
+						<pre>
+							{ this.state.multiple
+								? ` ${ this.state.value.map( v => v.label ).join( ', ' ) }`
+								: this.state.value.label
+							}
+						</pre>
+					}
+				</div>
+				<select name="" id="">
+					<option value="te">a</option>
+					<option value="t2">2</option>
+				</select>
 				<input type="text" placeholder="test" style={{ marginBottom: 20  }}/>
 				<ReactSelectrix
 					options={ options }
@@ -67,7 +81,9 @@ export default class App extends React.Component {
 					className="custom-select"
 					selected={ 'f' }
 					isOpen={ false }
-					searchable={ true }
+					searchable={ false }
+					multiple={ this.state.multiple }
+					stayOpen={ true }
 				/>
 			</div>
 		)

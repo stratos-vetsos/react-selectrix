@@ -1,12 +1,14 @@
 import { connect } from 'react-redux';
-import { toggleSelect, clearSelect } from 'actions';
-import Header from './Header';
+import { clearSelect, removeItem, openSelect } from 'actions';
+import MultiHeader from './MultiHeader';
 
 const mapStateToProps = ( state ) => {
 
     return {
 		settings: state.settings,
-		selected: state.selected.length > 0 ? state.options[ state.selectedIndex ] : null,
+		selected: state.selected,
+		selectedIndex: state.selectedIndex,
+		options: state.options,
 		isOpen: state.isOpen,
 		focused: state.focused
 	}
@@ -17,19 +19,23 @@ const mapDispatchToProps = ( dispatch ) => {
 
     return {
 
-		toggleSelect: () => {
-			dispatch( toggleSelect() );
-		},
-
 		clearSelect: ( event = false ) => {
 			if( event ) {
 				event.stopPropagation();
 				event.nativeEvent.stopImmediatePropagation();
 			}
 			dispatch( clearSelect() );
+		},
+
+		removeItem: ( index ) => {
+			dispatch( removeItem( index ) );
+		},
+
+		openSelect: () => {
+			dispatch( openSelect() );
 		}
 
     }
 }
 
-export default connect( mapStateToProps, mapDispatchToProps )( Header );
+export default connect( mapStateToProps, mapDispatchToProps )( MultiHeader );

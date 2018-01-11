@@ -6,17 +6,24 @@ const mapStateToProps = ( state ) => {
 
 	const queryString = state.search.queryString.toLowerCase();
 
+	let options = ! state.search.active || queryString === '' ? [ ... state.options ] : [ ... state.search.resultSet ];
+
+	if( state.settings.multiple ) {
+		options = options.filter( o => ! state.selected.includes( o.key ) );
+	}
+
     return {
 		settings: state.settings,
 		selected: state.selected,
 		selectedIndex: state.selectedIndex,
 		isOpen: state.isOpen,
-		options: ! state.search.active || queryString === '' ? state.options : state.search.resultSet,
+		options,
 		focused: state.focused,
 		focusedItem: state.focusedItem,
 		focusedItemIndex: state.focusedItemIndex,
 		checkForScroll: state.checkForScroll,
-		mouseEventLocked: state.mouseEventLocked
+		mouseEventLocked: state.mouseEventLocked,
+		checkForHover: state.checkForHover
 	}
 
 }

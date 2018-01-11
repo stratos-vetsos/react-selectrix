@@ -1,4 +1,4 @@
-import { SETUP_INSTANCE, CLOSE_SELECT, OPEN_SELECT, SELECT_ITEM, FOCUS_ITEM, CLEAR_SELECT, FOCUS_SELECT, BLUR_SELECT, SCROLL_SELECT, SEARCH_OPTIONS, UNLOCK_MOUSE_FOCUS } from 'actions';
+import { SETUP_INSTANCE, CLOSE_SELECT, OPEN_SELECT, SELECT_ITEM, FOCUS_ITEM, CLEAR_SELECT, FOCUS_SELECT, BLUR_SELECT, SCROLL_SELECT, SEARCH_OPTIONS, UNLOCK_MOUSE_FOCUS, REMOVE_ITEM, CLEAR_SEARCH, CHECK_FOR_SCROLL } from 'actions';
 
 const initialState = {
 	settings: {
@@ -21,6 +21,7 @@ const initialState = {
 	focusedItemIndex: null,
 	mouseEventLocked: false,
 	checkForScroll: false,
+	checkForHover: false,
 	scrolled: {
 		active: false,
 		scroll: 0
@@ -37,6 +38,14 @@ const reducer = ( state = initialState, action ) => {
 
     switch( action.type ) {
 
+		case REMOVE_ITEM: {
+			return Object.assign( {}, state, {
+				selected: state.selected.filter( k => k !== state.options[ action.index ].key ),
+				selectedIndex: state.selectedIndex.filter( i => i !== action.index ),
+				isOpen: true
+			} )
+		}
+
 		case SETUP_INSTANCE: {
 
 			return Object.assign( {}, state, {
@@ -48,7 +57,8 @@ const reducer = ( state = initialState, action ) => {
 					multiple: action.props.multiple,
 					disabled: action.props.disabled,
 					customScrollbar: action.props.customScrollbar,
-					searchable: action.props.searchable
+					searchable: action.props.searchable,
+					stayOpen: action.props.multiple && action.props.stayOpen
 				} ),
 				options: action.props.options,
 				isOpen: action.props.isOpen,
@@ -77,6 +87,24 @@ const reducer = ( state = initialState, action ) => {
 			} )
 		}
 
+		case CHECK_FOR_SCROLL: {
+			return Object.assign( {}, state, {
+				checkForScroll: true
+			} )
+		}
+
+		case CLEAR_SEARCH: {
+			return Object.assign( {}, state, {
+				search: Object.assign( {}, state.search, {
+					active: false,
+					queryString: '',
+					resultSet: []
+				} ),
+				focusedItem: null,
+				focusedItemIndex: null
+			} )
+		}
+
 		case CLOSE_SELECT: {
 			return Object.assign( {}, state, {
 				isOpen: false,
@@ -84,7 +112,8 @@ const reducer = ( state = initialState, action ) => {
 				focusedItemIndex: null,
 				search: Object.assign( {}, state.search, {
 					active: false,
-					queryString: ''
+					queryString: '',
+					resultSet: []
 				} )
 			} )
 		}
@@ -105,7 +134,8 @@ const reducer = ( state = initialState, action ) => {
 				isOpen: false,
 				search: Object.assign( {}, state.search, {
 					active: false,
-					queryString: ''
+					queryString: '',
+					resultSet: []
 				} )
 			} )
 		}
@@ -125,14 +155,17 @@ const reducer = ( state = initialState, action ) => {
 		case SELECT_ITEM: {
 
 			return Object.assign( {}, state, {
-				selected: [ action.item.key ],
-				selectedIndex: [ action.index ],
-				focusedItem: null,
-				focusedItemIndex: null,
-				isOpen: false,
+				selected: state.settings.multiple ? [ ... state.selected, ... [ action.item.key ] ] : [ action.item.key ],
+				selectedIndex: state.settings.multiple ? [ ... state.selectedIndex, ... [ action.index ] ] : [ action.index ],
+				focusedItem: state.settings.stayOpen ? state.focusedItem : null,
+				focusedItemIndex: state.settings.stayOpen ? state.focusedItemIndex : null,
+				isOpen: state.settings.stayOpen,
+				checkForHover: state.settings.stayOpen,
+				mouseEventLocked: state.settings.stayOpen,
 				search: Object.assign( {}, state.search, {
 					active: false,
-					queryString: ''
+					queryString: '',
+					resultSet: []
 				} )
 			} )
 		}
@@ -143,7 +176,8 @@ const reducer = ( state = initialState, action ) => {
 				focusedItem: action.item.key,
 				focusedItemIndex: action.index,
 				mouseEventLocked: ! action.mouseEvent,
-				checkForScroll: ! action.mouseEvent
+				checkForScroll: ! action.mouseEvent,
+				checkForHover: false
 			} )
 		}
 

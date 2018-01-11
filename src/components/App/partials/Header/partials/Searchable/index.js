@@ -6,9 +6,10 @@ const mapStateToProps = ( state ) => {
 
     return {
 		settings: state.settings,
-		selected: state.selected.length > 0 ? state.options[ state.selectedIndex ] : null,
+		selected: state.settings.multiple ? state.selected : state.selected.length > 0 ? state.options[ state.selectedIndex ] : null,
 		isOpen: state.isOpen,
-		queryString: state.search.queryString
+		queryString: state.search.queryString,
+		focused: state.focused
 	}
 
 }
@@ -18,7 +19,6 @@ const mapDispatchToProps = ( dispatch ) => {
     return {
 
 		searchOptions: ( queryString ) => {
-			console.log( queryString );
 			dispatch( searchOptions( queryString ) )
 		},
 

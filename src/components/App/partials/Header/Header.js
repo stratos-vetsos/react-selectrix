@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 const Header = ( props ) => {
 
-	const { settings, isOpen, selected } = props;
+	const { settings, isOpen, selected, focused } = props;
 
 	return (
 		<div className="rs-header" onClick={ props.toggleSelect }>
@@ -22,7 +22,7 @@ const Header = ( props ) => {
 
 			{ settings.searchable
 				? <Searchable />
-				: <div tabIndex="0" className="rs-toggle">
+				: <div tabIndex="0" className={ `rs-toggle${ focused ? ' rs-focused' : '' }` }>
 					{ selected === null ? settings.placeholder : selected.label }
 				</div>
 			}
@@ -36,7 +36,8 @@ Header.propTypes = {
 	isOpen: PropTypes.bool.isRequired,
 	selected: PropTypes.object,
 	toggleSelect: PropTypes.func.isRequired,
-	clearSelect: PropTypes.func.isRequired
+	clearSelect: PropTypes.func.isRequired,
+	focused: PropTypes.bool.isRequired
 }
 
 export default Header;

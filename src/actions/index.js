@@ -1,4 +1,4 @@
-import { normalizeSelected, isInViewport } from 'helpers';
+import { normalizeSelected, isInViewport, itemInOptions } from 'helpers';
 
 export const SETUP_INSTANCE = 'SETUP_INSTANCE';
 export const CLOSE_SELECT = 'CLOSE_SELECT';
@@ -12,6 +12,34 @@ export const BLUR_SELECT = 'BLUR_SELECT';
 export const SCROLL_SELECT = 'SCROLL_SELECT';
 export const SEARCH_OPTIONS = 'SEARCH_OPTIONS';
 export const UNLOCK_MOUSE_FOCUS = 'UNLOCK_MOUSE_FOCUS';
+export const REMOVE_ITEM = 'REMOVE_ITEM';
+export const CLEAR_SEARCH = 'CLEAR_SEARCH';
+export const CHECK_FOR_SCROLL = 'CHECK_FOR_SCROLL';
+
+export const removeItem = ( index ) => {
+
+	return ( dispatch, getState ) => {
+
+		dispatch( {
+			type: REMOVE_ITEM,
+			index
+		} );
+
+		const state = getState();
+
+		if( state.settings.multiple ) {
+			dispatch( focusItem( 0 ) );
+		}
+		state.onChange( [ ... state.selectedIndex ].map( i => state.options[ i ] ) );
+	}
+
+}
+
+export const checkForScroll = () => {
+	return {
+		type: CHECK_FOR_SCROLL
+	}
+}
 
 export const setupInstance = ( props ) => {
 
@@ -26,18 +54,46 @@ export const setupInstance = ( props ) => {
 }
 
 export const searchOptions = ( queryString ) => {
-	return {
-		type: SEARCH_OPTIONS,
-		queryString
+
+	return ( dispatch, getState ) => {
+
+		if( queryString !== '' ) {
+			dispatch( {
+				type: SEARCH_OPTIONS,
+				queryString
+			} )
+		}
+		else {
+			dispatch( {
+				type: CLEAR_SEARCH
+			} )
+		}
+
+		const state = getState();
+		if( state.settings.multiple ) {
+			dispatch( focusItem( 0 ) );
+		}
+		else {
+			state.search.active ? dispatch( focusItem( 0 ) ) : dispatch( checkForScroll() );
+		}
+
+
 	}
 }
 
 export const toggleSelect = () => {
+
 	return ( dispatch, getState ) => {
-		const state = getState();
+		let state = getState();
 		dispatch( {
 			type: state.isOpen ? CLOSE_SELECT : OPEN_SELECT
 		} )
+
+		state = getState();
+		if( ( state.selected.length === 0 || state.settings.multiple ) && state.focusedItem === null ) {
+			dispatch( moveFocus( 'down' ) );
+		}
+
 	}
 }
 
@@ -45,22 +101,36 @@ export const selectItem = ( index ) => {
 
 	return ( dispatch, getState ) => {
 
-		const state = getState();
+		let state = getState();
+		let options = state.search.active ? state.search.resultSet : state.options;
 
-		if( state.settings.multiple === false ) {
+		if( state.settings.multiple ) {
+			options = [ ... options ].filter( o => ! state.selected.includes( o.key ) );
+		}
 
-			const options = state.search.active ? state.search.resultSet : state.options;
+		if( options[ index ] ) {
+			dispatch( {
+				type: SELECT_ITEM,
+				item: options[ index ],
+				index: state.search.active || ( state.settings.multiple && state.selected.length ) ? state.options.findIndex( o => o.key === options[ index ].key ) : index
+			} )
+		}
 
-			if( options[ index ] ) {
-				dispatch( {
-					type: SELECT_ITEM,
-					item: options[ index ],
-					index: state.search.active ? state.options.findIndex( o => o.key === options[ index ].key ) : index
-				} )
+		state = getState();
+
+		if( state.settings.stayOpen ) {
+
+			if( index === options.length - 1 ) {
+				dispatch( focusItem( index - 1 ) );
 			}
 
-			state.onChange( options[ index ] );
+		}
 
+		if( state.settings.multiple ) {
+			state.onChange( [ ... state.selectedIndex ].map( i => state.options[ i ] ) );
+		}
+		else {
+			state.onChange( options[ index ] )
 		}
 
 	}
@@ -71,21 +141,23 @@ export const clearSelect = () => {
 	return ( dispatch, getState ) => {
 
 		const state = getState();
-		if( state.settings.multiple === false ) {
-
-			dispatch( { type: CLEAR_SELECT } )
-
-			state.onChange( '' );
-
-		}
+		dispatch( { type: CLEAR_SELECT } )
+		state.onChange( '' );
 
 	}
 }
 
 export const openSelect = () => {
+	return ( dispatch, getState ) => {
 
-	return {
-		type: OPEN_SELECT
+		dispatch( {
+			type: OPEN_SELECT
+		} );
+
+		const state = getState();
+		if( state.settings.multiple ) {
+			dispatch( moveFocus( 'down' ) );
+		}
 	}
 
 }
@@ -100,8 +172,12 @@ export const closeSelect = () => {
 
 export const focusSelect = () => {
 
-	return {
-		type: FOCUS_SELECT
+	return ( dispatch, getState ) => {
+		if( ! getState().focused ) {
+			dispatch( {
+				type: FOCUS_SELECT
+			} )
+		}
 	}
 
 }
@@ -134,17 +210,17 @@ export const handleKeyDown = ( e ) => {
 				}
 				else {
 					dispatch( openSelect() );
-					if( state.selected.length === 0 ) {
-						dispatch( moveFocus( 'down' ) );
-					}
 				}
 
 				break;
 			}
+			case 'Esc':
 			case 'Escape': {
 				dispatch( closeSelect() );
 				break;
 			}
+			case 'Up':
+			case 'Left':
 			case 'ArrowUp':
 			case 'ArrowLeft': {
 				e.preventDefault();
@@ -152,6 +228,8 @@ export const handleKeyDown = ( e ) => {
 				break;
 			}
 
+			case 'Down':
+			case 'Right':
 			case 'ArrowDown':
 			case 'ArrowRight': {
 				e.preventDefault();
@@ -168,7 +246,12 @@ export const moveFocus = ( direction ) => {
 	return ( dispatch, getState ) => {
 
 		const state = getState();
-		const options = state.search.active ? state.search.resultSet : state.options;
+		const placeHolderInside = ! state.settings.multiple && state.settings.placeHolderInside;
+		let options = state.search.active ? state.search.resultSet : state.options;
+
+		if( state.settings.multiple ) {
+			options = [ ... options ].filter( o => ! state.selected.includes( o.key ) );
+		}
 
 		let index = false,
 			targetIndex = false;
@@ -177,7 +260,7 @@ export const moveFocus = ( direction ) => {
 			index = state.focusedItemIndex;
 		}
 		else {
-			if( state.selected.length > 0 ) {
+			if( state.selected.length > 0 && ! state.settings.multiple ) {
 				if( state.search.active ) {
 					index = options.findIndex( o => o.key === state.options[ state.selectedIndex ].key );
 					if( index === -1 ) {
@@ -187,20 +270,19 @@ export const moveFocus = ( direction ) => {
 				else {
 					index = state.selectedIndex[ 0 ];
 				}
-
 			}
 		}
 
 		if( index !== false ) {
 			if( direction === 'up' ) {
-				targetIndex = index > 0 ? index - 1 : 0;
+				targetIndex = index > 0 || placeHolderInside ? index - 1 : 0;
 			}
 			else {
 				targetIndex = index + 1 < options.length ? index + 1 : options.length - 1;
 			}
 		}
 		else {
-			targetIndex = direction === 'up' ? options.length - 1 : 0;
+			targetIndex = direction === 'up' ? options.length - 1 : placeHolderInside ? -1 : 0;
 		}
 
 		if( targetIndex !== false ) {
@@ -237,13 +319,17 @@ export const focusItem = ( index, mouseEvent ) => {
 
 	return ( dispatch, getState ) => {
 
-		const state = getState(),
-			options = state.search.active ? state.search.resultSet : state.options;
+		const state = getState();
+		let options = state.search.active ? state.search.resultSet : state.options;
 
-		if( options[ index ] ) {
+		if( state.settings.multiple ) {
+			options = [ ... options ].filter( o => ! state.selected.includes( o.key ) );
+		}
+
+		if( options[ index ] || index === -1 ) {
 			dispatch( {
 				type: FOCUS_ITEM,
-				item: options[ index ],
+				item: index !== -1 ? options[ index ] : { key: 'default' },
 				index,
 				mouseEvent
 			} )

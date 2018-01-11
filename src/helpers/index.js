@@ -20,7 +20,7 @@ export const isEmpty = ( variable ) => {
     throw 'Incorrect variable type. Use object or array';
 }
 
-export const buildClassName = ( props, isOpen ) => {
+export const buildClassName = ( props, isOpen, selected ) => {
 
 	let targetProps = [ 'disabled', 'multiple', 'placeHolderInside', 'arrow', 'customScrollbar', 'searchable' ],
 		className = '';
@@ -33,6 +33,10 @@ export const buildClassName = ( props, isOpen ) => {
 
 	if( isOpen ) {
 		className += 'rs-base-open ';
+	}
+
+	if( selected.length === 0 ) {
+		className += 'rs-base-empty ';
 	}
 
 	if( props.className !== '' ) {
@@ -112,3 +116,7 @@ export const isInViewport = ( selectEl, itemEl ) => {
 	return false;
 
 }
+
+export const itemInOptions = ( itemKey, options ) => (
+	options.findIndex( o => o.key === itemKey ) !== -1
+)

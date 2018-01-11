@@ -1,7 +1,9 @@
 import React from 'react';
+import { findDOMNode } from 'react-dom'
 import { buildClassName } from 'helpers';
 import PropTypes from 'prop-types';
 import Header from './partials/Header/';
+import MultiHeader from './partials/MultiHeader/';
 
 export default class App extends React.Component {
 
@@ -12,7 +14,8 @@ export default class App extends React.Component {
 			'buildOptionClassName',
 			'handleBodyClick',
 			'handleKeyDown',
-			'handleMouseMove'
+			'handleMouseMove',
+			'checkIfHovered'
 		];
 
 		methods.forEach( method => this[ method ] = this[ method ].bind( this ) );
@@ -25,7 +28,7 @@ export default class App extends React.Component {
 		document.body.addEventListener( 'keydown', this.handleKeyDown );
 		document.body.addEventListener( 'mousemove', this.handleMouseMove );
 
-		if( this.props.isOpen && this.props.checkForScroll && this.props.selected.length > 0 ) {
+		if( ! this.props.settings.multiple && this.props.isOpen && this.props.checkForScroll && this.props.selected.length > 0 ) {
 			this.props.maybeScroll( this.rsBodyRef, this[ `option-${ this.props.selectedIndex[ 0 ].toString() }` ] );
 		}
 
@@ -39,8 +42,13 @@ export default class App extends React.Component {
 
 	handleBodyClick( e ) {
 
-		if( ! this.ref.contains( e.target ) && this.props.isOpen ) {
-			this.props.closeSelect();
+		if( ! this.ref.contains( e.target ) ) {
+			if( this.props.isOpen ) {
+				this.props.closeSelect();
+			}
+			if( this.props.focused ) {
+				this.props.blurSelect();
+			}
 		}
 
 	}
@@ -55,18 +63,45 @@ export default class App extends React.Component {
 
 	}
 
+	checkIfHovered() {
+		for( let i = 0; i < this.props.options.length; i++ ) {
+			const option = this[ `option-${ i }` ];
+			if( option && option.parentNode.querySelector( ':hover' ) === option ) {
+
+				if( this.rsBodyRef.scrollTop > 0 ) {
+					this.props.focusItem( i - 1, true );
+					return;
+				}
+
+				this.props.focusItem( i, true );
+
+				break;
+			}
+		}
+	}
+
 	componentDidUpdate() {
+
+		if( this.props.settings.stayOpen && this.props.checkForHover ) {
+			this.height = this.rsBodyRef.clientHeight;
+			console.log( this.height );
+			this.checkIfHovered();
+			return;
+		}
 
 		if( this.props.isOpen && this.props.checkForScroll ) {
 
 			if( this.props.focusedItem !== null ) {
 				this.props.maybeScroll( this.rsBodyRef, this[ `option-${ this.props.focusedItemIndex.toString() }` ] );
 			}
-			else if( this.props.selected.length > 0 ) {
+			else if( ! this.props.settings.multiple && this.props.selected.length > 0 ) {
 				this.props.maybeScroll( this.rsBodyRef, this[ `option-${ this.props.selectedIndex[ 0 ].toString() }` ] );
 			}
 
 		}
+
+
+
 	}
 
 	handleMouseMove() {
@@ -96,7 +131,7 @@ export default class App extends React.Component {
 	render() {
 
 		const { options, settings, isOpen, selected } = this.props;
-		const className = buildClassName( settings, isOpen );
+		const className = buildClassName( settings, isOpen, selected );
 
 		return(
 
@@ -104,16 +139,22 @@ export default class App extends React.Component {
 				className={ `react-selectrix${ className }` }
 				ref={ ( ref ) => this.ref = ref }
 				onFocus={ this.props.focusSelect }
-				onBlur={ this.props.blurSelect }
+
 			>
 				<input type="hidden" value={ JSON.stringify( selected ) } />
 				<div className="rs-wrapper">
-					{ settings.multiple ? 'multiheader' : <Header /> }
+					{ settings.multiple ? <MultiHeader /> : <Header /> }
 					{ isOpen &&
 						<div key={ 'rs-body' } className={ `rs-body${ isOpen ? '' : ' hidden' }` } ref={ ( ref ) => this.rsBodyRef = ref }>
 							<ul>
-								{ settings.placeHolderInside &&
-									<li className="rs-option" onClick={ () => this.props.clearSelect() }>{ settings.placeholder }</li>
+								{ ! settings.multiple && settings.placeHolderInside &&
+									<li
+										onClick={ () => this.props.clearSelect() }
+										className={ this.buildOptionClassName( { key: 'default' } ) }
+										onMouseEnter={ () => ! this.props.mouseEventLocked ? this.props.focusItem( -1, true ) : '' }
+									>
+										{ settings.placeholder }
+									</li>
 								}
 								{ options.map( ( o, index ) => {
 									return(
@@ -159,5 +200,6 @@ App.propTypes = {
 	maybeScroll: PropTypes.func.isRequired,
 	checkForScroll: PropTypes.bool.isRequired,
 	mouseEventLocked: PropTypes.bool.isRequired,
-	unlockMouseFocus: PropTypes.func.isRequired
+	unlockMouseFocus: PropTypes.func.isRequired,
+	checkForHover: PropTypes.bool.isRequired
 }

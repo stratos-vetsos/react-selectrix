@@ -55,6 +55,7 @@ ReactSelectrix.defaultProps = {
 	onChange: () => {},
 	customScrollbar: false,
 	searchable: true,
+	stayOpen: false,
 	initialized: false
 }
 
@@ -75,5 +76,6 @@ ReactSelectrix.propTypes = {
 	onChange: PropTypes.func,
 	customScrollbar: PropTypes.bool,
 	searchable: PropTypes.bool,
+	stayOpen: PropTypes.bool,
 	setupInstance: PropTypes.func.isRequired
 }
