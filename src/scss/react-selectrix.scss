@@ -115,16 +115,27 @@ html {
 	}
 
 	&.rs-base-multiple {
+
 		&:not( .rs-base-empty ) {
 			.rs-toggle {
 				padding: 5px 50px 5px 5px;
 			}
 		}
+
 		&.rs-base-searchable {
 			.rs-toggle {
 				cursor: text;
 			}
 		}
+
+		&.rs-base-singleline {
+			.rs-toggle {
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+		}
+
 		.rs-selection {
 			display: inline-block;
 			background-color: $multi-selection-bgcolor;
@@ -235,7 +246,7 @@ html {
 		color: $font-color;
 		font-size: 14px;
 		user-select: none;
-		
+
 		&.disabled {
 			opacity: 0.6;
 			pointer-events: none;

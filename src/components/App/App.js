@@ -1,5 +1,4 @@
 import React from 'react';
-import { findDOMNode } from 'react-dom'
 import { buildClassName } from 'helpers';
 import PropTypes from 'prop-types';
 import Header from './partials/Header/';
@@ -64,11 +63,17 @@ export default class App extends React.Component {
 	}
 
 	checkIfHovered() {
+
 		for( let i = 0; i < this.props.options.length; i++ ) {
+
 			const option = this[ `option-${ i }` ];
 			if( option && option.parentNode.querySelector( ':hover' ) === option ) {
 
-				if( this.rsBodyRef.scrollTop > 0 ) {
+				const scrollTop = this.rsBodyRef.scrollTop;
+				const innerHeight = this.rsBodyRef.clientHeight;
+				const scrollHeight = this.rsBodyRef.scrollHeight;
+
+				if( this.rsBodyRef.scrollTop > 0 && scrollTop + innerHeight >= scrollHeight ) {
 					this.props.focusItem( i - 1, true );
 					return;
 				}
@@ -83,8 +88,6 @@ export default class App extends React.Component {
 	componentDidUpdate() {
 
 		if( this.props.settings.stayOpen && this.props.checkForHover ) {
-			this.height = this.rsBodyRef.clientHeight;
-			console.log( this.height );
 			this.checkIfHovered();
 			return;
 		}
@@ -100,8 +103,6 @@ export default class App extends React.Component {
 
 		}
 
-
-
 	}
 
 	handleMouseMove() {
@@ -110,7 +111,7 @@ export default class App extends React.Component {
 		}
 	}
 
-	buildOptionClassName( option ) {
+	buildOptionClassName( option, index ) {
 
 		let className = 'rs-option';
 		if( option.hasOwnProperty( 'disabled' ) && option.disabled === true ) {
@@ -121,7 +122,7 @@ export default class App extends React.Component {
 			className += ' selected';
 		}
 
-		if( this.props.focusedItem !== null && this.props.focusedItem === option.key ) {
+		if( this.props.focusedItem !== null && this.props.focusedItemIndex === index ) {
 			className += ' focused';
 		}
 
@@ -162,7 +163,7 @@ export default class App extends React.Component {
 											ref={ ( ref ) => this[ `option-${ index }` ] = ref }
 											onClick={ () => this.props.selectItem( index ) }
 											key={ `li-${index}` }
-											className={ this.buildOptionClassName( o ) }
+											className={ this.buildOptionClassName( o, index ) }
 											onMouseEnter={ () => ! this.props.mouseEventLocked ? this.props.focusItem( index, true ) : '' }
 										>
 											{ o.label }

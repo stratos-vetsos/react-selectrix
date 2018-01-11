@@ -7,8 +7,18 @@ const MultiHeader = ( props ) => {
 	const { settings, isOpen, selected, selectedIndex, options, focused } = props;
 
 	return (
-		<div className="rs-header" onClick={ ( e ) => isOpen ? e.preventDefault() : props.openSelect( e ) }>
-			{ selected !== null &&
+		<div
+			className="rs-header"
+			onClick={ ( e ) => {
+				if( settings.searchable ) {
+					isOpen ? e.preventDefault() : props.openSelect();
+				}
+				else {
+					props.toggleSelect();
+				}
+			}}
+			>
+			{ selected.length > 0 &&
 				<span className="rs-reset-wrapper vertical-align">
 					<span className="rs-reset" onClick={ ( e ) => props.clearSelect( e ) }>×</span>
 				</span>
@@ -21,7 +31,7 @@ const MultiHeader = ( props ) => {
 			<div tabIndex="0" className={ `rs-toggle${ focused ? ' rs-focused' : '' }` }>
 				{ selected.length === 0
 					? settings.searchable ? '' : settings.placeholder
-					: selectedIndex.map( s => (
+					: settings.singleLine ? selectedIndex.map( s => options[ s ].label ).join( ', ' ) : selectedIndex.map( s => (
 						<div key={ `selection-${ s }` } className="rs-selection">
 							<span className="rs-remove vertical-align" onClick={ ( e ) => {
 								e.stopPropagation();
@@ -48,6 +58,7 @@ MultiHeader.propTypes = {
 	selected: PropTypes.array,
 	openSelect: PropTypes.func.isRequired,
 	clearSelect: PropTypes.func.isRequired,
+	toggleSelect: PropTypes.func.isRequired,
 	selectedIndex: PropTypes.array.isRequired,
 	options: PropTypes.array.isRequired,
 	removeItem: PropTypes.func.isRequired,

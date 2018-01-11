@@ -14,7 +14,6 @@ export default class App extends React.Component {
 	}
 
 	setValue( value ) {
-		console.log( value );
 		this.setState( { value } );
 	}
 
@@ -52,6 +51,26 @@ export default class App extends React.Component {
 			{
 				key: 'paok',
 				label: 'PAOK'
+			},
+			{
+				key: 'cron',
+				label: 'Cron'
+			},
+			{
+				key: 'test',
+				label: 'Test'
+			},
+			{
+				key: 'giorgos',
+				label: 'Giorgos'
+			},
+			{
+				key: 'antonis',
+				label: 'Antonis'
+			},
+			{
+				key: 'wxaman',
+				label: 'Wx Aman'
 			}
 		];
 
@@ -84,6 +103,7 @@ export default class App extends React.Component {
 					searchable={ false }
 					multiple={ this.state.multiple }
 					stayOpen={ true }
+					singleLine={ true }
 				/>
 			</div>
 		)

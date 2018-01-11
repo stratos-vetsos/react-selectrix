@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { clearSelect, removeItem, openSelect } from 'actions';
+import { clearSelect, removeItem, openSelect, toggleSelect } from 'actions';
 import MultiHeader from './MultiHeader';
 
 const mapStateToProps = ( state ) => {
@@ -33,6 +33,10 @@ const mapDispatchToProps = ( dispatch ) => {
 
 		openSelect: () => {
 			dispatch( openSelect() );
+		},
+
+		toggleSelect: () => {
+			dispatch( toggleSelect() );
 		}
 
     }

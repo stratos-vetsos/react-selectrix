@@ -1,4 +1,4 @@
-import { normalizeSelected, isInViewport, itemInOptions } from 'helpers';
+import { normalizeSelected, isInViewport } from 'helpers';
 
 export const SETUP_INSTANCE = 'SETUP_INSTANCE';
 export const CLOSE_SELECT = 'CLOSE_SELECT';
@@ -90,14 +90,14 @@ export const toggleSelect = () => {
 		} )
 
 		state = getState();
-		if( ( state.selected.length === 0 || state.settings.multiple ) && state.focusedItem === null ) {
+		if( state.isOpen && ( state.selected.length === 0 || state.settings.multiple ) && state.focusedItem === null ) {
 			dispatch( moveFocus( 'down' ) );
 		}
 
 	}
 }
 
-export const selectItem = ( index ) => {
+export const selectItem = ( index, isKeyboard = false ) => {
 
 	return ( dispatch, getState ) => {
 
@@ -112,7 +112,8 @@ export const selectItem = ( index ) => {
 			dispatch( {
 				type: SELECT_ITEM,
 				item: options[ index ],
-				index: state.search.active || ( state.settings.multiple && state.selected.length ) ? state.options.findIndex( o => o.key === options[ index ].key ) : index
+				index: state.search.active || ( state.settings.multiple && state.selected.length ) ? state.options.findIndex( o => o.key === options[ index ].key ) : index,
+				isKeyboard
 			} )
 		}
 
@@ -120,8 +121,13 @@ export const selectItem = ( index ) => {
 
 		if( state.settings.stayOpen ) {
 
-			if( index === options.length - 1 ) {
-				dispatch( focusItem( index - 1 ) );
+			if( state.mouseEventLocked ) {
+				index === options.length - 1 ? dispatch( focusItem( index - 1 ) ) : dispatch( focusItem( index ) )
+			}
+			else {
+				if( index === options.length - 1 ) {
+					dispatch( focusItem( index - 1 ) );
+				}
 			}
 
 		}
@@ -202,7 +208,7 @@ export const handleKeyDown = ( e ) => {
 				e.preventDefault();
 				if( state.isOpen ) {
 					if( state.focusedItem !== null ) {
-						dispatch( selectItem( state.focusedItemIndex ) );
+						dispatch( selectItem( state.focusedItemIndex, true ) );
 					}
 					else {
 						dispatch( closeSelect() );

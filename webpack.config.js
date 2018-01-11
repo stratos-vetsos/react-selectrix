@@ -9,7 +9,7 @@ module.exports = {
     entry: {
         bundle: [
             'react-hot-loader/patch',
-            'webpack-dev-server/client?http://localhost:3000',
+            'webpack-dev-server/client?http://localhost:3010',
             'webpack/hot/only-dev-server',
             './src/index'
         ]
@@ -92,7 +92,7 @@ module.exports = {
 
     devServer: {
         host: 'localhost',
-		port: 3000,
+		port: 3010,
 		historyApiFallback: false,
 		hot: true,
 		publicPath: '/dist/'

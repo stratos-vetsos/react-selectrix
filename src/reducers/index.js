@@ -58,7 +58,8 @@ const reducer = ( state = initialState, action ) => {
 					disabled: action.props.disabled,
 					customScrollbar: action.props.customScrollbar,
 					searchable: action.props.searchable,
-					stayOpen: action.props.multiple && action.props.stayOpen
+					stayOpen: action.props.multiple && action.props.stayOpen,
+					singleLine: action.props.multiple && action.props.singleLine
 				} ),
 				options: action.props.options,
 				isOpen: action.props.isOpen,
@@ -160,8 +161,7 @@ const reducer = ( state = initialState, action ) => {
 				focusedItem: state.settings.stayOpen ? state.focusedItem : null,
 				focusedItemIndex: state.settings.stayOpen ? state.focusedItemIndex : null,
 				isOpen: state.settings.stayOpen,
-				checkForHover: state.settings.stayOpen,
-				mouseEventLocked: state.settings.stayOpen,
+				checkForHover: state.settings.stayOpen && ! action.isKeyboard,
 				search: Object.assign( {}, state.search, {
 					active: false,
 					queryString: '',
