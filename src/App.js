@@ -103,7 +103,7 @@ export default class App extends React.Component {
 					searchable={ false }
 					multiple={ this.state.multiple }
 					stayOpen={ true }
-					singleLine={ true }
+					singleLine={ false }
 				/>
 			</div>
 		)

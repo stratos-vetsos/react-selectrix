@@ -23,7 +23,8 @@ const mapStateToProps = ( state ) => {
 		focusedItemIndex: state.focusedItemIndex,
 		checkForScroll: state.checkForScroll,
 		mouseEventLocked: state.mouseEventLocked,
-		checkForHover: state.checkForHover
+		checkForHover: state.checkForHover,
+		hide: state.hide
 	}
 
 }

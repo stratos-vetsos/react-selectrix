@@ -70,15 +70,15 @@ export default class App extends React.Component {
 			if( option && option.parentNode.querySelector( ':hover' ) === option ) {
 
 				const scrollTop = this.rsBodyRef.scrollTop;
-				const innerHeight = this.rsBodyRef.clientHeight;
-				const scrollHeight = this.rsBodyRef.scrollHeight;
+                const innerHeight = this.rsBodyRef.clientHeight;
+                const scrollHeight = this.rsBodyRef.scrollHeight;
 
-				if( this.rsBodyRef.scrollTop > 0 && scrollTop + innerHeight >= scrollHeight ) {
+				if( this.props.options[ i ] && scrollTop !== 0 && scrollTop + innerHeight >= scrollHeight ) {
 					this.props.focusItem( i - 1, true );
-					return;
 				}
-
-				this.props.focusItem( i, true );
+				else {
+					this.props.focusItem( i, true );
+				}
 
 				break;
 			}
@@ -111,7 +111,7 @@ export default class App extends React.Component {
 		}
 	}
 
-	buildOptionClassName( option, index ) {
+	buildOptionClassName( option ) {
 
 		let className = 'rs-option';
 		if( option.hasOwnProperty( 'disabled' ) && option.disabled === true ) {
@@ -122,8 +122,12 @@ export default class App extends React.Component {
 			className += ' selected';
 		}
 
-		if( this.props.focusedItem !== null && this.props.focusedItemIndex === index ) {
+		if( this.props.focusedItem !== null && this.props.focusedItem === option.key ) {
 			className += ' focused';
+		}
+
+		if( this.props.hide ) {
+			className += ' invisible';
 		}
 
 		return className.trim();
@@ -164,7 +168,16 @@ export default class App extends React.Component {
 											onClick={ () => this.props.selectItem( index ) }
 											key={ `li-${index}` }
 											className={ this.buildOptionClassName( o, index ) }
-											onMouseEnter={ () => ! this.props.mouseEventLocked ? this.props.focusItem( index, true ) : '' }
+											onMouseOver={ () => {
+												if( ! this.props.mouseEventLocked ) {
+													this.props.focusItem( index, true );
+												}
+												else {
+													if( settings.stayOpen ) {
+														this.props.unlockMouseFocus();
+													}
+												}
+											}}
 										>
 											{ o.label }
 										</li>
@@ -202,5 +215,6 @@ App.propTypes = {
 	checkForScroll: PropTypes.bool.isRequired,
 	mouseEventLocked: PropTypes.bool.isRequired,
 	unlockMouseFocus: PropTypes.func.isRequired,
-	checkForHover: PropTypes.bool.isRequired
+	checkForHover: PropTypes.bool.isRequired,
+	hide: PropTypes.bool.isRequired
 }

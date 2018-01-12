@@ -161,6 +161,7 @@ const reducer = ( state = initialState, action ) => {
 				focusedItem: state.settings.stayOpen ? state.focusedItem : null,
 				focusedItemIndex: state.settings.stayOpen ? state.focusedItemIndex : null,
 				isOpen: state.settings.stayOpen,
+				mouseEventLocked: state.settings.stayOpen,
 				checkForHover: state.settings.stayOpen && ! action.isKeyboard,
 				search: Object.assign( {}, state.search, {
 					active: false,
@@ -184,7 +185,8 @@ const reducer = ( state = initialState, action ) => {
 		case UNLOCK_MOUSE_FOCUS: {
 			return Object.assign( {}, state, {
 				mouseEventLocked: false,
-				checkForScroll: false
+				checkForScroll: false,
+				checkForHover: false
 			} )
 		}
 

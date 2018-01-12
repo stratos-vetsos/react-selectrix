@@ -119,17 +119,11 @@ export const selectItem = ( index, isKeyboard = false ) => {
 
 		state = getState();
 
-		if( state.settings.stayOpen ) {
-
-			if( state.mouseEventLocked ) {
-				index === options.length - 1 ? dispatch( focusItem( index - 1 ) ) : dispatch( focusItem( index ) )
-			}
-			else {
-				if( index === options.length - 1 ) {
-					dispatch( focusItem( index - 1 ) );
-				}
-			}
-
+		if( isKeyboard ) {
+			index === options.length - 1 ? dispatch( focusItem( index - 1 ) ) : dispatch( focusItem( index ) )
+		}
+		else {
+			index === options.length - 1 ? dispatch( focusItem( index - 1 ) ) : '';
 		}
 
 		if( state.settings.multiple ) {
