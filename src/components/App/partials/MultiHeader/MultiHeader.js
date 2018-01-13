@@ -17,7 +17,7 @@ const MultiHeader = ( props ) => {
 					props.toggleSelect();
 				}
 			}}
-			>
+		>
 			{ selected.length > 0 &&
 				<span className="rs-reset-wrapper vertical-align">
 					<span className="rs-reset" onClick={ ( e ) => props.clearSelect( e ) }>×</span>
@@ -31,7 +31,7 @@ const MultiHeader = ( props ) => {
 			<div tabIndex="0" className={ `rs-toggle${ focused ? ' rs-focused' : '' }` }>
 				{ selected.length === 0
 					? settings.searchable ? '' : settings.placeholder
-					: settings.singleLine ? selectedIndex.map( s => options[ s ].label ).join( ', ' ) : selectedIndex.map( s => (
+					: settings.commaSeperated ? selectedIndex.map( s => options[ s ].label ).join( ', ' ) : selectedIndex.map( s => (
 						<div key={ `selection-${ s }` } className="rs-selection">
 							<span className="rs-remove vertical-align" onClick={ ( e ) => {
 								e.stopPropagation();

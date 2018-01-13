@@ -15,6 +15,7 @@ export const UNLOCK_MOUSE_FOCUS = 'UNLOCK_MOUSE_FOCUS';
 export const REMOVE_ITEM = 'REMOVE_ITEM';
 export const CLEAR_SEARCH = 'CLEAR_SEARCH';
 export const CHECK_FOR_SCROLL = 'CHECK_FOR_SCROLL';
+export const SELECT_ALL = 'SELECT_ALL';
 
 export const removeItem = ( index ) => {
 
@@ -27,7 +28,7 @@ export const removeItem = ( index ) => {
 
 		const state = getState();
 
-		if( state.settings.multiple ) {
+		if( state.settings.multiple && ! state.settings.commaSeperated ) {
 			dispatch( focusItem( 0 ) );
 		}
 		state.onChange( [ ... state.selectedIndex ].map( i => state.options[ i ] ) );
@@ -91,9 +92,22 @@ export const toggleSelect = () => {
 
 		state = getState();
 		if( state.isOpen && ( state.selected.length === 0 || state.settings.multiple ) && state.focusedItem === null ) {
-			dispatch( moveFocus( 'down' ) );
+			if( state.settings.multiple && state.settings.commaSeperated && state.selected.length > 0 ) {
+				const index = state.settings.lifo ? state.selectedIndex[ 0 ] : state.selectedIndex[ state.selectedIndex.length - 1 ];
+				dispatch( focusItem( index ) );
+			}
+			else {
+				dispatch( moveFocus( 'down' ) );
+			}
+
 		}
 
+	}
+}
+
+export const selectAll = () => {
+	return {
+		type: SELECT_ALL
 	}
 }
 
@@ -104,17 +118,22 @@ export const selectItem = ( index, isKeyboard = false ) => {
 		let state = getState();
 		let options = state.search.active ? state.search.resultSet : state.options;
 
-		if( state.settings.multiple ) {
+		if( state.settings.multiple && ! state.settings.commaSeperated ) {
 			options = [ ... options ].filter( o => ! state.selected.includes( o.key ) );
 		}
 
-		if( options[ index ] ) {
-			dispatch( {
-				type: SELECT_ITEM,
-				item: options[ index ],
-				index: state.search.active || ( state.settings.multiple && state.selected.length ) ? state.options.findIndex( o => o.key === options[ index ].key ) : index,
-				isKeyboard
-			} )
+		if( state.settings.commaSeperated && state.selectedIndex.includes( index ) ) {
+			return dispatch( removeItem( index ) );
+		}
+		else {
+			if( options[ index ] ) {
+				dispatch( {
+					type: SELECT_ITEM,
+					item: options[ index ],
+					index: state.search.active || ( state.settings.multiple && state.selected.length ) ? state.options.findIndex( o => o.key === options[ index ].key ) : index,
+					isKeyboard
+				} )
+			}
 		}
 
 		state = getState();
@@ -136,12 +155,21 @@ export const selectItem = ( index, isKeyboard = false ) => {
 	}
 }
 
-export const clearSelect = () => {
+export const deselectAll = ( stayOpen = false ) => {
+
+	return ( dispatch, getState ) => {
+		const state = getState();
+		dispatch( { type: CLEAR_SELECT, stayOpen } )
+		//state.onChange( '' );
+	}
+}
+
+export const clearSelect = ( stayOpen = false ) => {
 
 	return ( dispatch, getState ) => {
 
 		const state = getState();
-		dispatch( { type: CLEAR_SELECT } )
+		dispatch( { type: CLEAR_SELECT, stayOpen } )
 		state.onChange( '' );
 
 	}
@@ -249,7 +277,7 @@ export const moveFocus = ( direction ) => {
 		const placeHolderInside = ! state.settings.multiple && state.settings.placeHolderInside;
 		let options = state.search.active ? state.search.resultSet : state.options;
 
-		if( state.settings.multiple ) {
+		if( state.settings.multiple && ! state.settings.commaSeperated ) {
 			options = [ ... options ].filter( o => ! state.selected.includes( o.key ) );
 		}
 
@@ -322,7 +350,7 @@ export const focusItem = ( index, mouseEvent ) => {
 		const state = getState();
 		let options = state.search.active ? state.search.resultSet : state.options;
 
-		if( state.settings.multiple ) {
+		if( state.settings.multiple && ! state.settings.commaSeperated ) {
 			options = [ ... options ].filter( o => ! state.selected.includes( o.key ) );
 		}
 

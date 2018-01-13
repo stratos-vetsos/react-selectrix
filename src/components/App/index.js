@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { toggleSelect, selectItem, focusItem, getSelectedIndex, move, clearSelect, openSelect, closeSelect, focusSelect, blurSelect, handleKeyDown, maybeScroll, unlockMouseFocus } from 'actions';
+import { toggleSelect, selectItem, focusItem, getSelectedIndex, move, clearSelect, openSelect, closeSelect, focusSelect, blurSelect, handleKeyDown, maybeScroll, unlockMouseFocus, selectAll } from 'actions';
 import App from './App';
 
 const mapStateToProps = ( state ) => {
@@ -7,8 +7,9 @@ const mapStateToProps = ( state ) => {
 	const queryString = state.search.queryString.toLowerCase();
 
 	let options = ! state.search.active || queryString === '' ? [ ... state.options ] : [ ... state.search.resultSet ];
+	const originalCount = state.search.active ? options.length : state.options.length;
 
-	if( state.settings.multiple ) {
+	if( state.settings.multiple && ! state.settings.commaSeperated ) {
 		options = options.filter( o => ! state.selected.includes( o.key ) );
 	}
 
@@ -24,7 +25,8 @@ const mapStateToProps = ( state ) => {
 		checkForScroll: state.checkForScroll,
 		mouseEventLocked: state.mouseEventLocked,
 		checkForHover: state.checkForHover,
-		hide: state.hide
+		originalCount,
+		height: state.height
 	}
 
 }
@@ -57,12 +59,12 @@ const mapDispatchToProps = ( dispatch ) => {
 			dispatch( getSelectedIndex() );
 		},
 
-		clearSelect: ( event = false ) => {
+		clearSelect: ( event = false, stayOpen = false ) => {
 			if( event ) {
 				event.stopPropagation();
 				event.nativeEvent.stopImmediatePropagation();
 			}
-			dispatch( clearSelect() );
+			dispatch( clearSelect( stayOpen ) );
 		},
 
 		closeSelect: () => {
@@ -87,6 +89,10 @@ const mapDispatchToProps = ( dispatch ) => {
 
 		unlockMouseFocus: () => {
 			dispatch( unlockMouseFocus() );
+		},
+
+		selectAll: () => {
+			dispatch( selectAll() );
 		}
 
     }

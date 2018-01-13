@@ -14,7 +14,8 @@ export default class App extends React.Component {
 			'handleBodyClick',
 			'handleKeyDown',
 			'handleMouseMove',
-			'checkIfHovered'
+			'checkIfHovered',
+			'maybeScroll'
 		];
 
 		methods.forEach( method => this[ method ] = this[ method ].bind( this ) );
@@ -27,7 +28,7 @@ export default class App extends React.Component {
 		document.body.addEventListener( 'keydown', this.handleKeyDown );
 		document.body.addEventListener( 'mousemove', this.handleMouseMove );
 
-		if( ! this.props.settings.multiple && this.props.isOpen && this.props.checkForScroll && this.props.selected.length > 0 ) {
+		if( ( ! this.props.settings.multiple && ! this.props.settings.commaSeperated ) && this.props.isOpen && this.props.checkForScroll && this.props.selected.length > 0 ) {
 			this.props.maybeScroll( this.rsBodyRef, this[ `option-${ this.props.selectedIndex[ 0 ].toString() }` ] );
 		}
 
@@ -64,6 +65,10 @@ export default class App extends React.Component {
 
 	checkIfHovered() {
 
+		if( ! this.props.settings.stayOpen || ! this.props.checkForHover || this.props.settings.commaSeperated ) {
+			return;
+		}
+
 		for( let i = 0; i < this.props.options.length; i++ ) {
 
 			const option = this[ `option-${ i }` ];
@@ -85,23 +90,25 @@ export default class App extends React.Component {
 		}
 	}
 
-	componentDidUpdate() {
+	maybeScroll() {
 
-		if( this.props.settings.stayOpen && this.props.checkForHover ) {
-			this.checkIfHovered();
+		if( ! this.props.isOpen || ! this.props.checkForScroll ) {
 			return;
 		}
 
-		if( this.props.isOpen && this.props.checkForScroll ) {
-
-			if( this.props.focusedItem !== null ) {
-				this.props.maybeScroll( this.rsBodyRef, this[ `option-${ this.props.focusedItemIndex.toString() }` ] );
-			}
-			else if( ! this.props.settings.multiple && this.props.selected.length > 0 ) {
-				this.props.maybeScroll( this.rsBodyRef, this[ `option-${ this.props.selectedIndex[ 0 ].toString() }` ] );
-			}
-
+		if( this.props.focusedItem !== null ) {
+			this.props.maybeScroll( this.rsBodyRef, this[ `option-${ this.props.focusedItemIndex.toString() }` ] );
 		}
+		else if( ! this.props.settings.multiple && this.props.selected.length > 0 ) {
+			this.props.maybeScroll( this.rsBodyRef, this[ `option-${ this.props.selectedIndex[ 0 ].toString() }` ] );
+		}
+
+	}
+
+	componentDidUpdate() {
+
+		this.checkIfHovered();
+		this.maybeScroll();
 
 	}
 
@@ -126,16 +133,12 @@ export default class App extends React.Component {
 			className += ' focused';
 		}
 
-		if( this.props.hide ) {
-			className += ' invisible';
-		}
-
 		return className.trim();
 	}
 
 	render() {
 
-		const { options, settings, isOpen, selected } = this.props;
+		const { options, settings, isOpen, selected, originalCount } = this.props;
 		const className = buildClassName( settings, isOpen, selected );
 
 		return(
@@ -144,13 +147,26 @@ export default class App extends React.Component {
 				className={ `react-selectrix${ className }` }
 				ref={ ( ref ) => this.ref = ref }
 				onFocus={ this.props.focusSelect }
-
 			>
 				<input type="hidden" value={ JSON.stringify( selected ) } />
 				<div className="rs-wrapper">
 					{ settings.multiple ? <MultiHeader /> : <Header /> }
 					{ isOpen &&
-						<div key={ 'rs-body' } className={ `rs-body${ isOpen ? '' : ' hidden' }` } ref={ ( ref ) => this.rsBodyRef = ref }>
+						<div
+							className={ `rs-body${ isOpen ? '' : ' hidden' }` }
+							ref={ ( ref ) => this.rsBodyRef = ref }
+							style={{ maxHeight: this.props.height }}
+						>
+							{ settings.selectAllButton &&
+								<div className="rs-toggle-wrapper">
+									<button
+										type="button"
+										className="rs-toggle-button"
+										onClick={ () => originalCount > selected.length ? this.props.selectAll() : this.props.clearSelect( false, true ) }>
+										{ originalCount > selected.length ? 'Select All' : 'Deselect All' }
+									</button>
+								</div>
+							}
 							<ul>
 								{ ! settings.multiple && settings.placeHolderInside &&
 									<li
@@ -169,15 +185,10 @@ export default class App extends React.Component {
 											key={ `li-${index}` }
 											className={ this.buildOptionClassName( o, index ) }
 											onMouseOver={ () => {
-												if( ! this.props.mouseEventLocked ) {
-													this.props.focusItem( index, true );
-												}
-												else {
-													if( settings.stayOpen ) {
-														this.props.unlockMouseFocus();
-													}
-												}
-											}}
+												! this.props.mouseEventLocked
+													? this.props.focusItem( index, true )
+													: settings.stayOpen ? this.props.unlockMouseFocus() : ''
+											} }
 										>
 											{ o.label }
 										</li>
@@ -198,6 +209,7 @@ App.propTypes = {
 	settings: PropTypes.object.isRequired,
 	toggleSelect: PropTypes.func.isRequired,
 	options: PropTypes.array.isRequired,
+	height: PropTypes.number.isRequired,
 	isOpen: PropTypes.bool.isRequired,
 	selected: PropTypes.array.isRequired,
 	selectedIndex: PropTypes.array.isRequired,
@@ -216,5 +228,6 @@ App.propTypes = {
 	mouseEventLocked: PropTypes.bool.isRequired,
 	unlockMouseFocus: PropTypes.func.isRequired,
 	checkForHover: PropTypes.bool.isRequired,
-	hide: PropTypes.bool.isRequired
+	selectAll: PropTypes.func.isRequired,
+	originalCount: PropTypes.number.isRequired
 }

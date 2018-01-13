@@ -7,7 +7,7 @@ html {
 }
 
 #root {
-	max-width: 400px;
+	max-width: 500px;
 	margin: 0 auto;
 	padding: 15px;
 
@@ -37,6 +37,22 @@ html {
 		}
 		&:after {
 			clear: both;
+		}
+	}
+
+	.rs-toggle-wrapper {
+		padding: 10px 15px;
+	}
+
+	button.rs-toggle-button {
+		background-color: $background-color;
+		border: none;
+		font-size: 11px;
+		cursor: pointer;
+		outline: none;
+		color: $toggle-all-color;
+		&:hover {
+			text-decoration: underline;
 		}
 	}
 
@@ -116,23 +132,25 @@ html {
 
 	&.rs-base-multiple {
 
-		&:not( .rs-base-empty ) {
+		&:not( .rs-base-empty ):not( .rs-base-commaseperated ) {
 			.rs-toggle {
 				padding: 5px 50px 5px 5px;
+			}
+		}
+
+		&.rs-base-commaseperated {
+			&.rs-base-singleline {
+				.rs-toggle {
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
+				}
 			}
 		}
 
 		&.rs-base-searchable {
 			.rs-toggle {
 				cursor: text;
-			}
-		}
-
-		&.rs-base-singleline {
-			.rs-toggle {
-				white-space: nowrap;
-				overflow: hidden;
-				text-overflow: ellipsis;
 			}
 		}
 
@@ -228,7 +246,6 @@ html {
 		width: 100%;
 		left: 0;
 		z-index: 1;
-		max-height: 150px;
 		overflow: auto;
 
 		> ul {

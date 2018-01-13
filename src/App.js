@@ -100,10 +100,14 @@ export default class App extends React.Component {
 					className="custom-select"
 					selected={ 'f' }
 					isOpen={ false }
-					searchable={ false }
+					searchable={ true }
 					multiple={ this.state.multiple }
 					stayOpen={ true }
+					commaSeperated={ false }
 					singleLine={ false }
+					lifo={ false }
+					selectAllButton={ true }
+					height={ 190 }
 				/>
 			</div>
 		)

@@ -44,6 +44,7 @@ export default class ReactSelectrix extends React.Component {
 
 ReactSelectrix.defaultProps = {
 	options: [],
+	height: 190,
 	className: '',
 	isOpen: false,
 	placeHolderInside: true,
@@ -56,15 +57,23 @@ ReactSelectrix.defaultProps = {
 	customScrollbar: false,
 	searchable: true,
 	stayOpen: false,
-	initialized: false
+	initialized: false,
+	commaSeperated: false,
+	singleLine: false,
+	lifo: false,
+	selectAllButton: false
 }
 
 ReactSelectrix.propTypes = {
 	options: PropTypes.array.isRequired,
+	height: PropTypes.oneOfType( [
+		PropTypes.number,
+		PropTypes.string,
+	] ),
 	className: PropTypes.string,
-	isOpen: PropTypes.bool.isRequired,
+	isOpen: PropTypes.bool,
 	placeHolderInside: PropTypes.bool,
-	placeholder: PropTypes.string.isRequired,
+	placeholder: PropTypes.string,
 	arrow: PropTypes.bool,
 	selected: PropTypes.oneOfType( [
 		PropTypes.string,
@@ -77,5 +86,9 @@ ReactSelectrix.propTypes = {
 	customScrollbar: PropTypes.bool,
 	searchable: PropTypes.bool,
 	stayOpen: PropTypes.bool,
+	commaSeperated: PropTypes.bool,
+	singleLine: PropTypes.bool,
+	lifo: PropTypes.bool,
+	selectAllButton: PropTypes.bool,
 	setupInstance: PropTypes.func.isRequired
 }
