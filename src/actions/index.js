@@ -155,12 +155,12 @@ export const selectItem = ( index, isKeyboard = false ) => {
 	}
 }
 
-export const deselectAll = ( stayOpen = false ) => {
+export const deselectAll = () => {
 
 	return ( dispatch, getState ) => {
 		const state = getState();
-		dispatch( { type: CLEAR_SELECT, stayOpen } )
-		//state.onChange( '' );
+		//dispatch( { type: DESELECT_ALL, stayOpen } )
+		state.onChange( '' );
 	}
 }
 

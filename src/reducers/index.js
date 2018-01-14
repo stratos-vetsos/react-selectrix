@@ -52,12 +52,9 @@ const reducer = ( state = initialState, action ) => {
 				: options.map( ( o, i ) => i );
 
 			return Object.assign( {}, state, {
-				selected: keys,
-				selectedIndex: indexes,
-				isOpen: true,
-				search: state.settings.searchable
-					? initialState.search
-					: state.search
+				selected: [ ... state.selected, ... keys ],
+				selectedIndex: [ ... state.selectedIndex, ... indexes ],
+				isOpen: state.settings.stayOpen
 			} )
 
 		}
@@ -153,7 +150,7 @@ const reducer = ( state = initialState, action ) => {
 				focusedItem: null,
 				focusedItemIndex: null,
 				isOpen: action.stayOpen,
-				search: initialState.search
+				search: action.stayOpen ? state.search : initialState.search
 			} )
 		}
 
