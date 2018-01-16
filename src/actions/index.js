@@ -28,7 +28,7 @@ export const removeItem = ( index ) => {
 
 		const state = getState();
 
-		if( state.settings.multiple && ! state.settings.commaSeperated ) {
+		if( state.settings.multiple && ! state.settings.commaSeperated && ! state.settings.checkBoxes ) {
 			dispatch( focusItem( 0 ) );
 		}
 		state.onChange( [ ... state.selectedIndex ].map( i => state.options[ i ] ) );
@@ -118,11 +118,11 @@ export const selectItem = ( index, isKeyboard = false ) => {
 		let state = getState();
 		let options = state.search.active ? state.search.resultSet : state.options;
 
-		if( state.settings.multiple && ! state.settings.commaSeperated ) {
+		if( state.settings.multiple && ! state.settings.commaSeperated && ! state.settings.checkBoxes ) {
 			options = [ ... options ].filter( o => ! state.selected.includes( o.key ) );
 		}
 
-		if( state.settings.commaSeperated && state.selectedIndex.includes( index ) ) {
+		if( ( state.settings.commaSeperated || state.settings.checkBoxes ) && state.selectedIndex.includes( index ) ) {
 			return dispatch( removeItem( index ) );
 		}
 		else {
@@ -138,11 +138,15 @@ export const selectItem = ( index, isKeyboard = false ) => {
 
 		state = getState();
 
-		if( isKeyboard ) {
-			index === options.length - 1 ? dispatch( focusItem( index - 1 ) ) : dispatch( focusItem( index ) )
-		}
-		else {
-			index === options.length - 1 ? dispatch( focusItem( index - 1 ) ) : '';
+		if( ! state.settings.checkBoxes && ! state.settings.commaSeperated ) {
+
+			if( isKeyboard ) {
+				index === options.length - 1 ? dispatch( focusItem( index - 1 ) ) : dispatch( focusItem( index ) )
+			}
+			else {
+				index === options.length - 1 ? dispatch( focusItem( index - 1 ) ) : '';
+			}
+
 		}
 
 		if( state.settings.multiple ) {
@@ -277,7 +281,7 @@ export const moveFocus = ( direction ) => {
 		const placeHolderInside = ! state.settings.multiple && state.settings.placeHolderInside;
 		let options = state.search.active ? state.search.resultSet : state.options;
 
-		if( state.settings.multiple && ! state.settings.commaSeperated ) {
+		if( state.settings.multiple && ! state.settings.commaSeperated && ! state.settings.checkBoxes ) {
 			options = [ ... options ].filter( o => ! state.selected.includes( o.key ) );
 		}
 
@@ -350,7 +354,7 @@ export const focusItem = ( index, mouseEvent ) => {
 		const state = getState();
 		let options = state.search.active ? state.search.resultSet : state.options;
 
-		if( state.settings.multiple && ! state.settings.commaSeperated ) {
+		if( state.settings.multiple && ! state.settings.commaSeperated && ! state.settings.checkBoxes ) {
 			options = [ ... options ].filter( o => ! state.selected.includes( o.key ) );
 		}
 

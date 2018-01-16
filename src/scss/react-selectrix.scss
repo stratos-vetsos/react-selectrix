@@ -19,7 +19,6 @@ html {
 @import 'colors';
 
 .react-selectrix {
-
 	position: relative;
 
 	* {
@@ -31,10 +30,12 @@ html {
 	}
 
 	.clearfix {
-		&:before, &:after {
+		&:after,
+		&:before {
 			content: "";
 			display: table;
 		}
+
 		&:after {
 			clear: both;
 		}
@@ -51,6 +52,7 @@ html {
 		cursor: pointer;
 		outline: none;
 		color: $toggle-all-color;
+
 		&:hover {
 			text-decoration: underline;
 		}
@@ -131,14 +133,17 @@ html {
 	}
 
 	&.rs-base-multiple {
-
-		&:not( .rs-base-empty ):not( .rs-base-commaseperated ) {
+		&:not(.rs-base-empty):not(.rs-base-commaseperated) {
 			.rs-toggle {
 				padding: 5px 50px 5px 5px;
 			}
 		}
 
 		&.rs-base-commaseperated {
+			.rs-toggle {
+				padding: 6px 50px 6px 10px;
+				line-height: 1.75;
+			}
 			&.rs-base-singleline {
 				.rs-toggle {
 					white-space: nowrap;
@@ -166,21 +171,24 @@ html {
 			position: relative;
 			cursor: pointer;
 		}
+
 		.rs-remove {
-		    font-size: 15px;
-		    color: $multi-remove-color;
-		    position: absolute;
-		    left: 0;
+			font-size: 15px;
+			color: $multi-remove-color;
+			position: absolute;
+			left: 0;
 			width: 20px;
 			text-align: center;
-		    border-right: 1px solid $multi-remove-border;
-		    top: 0;
+			border-right: 1px solid $multi-remove-border;
+			top: 0;
 			height: 100%;
-			transition: .2s background-color ease-in-out;
+			transition: 0.2s background-color ease-in-out;
+
 			&:hover {
 				background-color: #23c8ff;
 			}
 		}
+
 		.rs-searchable {
 			border: none;
 			box-shadow: none;
@@ -300,4 +308,122 @@ html {
 			}
 		}
 	}
+
+	&.rs-base-checkboxes {
+
+		.rs-option {
+
+			&:not(.disabled) {
+
+				&.selected {
+					background-color: inherit;
+				}
+
+				&.focused {
+					background-color: $focused-color;
+				}
+			}
+
+			input[type="checkbox"] {
+				position: absolute;
+				opacity: 0;
+				margin: 0;
+
+				&:not(:checked) {
+					+ label {
+						&:before {
+							width: 0;
+							height: 0;
+							border: 3px solid transparent;
+							left: 6px;
+							top: 10px;
+							-webkit-transform: rotateZ(37deg);
+							transform: rotateZ(37deg);
+							-webkit-transform-origin: 100% 100%;
+							transform-origin: 100% 100%;
+						}
+
+						&:after {
+							height: 13px;
+							width: 13px;
+							background-color: transparent;
+							border: 1px solid #D5D9DF;
+							border-radius: 2px;
+							top: 0;
+							z-index: 0;
+						}
+					}
+				}
+
+				+ label {
+
+					position: relative;
+					padding-left: 25px;
+					cursor: pointer;
+					display: inline-block;
+					user-select: none;
+					font-size: 14px;
+					line-height: 14px;
+					font-weight: 400;
+					margin-bottom: 0;
+
+					&:after,
+					&:before {
+						content: '';
+						left: 0;
+						position: absolute;
+						-webkit-transition: border 0.25s, background-color 0.25s, width 0.20s 0.1s, height 0.20s 0.1s, top 0.20s 0.1s, left 0.20s 0.1s;
+						transition: border 0.25s, background-color 0.25s, width 0.20s 0.1s, height 0.20s 0.1s, top 0.20s 0.1s, left 0.20s 0.1s;
+						z-index: 1;
+					}
+
+					&:after {
+						height: 13px;
+						width: 13px;
+						background-color: transparent;
+						border: 2px solid #5a5a5a;
+						top: 0;
+						z-index: 0;
+					}
+				}
+
+				&:checked {
+					+ label {
+						&:before {
+							top: 2px;
+						    left: 1px;
+						    width: 2px;
+						    height: 6px;
+							border-top: 2px solid transparent;
+							border-left: 2px solid transparent;
+							border-right: 2px solid #fff;
+							border-bottom: 2px solid #fff;
+							-webkit-transform: rotateZ(37deg);
+							transform: rotateZ(37deg);
+							-webkit-transform-origin: 100% 100%;
+							transform-origin: 100% 100%;
+						}
+
+						&:after {
+							top: 0;
+							height: 13px;
+							width: 13px;
+							border: 1px solid #1DA4CF;
+							background-color: #1DA4CF;
+							z-index: 0;
+							border-radius: 2px;
+						}
+					}
+				}
+
+				&:disabled {
+					+label {
+						opacity: 0.4;
+						cursor: not-allowed;
+					}
+				}
+			}
+		}
+	}
+
 }

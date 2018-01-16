@@ -103,11 +103,12 @@ export default class App extends React.Component {
 					searchable={ true }
 					multiple={ this.state.multiple }
 					stayOpen={ true }
-					commaSeperated={ false }
+					commaSeperated={ true }
 					singleLine={ false }
 					lifo={ false }
 					selectAllButton={ true }
 					height={ 190 }
+					checkBoxes={ false }
 				/>
 			</div>
 		)

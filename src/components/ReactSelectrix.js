@@ -61,7 +61,8 @@ ReactSelectrix.defaultProps = {
 	commaSeperated: false,
 	singleLine: false,
 	lifo: false,
-	selectAllButton: false
+	selectAllButton: false,
+	checkBoxes: false
 }
 
 ReactSelectrix.propTypes = {
@@ -90,5 +91,6 @@ ReactSelectrix.propTypes = {
 	singleLine: PropTypes.bool,
 	lifo: PropTypes.bool,
 	selectAllButton: PropTypes.bool,
+	checkBoxes: PropTypes.bool,
 	setupInstance: PropTypes.func.isRequired
 }

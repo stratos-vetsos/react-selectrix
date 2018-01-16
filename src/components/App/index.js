@@ -9,7 +9,7 @@ const mapStateToProps = ( state ) => {
 	let options = ! state.search.active || queryString === '' ? [ ... state.options ] : [ ... state.search.resultSet ];
 	const originalCount = state.search.active ? options.length : state.options.length;
 
-	if( state.settings.multiple && ! state.settings.commaSeperated ) {
+	if( state.settings.multiple && ! state.settings.commaSeperated && ! state.settings.checkBoxes ) {
 		options = options.filter( o => ! state.selected.includes( o.key ) );
 	}
 

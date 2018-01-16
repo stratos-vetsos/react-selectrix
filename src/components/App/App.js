@@ -65,7 +65,7 @@ export default class App extends React.Component {
 
 	checkIfHovered() {
 
-		if( ! this.props.settings.stayOpen || ! this.props.checkForHover || this.props.settings.commaSeperated ) {
+		if( ! this.props.settings.stayOpen || ! this.props.checkForHover || this.props.settings.commaSeperated || this.props.settings.checkBoxes ) {
 			return;
 		}
 
@@ -190,7 +190,13 @@ export default class App extends React.Component {
 													: settings.stayOpen ? this.props.unlockMouseFocus() : ''
 											} }
 										>
-											{ o.label }
+											{ settings.checkBoxes ?
+												<span className="rs-checkbox-wrapper">
+													<input type="checkbox" checked={ this.props.selected.includes( o.key ) } />
+													<label>{ o.label }</label>
+												</span> :
+												o.label
+											}
 										</li>
 									)
 								} ) }

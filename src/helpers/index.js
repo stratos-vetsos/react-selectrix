@@ -22,7 +22,7 @@ export const isEmpty = ( variable ) => {
 
 export const buildClassName = ( props, isOpen, selected ) => {
 
-	let targetProps = [ 'disabled', 'multiple', 'placeHolderInside', 'arrow', 'customScrollbar', 'searchable', 'commaSeperated', 'singleLine' ],
+	let targetProps = [ 'disabled', 'multiple', 'placeHolderInside', 'arrow', 'customScrollbar', 'searchable', 'commaSeperated', 'singleLine', 'checkBoxes' ],
 		className = '';
 
 	for( let [ key, value ] of Object.entries( props ) ) {

@@ -13,7 +13,8 @@ const initialState = {
 		commaSeperated: false,
 		singleLine: false,
 		lifo: false,
-		selectAllButton: false
+		selectAllButton: false,
+		checkBoxes: false
 	},
 	options: [],
 	height: '150',
@@ -83,7 +84,8 @@ const reducer = ( state = initialState, action ) => {
 					commaSeperated: action.props.multiple && action.props.commaSeperated,
 					singleLine: action.props.multiple && action.props.commaSeperated && action.props.singleLine,
 					lifo: action.props.multiple && action.props.lifo,
-					selectAllButton: action.props.multiple && action.props.selectAllButton
+					selectAllButton: action.props.multiple && action.props.selectAllButton,
+					checkBoxes: action.props.multiple && action.props.checkBoxes
 				} ),
 				options: action.props.options,
 				height: action.props.height,
