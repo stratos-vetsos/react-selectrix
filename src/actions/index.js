@@ -106,8 +106,12 @@ export const toggleSelect = () => {
 }
 
 export const selectAll = () => {
-	return {
-		type: SELECT_ALL
+	return ( dispatch, getState ) => {
+		dispatch( {
+			type: SELECT_ALL
+		} )
+		const state = getState();
+		state.onChange( [ ... state.selectedIndex ].map( i => state.options[ i ] ) );
 	}
 }
 
@@ -122,15 +126,17 @@ export const selectItem = ( index, isKeyboard = false ) => {
 			options = [ ... options ].filter( o => ! state.selected.includes( o.key ) );
 		}
 
-		if( ( state.settings.commaSeperated || state.settings.checkBoxes ) && state.selectedIndex.includes( index ) ) {
-			return dispatch( removeItem( index ) );
+		const targetIndex = state.search.active ? state.options.findIndex( o => o.key === options[ index ].key ) : index;
+
+		if( ( state.settings.commaSeperated || state.settings.checkBoxes ) && state.selectedIndex.includes( targetIndex ) ) {
+			return dispatch( removeItem( targetIndex ) );
 		}
 		else {
 			if( options[ index ] ) {
 				dispatch( {
 					type: SELECT_ITEM,
 					item: options[ index ],
-					index: state.search.active || ( state.settings.multiple && state.selected.length ) ? state.options.findIndex( o => o.key === options[ index ].key ) : index,
+					index: state.search.active || ( state.settings.multiple && state.selected.length ) ? targetIndex : index,
 					isKeyboard
 				} )
 			}
@@ -156,15 +162,6 @@ export const selectItem = ( index, isKeyboard = false ) => {
 			state.onChange( options[ index ] )
 		}
 
-	}
-}
-
-export const deselectAll = () => {
-
-	return ( dispatch, getState ) => {
-		const state = getState();
-		//dispatch( { type: DESELECT_ALL, stayOpen } )
-		state.onChange( '' );
 	}
 }
 

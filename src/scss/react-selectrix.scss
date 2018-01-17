@@ -140,15 +140,28 @@ html {
 		}
 
 		&.rs-base-commaseperated {
-			.rs-toggle {
-				padding: 6px 50px 6px 10px;
-				line-height: 1.75;
+			&:not(.rs-base-empty) {
+				.rs-toggle {
+					padding: 6px 50px 6px 15px;
+					line-height: 1.75;
+				}
 			}
 			&.rs-base-singleline {
-				.rs-toggle {
+				.rs-commaseperated-wrapper {
 					white-space: nowrap;
 					overflow: hidden;
 					text-overflow: ellipsis;
+					display: block;
+				}
+			}
+			&.rs-base-searchable {
+				.rs-toggle {
+					display: flex;
+				}
+				.rs-commaseperated-wrapper {
+					display: block;
+					padding-right: 10px;
+					max-width: 100%;
 				}
 			}
 		}

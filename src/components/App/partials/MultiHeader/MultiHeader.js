@@ -6,6 +6,12 @@ const MultiHeader = ( props ) => {
 
 	const { settings, isOpen, selected, selectedIndex, options, focused } = props;
 
+	let toggleClassName = 'rs-toggle';
+
+	if( focused ) {
+		toggleClassName += ' rs-focused';
+	}
+
 	return (
 		<div
 			className="rs-header"
@@ -28,10 +34,10 @@ const MultiHeader = ( props ) => {
 					<span className={ `rs-arrow-indicator ${ isOpen ? 'up' : 'down' }` }></span>
 				</span>
 			}
-			<div tabIndex="0" className={ `rs-toggle${ focused ? ' rs-focused' : '' }` }>
+			<div tabIndex="0" className={ toggleClassName }>
 				{ selected.length === 0
 					? settings.searchable ? '' : settings.placeholder
-					: settings.commaSeperated ? selectedIndex.map( s => options[ s ].label ).join( ', ' ) : selectedIndex.map( s => (
+					: settings.commaSeperated ? <span className="rs-commaseperated-wrapper">{ selectedIndex.map( s => options[ s ].label ).join( ', ' ) }</span> : selectedIndex.map( s => (
 						<div key={ `selection-${ s }` } className="rs-selection">
 							<span className="rs-remove vertical-align" onClick={ ( e ) => {
 								e.stopPropagation();

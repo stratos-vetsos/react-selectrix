@@ -46,15 +46,20 @@ const reducer = ( state = initialState, action ) => {
 
 		case SELECT_ALL: {
 
-			const options = state.search.active ? [ ... state.search.resultSet ] : [ ... state.options ];
-			const keys = options.map( o => o.key );
-			const indexes = state.search.active
-				? [ ... state.options ].map( ( option, index ) => keys.includes( option.key ) ? index : null ).filter( x => x )
-				: options.map( ( o, i ) => i );
+			let options = state.search.active ? [ ... state.search.resultSet ] : [ ... state.options ]
+			.filter( o => ! state.selected.includes( o .key ) );
+
+			let keys = options.map( o => o.key );
+			let indexes = [ ... state.options ].map( ( option, index ) => keys.includes( option.key ) ? index : null ).filter( x => x !== null );
+
+			if( state.settings.lifo ) {
+				keys = keys.reverse();
+				indexes = indexes.reverse();
+			}
 
 			return Object.assign( {}, state, {
-				selected: [ ... state.selected, ... keys ],
-				selectedIndex: [ ... state.selectedIndex, ... indexes ],
+				selected: state.settings.lifo ? [ ... keys, ... state.selected ] : [ ... state.selected, ... keys ],
+				selectedIndex: state.settings.lifo ? [ ... indexes, ... state.selectedIndex ] : [ ... state.selectedIndex, ... indexes ],
 				isOpen: state.settings.stayOpen
 			} )
 
