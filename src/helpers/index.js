@@ -22,8 +22,20 @@ export const isEmpty = ( variable ) => {
 
 export const buildClassName = ( props, isOpen, selected ) => {
 
-	let targetProps = [ 'disabled', 'multiple', 'placeHolderInside', 'arrow', 'customScrollbar', 'searchable', 'commaSeperated', 'singleLine', 'checkBoxes' ],
-		className = '';
+	const targetProps = [
+		'disabled',
+		'multiple',
+		'placeHolderInside',
+		'arrow',
+		'customScrollbar',
+		'searchable',
+		'commaSeperated',
+		'singleLine',
+		'checkBoxes',
+		'materialize'
+	];
+
+	let className = '';
 
 	for( let [ key, value ] of Object.entries( props ) ) {
 		if( value === true && targetProps.includes( key ) ) {

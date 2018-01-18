@@ -7,7 +7,7 @@ export default class App extends React.Component {
 		super( props );
 		this.state = {
 			value: '',
-			multiple: true
+			multiple: false
 		};
 
 		this.setValue = this.setValue.bind( this );
@@ -102,13 +102,15 @@ export default class App extends React.Component {
 					isOpen={ false }
 					searchable={ true }
 					multiple={ this.state.multiple }
-					stayOpen={ true }
+					stayOpen={ false }
 					commaSeperated={ false }
 					singleLine={ true }
 					lifo={ false }
 					selectAllButton={ true }
 					height={ 190 }
-					checkBoxes={ true }
+					checkBoxes={ false }
+					materialize={ true }
+					isDropDown={ true }
 				/>
 			</div>
 		)

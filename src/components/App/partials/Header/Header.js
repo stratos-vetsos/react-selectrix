@@ -9,7 +9,7 @@ const Header = ( props ) => {
 	return (
 		<div className="rs-header" onClick={ props.toggleSelect }>
 
-			{ ! settings.placeHolderInside && selected !== null &&
+			{ ! settings.placeHolderInside && ! settings.isDropDown && selected !== null &&
 				<span className="rs-reset-wrapper vertical-align">
 					<span className="rs-reset" onClick={ ( e ) => props.clearSelect( e ) }>×</span>
 				</span>
@@ -19,11 +19,10 @@ const Header = ( props ) => {
 					<span className={ `rs-arrow-indicator ${ isOpen ? 'up' : 'down' }` }></span>
 				</span>
 			}
-
 			{ settings.searchable
 				? <Searchable />
 				: <div tabIndex="0" className={ `rs-toggle${ focused ? ' rs-focused' : '' }` }>
-					{ selected === null ? settings.placeholder : selected.label }
+					{ ( selected === null || settings.isDropDown ) ? settings.placeholder : selected.label }
 				</div>
 			}
 

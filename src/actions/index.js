@@ -91,8 +91,16 @@ export const toggleSelect = () => {
 		} )
 
 		state = getState();
-		if( state.isOpen && ( state.selected.length === 0 || state.settings.multiple ) && state.focusedItem === null ) {
-			if( state.settings.multiple && state.settings.commaSeperated && state.selected.length > 0 ) {
+
+		if( state.settings.isDropDown ) {
+			return dispatch( focusItem( 0 ) );
+		}
+
+		if( state.isOpen && ( state.selected.length === 0 || state.settings.multiple || state.settings.checkBoxes ) && state.focusedItem === null ) {
+			if( state.settings.checkBoxes && ! state.settings.multiple ) {
+				dispatch( focusItem( state.selectedIndex[ 0 ] ) );
+			}
+			else if( state.settings.multiple && state.settings.commaSeperated && state.selected.length > 0 ) {
 				const index = state.settings.lifo ? state.selectedIndex[ 0 ] : state.selectedIndex[ state.selectedIndex.length - 1 ];
 				dispatch( focusItem( index ) );
 			}
@@ -144,7 +152,7 @@ export const selectItem = ( index, isKeyboard = false ) => {
 
 		state = getState();
 
-		if( ! state.settings.checkBoxes && ! state.settings.commaSeperated ) {
+		if( ! state.settings.checkBoxes && ! state.settings.commaSeperated && ! state.settings.isDropDown ) {
 
 			if( isKeyboard ) {
 				index === options.length - 1 ? dispatch( focusItem( index - 1 ) ) : dispatch( focusItem( index ) )
@@ -185,7 +193,10 @@ export const openSelect = () => {
 
 		const state = getState();
 		if( state.settings.multiple ) {
-			dispatch( moveFocus( 'down' ) );
+			return dispatch( moveFocus( 'down' ) );
+		}
+		if( state.settings.isDropDown ) {
+			return dispatch( focusItem( 0 ) );
 		}
 	}
 
@@ -289,7 +300,7 @@ export const moveFocus = ( direction ) => {
 			index = state.focusedItemIndex;
 		}
 		else {
-			if( state.selected.length > 0 && ! state.settings.multiple ) {
+			if( state.selected.length > 0 && ! state.settings.multiple && ! state.settings.isDropDown ) {
 				if( state.search.active ) {
 					index = options.findIndex( o => o.key === state.options[ state.selectedIndex ].key );
 					if( index === -1 ) {

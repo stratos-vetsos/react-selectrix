@@ -14,7 +14,9 @@ const initialState = {
 		singleLine: false,
 		lifo: false,
 		selectAllButton: false,
-		checkBoxes: false
+		checkBoxes: false,
+		materialize: false,
+		isDropDown: false
 	},
 	options: [],
 	height: '150',
@@ -85,12 +87,14 @@ const reducer = ( state = initialState, action ) => {
 					disabled: action.props.disabled,
 					customScrollbar: action.props.customScrollbar,
 					searchable: action.props.searchable,
-					stayOpen: action.props.multiple && action.props.stayOpen,
+					stayOpen: action.props.stayOpen && ! action.props.isDropDown,
 					commaSeperated: action.props.multiple && action.props.commaSeperated,
 					singleLine: action.props.multiple && action.props.commaSeperated && action.props.singleLine,
 					lifo: action.props.multiple && action.props.lifo,
 					selectAllButton: action.props.multiple && action.props.selectAllButton,
-					checkBoxes: action.props.multiple && action.props.checkBoxes
+					checkBoxes: action.props.checkBoxes,
+					materialize: action.props.materialize,
+					isDropDown: action.props.isDropDown && ! action.props.multiple
 				} ),
 				options: action.props.options,
 				height: action.props.height,

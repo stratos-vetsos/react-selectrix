@@ -86,7 +86,7 @@ export default class Searchable extends React.Component {
 		}
 		else {
 			className += ' rs-toggle';
-			placeholder = this.props.selected ? this.props.selected.label : this.props.settings.placeholder;
+			placeholder = this.props.selected && ! this.props.settings.isDropDown ? this.props.selected.label : this.props.settings.placeholder;
 		}
 
 		if( focused ) {

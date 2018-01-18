@@ -28,7 +28,7 @@ export default class App extends React.Component {
 		document.body.addEventListener( 'keydown', this.handleKeyDown );
 		document.body.addEventListener( 'mousemove', this.handleMouseMove );
 
-		if( ( ! this.props.settings.multiple && ! this.props.settings.commaSeperated ) && this.props.isOpen && this.props.checkForScroll && this.props.selected.length > 0 ) {
+		if( ( ! this.props.settings.multiple && ! this.props.settings.commaSeperated && ! this.props.settings.isDropDown ) && this.props.isOpen && this.props.checkForScroll && this.props.selected.length > 0 ) {
 			this.props.maybeScroll( this.rsBodyRef, this[ `option-${ this.props.selectedIndex[ 0 ].toString() }` ] );
 		}
 
@@ -65,7 +65,7 @@ export default class App extends React.Component {
 
 	checkIfHovered() {
 
-		if( ! this.props.settings.stayOpen || ! this.props.checkForHover || this.props.settings.commaSeperated || this.props.settings.checkBoxes ) {
+		if( ! this.props.settings.stayOpen || ! this.props.checkForHover || this.props.settings.commaSeperated || this.props.settings.checkBoxes || this.props.settings.isDropDown ) {
 			return;
 		}
 
@@ -125,7 +125,7 @@ export default class App extends React.Component {
 			className += ' disabled';
 		}
 
-		if( this.props.selected.includes( option.key ) ) {
+		if( ! this.props.settings.isDropDown && this.props.selected.includes( option.key ) ) {
 			className += ' selected';
 		}
 
@@ -151,7 +151,7 @@ export default class App extends React.Component {
 				<input type="hidden" value={ JSON.stringify( selected ) } />
 				<div className="rs-wrapper">
 					{ settings.multiple ? <MultiHeader /> : <Header /> }
-					{ isOpen &&
+					{ ( isOpen || settings.materialize ) &&
 						<div
 							className={ `rs-body${ isOpen ? '' : ' hidden' }` }
 							ref={ ( ref ) => this.rsBodyRef = ref }
@@ -192,7 +192,7 @@ export default class App extends React.Component {
 										>
 											{ settings.checkBoxes ?
 												<span className="rs-checkbox-wrapper">
-													<input type="checkbox" checked={ this.props.selected.includes( o.key ) } />
+													<input type="checkbox" checked={ this.props.selected.includes( o.key ) } readOnly />
 													<label>{ o.label }</label>
 												</span> :
 												o.label
