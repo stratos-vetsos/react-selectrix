@@ -23,6 +23,7 @@ const initialState = {
 	isOpen: false,
 	selected: [],
 	selectedIndex: [],
+	customKeys: false,
 	initialized: false,
 	focused: false,
 	focusedItem: null,
@@ -49,7 +50,7 @@ const reducer = ( state = initialState, action ) => {
 		case SELECT_ALL: {
 
 			let options = state.search.active ? [ ... state.search.resultSet ] : [ ... state.options ]
-			.filter( o => ! state.selected.includes( o .key ) );
+			.filter( o => ! state.selected.includes( o.key ) );
 
 			let keys = options.map( o => o.key );
 			let indexes = [ ... state.options ].map( ( option, index ) => keys.includes( option.key ) ? index : null ).filter( x => x !== null );
@@ -96,11 +97,12 @@ const reducer = ( state = initialState, action ) => {
 					materialize: action.props.materialize,
 					isDropDown: action.props.isDropDown && ! action.props.multiple
 				} ),
-				options: action.props.options,
+				options: action.options,
 				height: action.props.height,
 				isOpen: action.props.isOpen,
 				selected: action.selected,
 				selectedIndex: action.selectedIndex,
+				customKeys: action.customKeys,
 				initialized: true,
 				onChange: action.props.onChange,
 				checkForScroll: action.props.isOpen

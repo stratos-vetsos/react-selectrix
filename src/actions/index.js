@@ -1,4 +1,4 @@
-import { normalizeSelected, isInViewport } from 'helpers';
+import { normalizeSelected, isInViewport, isEmpty } from 'helpers';
 
 export const SETUP_INSTANCE = 'SETUP_INSTANCE';
 export const CLOSE_SELECT = 'CLOSE_SELECT';
@@ -31,7 +31,14 @@ export const removeItem = ( index ) => {
 		if( state.settings.multiple && ! state.settings.commaSeperated && ! state.settings.checkBoxes ) {
 			dispatch( focusItem( 0 ) );
 		}
-		state.onChange( [ ... state.selectedIndex ].map( i => state.options[ i ] ) );
+
+		state.onChange( [ ... state.selectedIndex ].map( i => {
+			return state.customKeys ? Object.assign( {}, {
+				[ state.customKeys.key ]: state.options[ i ].key,
+				[ state.customKeys.label ]: state.options[ i ].label
+			} ) : state.options[ i ];
+		} ) );
+
 	}
 
 }
@@ -45,12 +52,39 @@ export const checkForScroll = () => {
 export const setupInstance = ( props ) => {
 
 	const { selected, selectedIndex } = normalizeSelected( props.selected, [ ... props.options ] );
+	let customKeys = {},
+		options = [ ... props.options ];
+
+	if( props.customKeys ) {
+		const target = [ 'key', 'label' ];
+		Object.keys( props.customKeys ).forEach( key => {
+			if( target.includes( key ) ) {
+				customKeys[ key ] = props.customKeys[ key ];
+			}
+		} );
+	}
+
+	customKeys = isEmpty( customKeys ) ? false : Object.assign( { key: 'key', label: 'label' }, customKeys );
+
+	if( customKeys ) {
+		options = options.map( o => {
+			if( o.hasOwnProperty( customKeys.key ) && o.hasOwnProperty( customKeys.label ) ) {
+				return {
+					key: o[ customKeys.key ],
+					label: o[ customKeys.label ]
+				};
+			}
+			return null;
+		} ).filter( x => x );
+	}
 
 	return {
 		type: SETUP_INSTANCE,
 		props,
 		selected,
-		selectedIndex
+		selectedIndex,
+		options,
+		customKeys
 	}
 }
 
@@ -118,8 +152,14 @@ export const selectAll = () => {
 		dispatch( {
 			type: SELECT_ALL
 		} )
+
 		const state = getState();
-		state.onChange( [ ... state.selectedIndex ].map( i => state.options[ i ] ) );
+		state.onChange( [ ... state.selectedIndex ].map( i => {
+			return state.customKeys ? Object.assign( {}, {
+				[ state.customKeys.key ]: state.options[ i ].key,
+				[ state.customKeys.label ]: state.options[ i ].label
+			} ) : state.options[ i ];
+		} ) );
 	}
 }
 
@@ -164,10 +204,20 @@ export const selectItem = ( index, isKeyboard = false ) => {
 		}
 
 		if( state.settings.multiple ) {
-			state.onChange( [ ... state.selectedIndex ].map( i => state.options[ i ] ) );
+			state.onChange( [ ... state.selectedIndex ].map( i => {
+				return state.customKeys ? Object.assign( {}, {
+					[ state.customKeys.key ]: state.options[ i ].key,
+					[ state.customKeys.label ]: state.options[ i ].label
+				} ) : state.options[ i ];
+			} ) );
 		}
 		else {
-			state.onChange( options[ index ] )
+
+			state.onChange( state.customKeys ? Object.assign( {}, {
+				[ state.customKeys.key ]: options[ index ].key,
+				[ state.customKeys.label ]: options[ index ].label
+			} ) : options[ index ] );
+
 		}
 
 	}

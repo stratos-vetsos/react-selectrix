@@ -14,6 +14,7 @@ export default class App extends React.Component {
 	}
 
 	setValue( value ) {
+		console.log( value );
 		this.setState( { value } );
 	}
 
@@ -21,16 +22,16 @@ export default class App extends React.Component {
 
 		let options = [
 			{
-				key: 'a',
-				label: 'Option A'
+				value: 'a',
+				text: 'Option A'
 			},
 			{
-				key: 'b',
-				label: 'Option B'
+				value: 'b',
+				text: 'Option B'
 			},
 			{
-				key: 'c',
-				label: 'Option C'
+				value: 'c',
+				text: 'Option C'
 			},
 			{
 				key: 'd',
@@ -111,6 +112,7 @@ export default class App extends React.Component {
 					checkBoxes={ false }
 					materialize={ true }
 					isDropDown={ true }
+					customKeys={{ key: 'value', label: 'text' }}
 				/>
 			</div>
 		)

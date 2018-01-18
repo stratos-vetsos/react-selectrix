@@ -84,6 +84,12 @@ export const getSelectedIndex = ( selected, options ) => {
 	return false;
 }
 
+export const normalizeOptions = ( options, keySets ) => {
+	[ ... options ].map( o => {
+		
+	} )
+}
+
 export const normalizeSelected = ( selected, options ) => {
 
 	const results = {

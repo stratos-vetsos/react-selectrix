@@ -64,7 +64,13 @@ ReactSelectrix.defaultProps = {
 	selectAllButton: false,
 	checkBoxes: false,
 	materialize: false,
-	isDropDown: false
+	isDropDown: false,
+	customKeys: false,
+	ajax: {
+		active: false,
+		url: '',
+		timeOut: 2000
+	}
 }
 
 ReactSelectrix.propTypes = {
@@ -96,5 +102,9 @@ ReactSelectrix.propTypes = {
 	checkBoxes: PropTypes.bool,
 	materialize: PropTypes.bool,
 	isDropDown: PropTypes.bool,
+	customKeys: PropTypes.oneOfType( [
+		PropTypes.object,
+		PropTypes.bool
+	] ),
 	setupInstance: PropTypes.func.isRequired
 }
