@@ -66,11 +66,7 @@ ReactSelectrix.defaultProps = {
 	materialize: false,
 	isDropDown: false,
 	customKeys: false,
-	ajax: {
-		active: false,
-		url: '',
-		timeOut: 2000
-	}
+	ajax: false
 }
 
 ReactSelectrix.propTypes = {
@@ -103,6 +99,10 @@ ReactSelectrix.propTypes = {
 	materialize: PropTypes.bool,
 	isDropDown: PropTypes.bool,
 	customKeys: PropTypes.oneOfType( [
+		PropTypes.object,
+		PropTypes.bool
+	] ),
+	ajax: PropTypes.oneOfType( [
 		PropTypes.object,
 		PropTypes.bool
 	] ),

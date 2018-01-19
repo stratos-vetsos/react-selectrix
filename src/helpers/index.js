@@ -6,6 +6,8 @@ export const isObject = ( variable ) => (
     variable !== null && typeof variable === 'object' ? true : false
 )
 
+export const isNumeric = ( n ) => !isNaN( parseFloat( n ) ) && isFinite( n );
+
 export const isEmpty = ( variable ) => {
 
     if( variable.constructor === String ) {
@@ -82,12 +84,6 @@ export const getSelectedIndex = ( selected, options ) => {
 		}
 	}
 	return false;
-}
-
-export const normalizeOptions = ( options, keySets ) => {
-	[ ... options ].map( o => {
-		
-	} )
 }
 
 export const normalizeSelected = ( selected, options ) => {

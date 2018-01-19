@@ -40,6 +40,7 @@ const initialState = {
 		queryString: '',
 		resultSet: []
 	},
+	ajax: false,
 	onChange: () => {}
 };
 
@@ -103,6 +104,7 @@ const reducer = ( state = initialState, action ) => {
 				selected: action.selected,
 				selectedIndex: action.selectedIndex,
 				customKeys: action.customKeys,
+				ajax: action.ajax,
 				initialized: true,
 				onChange: action.props.onChange,
 				checkForScroll: action.props.isOpen

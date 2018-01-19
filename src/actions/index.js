@@ -1,4 +1,4 @@
-import { normalizeSelected, isInViewport, isEmpty } from 'helpers';
+import { normalizeSelected, isInViewport, isEmpty, isNumeric } from 'helpers';
 
 export const SETUP_INSTANCE = 'SETUP_INSTANCE';
 export const CLOSE_SELECT = 'CLOSE_SELECT';
@@ -55,6 +55,14 @@ export const setupInstance = ( props ) => {
 	let customKeys = {},
 		options = [ ... props.options ];
 
+	let ajax = {
+		active: false,
+		url: '',
+		timeout: 2000,
+		fetchOnSearch: false,
+		q: ''
+	};
+
 	if( props.customKeys ) {
 		const target = [ 'key', 'label' ];
 		Object.keys( props.customKeys ).forEach( key => {
@@ -78,13 +86,25 @@ export const setupInstance = ( props ) => {
 		} ).filter( x => x );
 	}
 
+	if( props.ajax && props.ajax.hasOwnProperty( 'url' ) && props.ajax.url !== '' ) {
+		ajax.active = true;
+		ajax.url = props.ajax.url;
+		if( props.ajax.hasOwnProperty( 'timeout' ) && isNumeric( props.ajax.timeout ) ) {
+			ajax.timeout = props.ajax.timeout;
+		}
+		if( props.ajax.fetchOnSearch && isString( props.ajax.q )  ) {
+
+		}
+	}
+
 	return {
 		type: SETUP_INSTANCE,
 		props,
 		selected,
 		selectedIndex,
 		options,
-		customKeys
+		customKeys,
+		ajax
 	}
 }
 

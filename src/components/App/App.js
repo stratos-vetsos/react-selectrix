@@ -7,6 +7,7 @@ import MultiHeader from './partials/MultiHeader/';
 export default class App extends React.Component {
 
 	constructor( props ) {
+
 		super( props );
 
 		const methods = [
