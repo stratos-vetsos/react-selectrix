@@ -139,7 +139,7 @@ export default class App extends React.Component {
 
 	render() {
 
-		const { options, settings, isOpen, selected, originalCount } = this.props;
+		const { options, settings, isOpen, selected, originalCount, ajax } = this.props;
 		const className = buildClassName( settings, isOpen, selected );
 
 		return(
@@ -169,6 +169,11 @@ export default class App extends React.Component {
 								</div>
 							}
 							<ul>
+								{ ajax.active && ajax.fetching &&
+									<div className="rs-loader">
+										Loading...
+									</div>
+								}
 								{ ! settings.multiple && settings.placeHolderInside &&
 									<li
 										onClick={ () => this.props.clearSelect() }
@@ -236,5 +241,6 @@ App.propTypes = {
 	unlockMouseFocus: PropTypes.func.isRequired,
 	checkForHover: PropTypes.bool.isRequired,
 	selectAll: PropTypes.func.isRequired,
-	originalCount: PropTypes.number.isRequired
+	originalCount: PropTypes.number.isRequired,
+	ajax: PropTypes.object.isRequired
 }

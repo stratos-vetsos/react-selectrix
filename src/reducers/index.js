@@ -1,4 +1,4 @@
-import { SETUP_INSTANCE, CLOSE_SELECT, OPEN_SELECT, SELECT_ITEM, FOCUS_ITEM, CLEAR_SELECT, FOCUS_SELECT, BLUR_SELECT, SCROLL_SELECT, SEARCH_OPTIONS, UNLOCK_MOUSE_FOCUS, REMOVE_ITEM, CLEAR_SEARCH, CHECK_FOR_SCROLL, SELECT_ALL } from 'actions';
+import { SETUP_INSTANCE, CLOSE_SELECT, OPEN_SELECT, SELECT_ITEM, FOCUS_ITEM, CLEAR_SELECT, FOCUS_SELECT, BLUR_SELECT, SCROLL_SELECT, SEARCH_OPTIONS, UNLOCK_MOUSE_FOCUS, REMOVE_ITEM, CLEAR_SEARCH, CHECK_FOR_SCROLL, SELECT_ALL, FETCHING_OPTIONS, SETUP_AJAX_OPTIONS } from 'actions';
 
 const initialState = {
 	settings: {
@@ -230,6 +230,23 @@ const reducer = ( state = initialState, action ) => {
 				scrolled: Object.assign( {}, state.scrolled, {
 					active: action.active,
 					scroll: action.scroll
+				} )
+			} )
+		}
+
+		case FETCHING_OPTIONS: {
+			return Object.assign( {}, state, {
+				ajax: Object.assign( {}, state.ajax, {
+					fetching: true
+				} )
+			} )
+		}
+
+		case SETUP_AJAX_OPTIONS: {
+			return Object.assign( {}, state, {
+				options: action.options,
+				ajax: Object.assign( {}, state.ajax, {
+					fetching: false
 				} )
 			} )
 		}

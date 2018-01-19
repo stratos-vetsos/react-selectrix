@@ -26,7 +26,8 @@ const mapStateToProps = ( state ) => {
 		mouseEventLocked: state.mouseEventLocked,
 		checkForHover: state.checkForHover,
 		originalCount,
-		height: state.height
+		height: state.height,
+		ajax: state.ajax
 	}
 
 }

@@ -1,4 +1,4 @@
-import { normalizeSelected, isInViewport, isEmpty, isNumeric } from 'helpers';
+import { normalizeSelected, isInViewport, isEmpty, isNumeric, isString } from 'helpers';
 
 export const SETUP_INSTANCE = 'SETUP_INSTANCE';
 export const CLOSE_SELECT = 'CLOSE_SELECT';
@@ -16,6 +16,8 @@ export const REMOVE_ITEM = 'REMOVE_ITEM';
 export const CLEAR_SEARCH = 'CLEAR_SEARCH';
 export const CHECK_FOR_SCROLL = 'CHECK_FOR_SCROLL';
 export const SELECT_ALL = 'SELECT_ALL';
+export const FETCHING_OPTIONS = 'FETCHING_OPTIONS';
+export const SETUP_AJAX_OPTIONS = 'SETUP_AJAX_OPTIONS';
 
 export const removeItem = ( index ) => {
 
@@ -60,7 +62,8 @@ export const setupInstance = ( props ) => {
 		url: '',
 		timeout: 2000,
 		fetchOnSearch: false,
-		q: ''
+		q: '',
+		fetching: false
 	};
 
 	if( props.customKeys ) {
@@ -87,13 +90,15 @@ export const setupInstance = ( props ) => {
 	}
 
 	if( props.ajax && props.ajax.hasOwnProperty( 'url' ) && props.ajax.url !== '' ) {
+		options = [];
 		ajax.active = true;
 		ajax.url = props.ajax.url;
 		if( props.ajax.hasOwnProperty( 'timeout' ) && isNumeric( props.ajax.timeout ) ) {
 			ajax.timeout = props.ajax.timeout;
 		}
-		if( props.ajax.fetchOnSearch && isString( props.ajax.q )  ) {
-
+		if( props.ajax.fetchOnSearch && !isEmpty( props.ajax.q ) && isString( props.ajax.q )  ) {
+			ajax.fetchOnSearch = true;
+			ajax.q = props.ajax.q;
 		}
 	}
 
@@ -131,9 +136,62 @@ export const searchOptions = ( queryString ) => {
 		else {
 			state.search.active ? dispatch( focusItem( 0 ) ) : dispatch( checkForScroll() );
 		}
+	}
+}
 
+export const fetchOptions = () => {
+
+	return( dispatch, getState ) => {
+		dispatch( { type: FETCHING_OPTIONS } );
+		let state = getState();
+		fetch( state.ajax.url )
+		.then( res => {
+			const contentType = res.headers.get( 'content-type' );
+			if( contentType && contentType.includes( 'application/json' ) ) {
+				return res.json();
+			}
+		} )
+		.then( data => dispatch( setupAjaxOptions( data ) ) )
+		.catch( err => console.err( 'not a json' ) )
+	}
+
+}
+
+export const setupAjaxOptions = ( data ) => {
+
+	return( dispatch, getState ) => {
+
+		let state = getState();
+		const key = state.customKeys && state.customKeys.hasOwnProperty( 'key' ) ? state.customKeys.key : 'key';
+		const labelKey = state.customKeys && state.customKeys.hasOwnProperty( 'label' ) ? state.customKeys.label : 'label';
+
+		const options = data.map( d => {
+
+			if( ! d.hasOwnProperty( key ) || ! d.hasOwnProperty( labelKey ) ) {
+				return null;
+			}
+
+			let item = {
+				key: d[ key ],
+				label: d[ labelKey ],
+			};
+
+			if( d.hasOwnProperty( 'disabled' ) && d.disabled ) {
+				item[ 'disabled' ] = true;
+			}
+
+			return item;
+
+		} ).filter( x => x );
+
+
+		dispatch( {
+			type: SETUP_AJAX_OPTIONS,
+			options
+		} )
 
 	}
+
 }
 
 export const toggleSelect = () => {
@@ -145,6 +203,10 @@ export const toggleSelect = () => {
 		} )
 
 		state = getState();
+
+		if( state.ajax.active ) {
+			return dispatch( fetchOptions() );
+		}
 
 		if( state.settings.isDropDown ) {
 			return dispatch( focusItem( 0 ) );

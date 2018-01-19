@@ -112,10 +112,10 @@ export default class App extends React.Component {
 					checkBoxes={ false }
 					materialize={ true }
 					isDropDown={ true }
-					customKeys={ { key: 'value', label: 'text' } }
+					customKeys={ { key: 'id', label: 'name' } }
 					ajax={{
 						url: 'https://jsonplaceholder.typicode.com/users',
-						fetchOnSearch: true,
+						fetchOnSearch: false,
 						q: '/q={q}'
 					}}
 				/>

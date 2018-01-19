@@ -2,6 +2,8 @@ export const isArray = ( variable ) => (
 	variable.constructor === Array ? true : false
 )
 
+export const isString = ( v ) => typeof v === 'string';
+
 export const isObject = ( variable ) => (
     variable !== null && typeof variable === 'object' ? true : false
 )
