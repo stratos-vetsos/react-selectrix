@@ -1,4 +1,4 @@
-import { normalizeSelected, isInViewport, isEmpty, isNumeric, isString } from 'helpers';
+import { normalizeSelected, isInViewport, isEmpty, isNumeric, isString, isArray } from 'helpers';
 
 export const SETUP_INSTANCE = 'SETUP_INSTANCE';
 export const CLOSE_SELECT = 'CLOSE_SELECT';
@@ -18,6 +18,9 @@ export const CHECK_FOR_SCROLL = 'CHECK_FOR_SCROLL';
 export const SELECT_ALL = 'SELECT_ALL';
 export const FETCHING_OPTIONS = 'FETCHING_OPTIONS';
 export const SETUP_AJAX_OPTIONS = 'SETUP_AJAX_OPTIONS';
+export const CLEAR_OPTIONS = 'CLEAR_OPTIONS';
+
+let timeout = null;
 
 export const removeItem = ( index ) => {
 
@@ -53,17 +56,19 @@ export const checkForScroll = () => {
 
 export const setupInstance = ( props ) => {
 
-	const { selected, selectedIndex } = normalizeSelected( props.selected, [ ... props.options ] );
+	let { selected, selectedIndex } = normalizeSelected( props.selected, [ ... props.options ] );
 	let customKeys = {},
 		options = [ ... props.options ];
 
 	let ajax = {
 		active: false,
 		url: '',
-		timeout: 2000,
+		timeout: 200,
 		fetchOnSearch: false,
 		q: '',
-		fetching: false
+		fetching: false,
+		needsUpdate: true,
+		nestedKey: false
 	};
 
 	if( props.customKeys ) {
@@ -90,9 +95,11 @@ export const setupInstance = ( props ) => {
 	}
 
 	if( props.ajax && props.ajax.hasOwnProperty( 'url' ) && props.ajax.url !== '' ) {
-		options = [];
+
+		options = selected = selectedIndex = [];
 		ajax.active = true;
 		ajax.url = props.ajax.url;
+
 		if( props.ajax.hasOwnProperty( 'timeout' ) && isNumeric( props.ajax.timeout ) ) {
 			ajax.timeout = props.ajax.timeout;
 		}
@@ -100,6 +107,10 @@ export const setupInstance = ( props ) => {
 			ajax.fetchOnSearch = true;
 			ajax.q = props.ajax.q;
 		}
+		if( props.ajax.hasOwnProperty( 'nestedKey' ) && isString( props.ajax.nestedKey ) ) {
+			ajax.nestedKey = props.ajax.nestedKey;
+		}
+
 	}
 
 	return {
@@ -113,11 +124,41 @@ export const setupInstance = ( props ) => {
 	}
 }
 
+export const clearOptions = () => {
+	return {
+		type: CLEAR_OPTIONS
+	}
+}
+
 export const searchOptions = ( queryString ) => {
 
 	return ( dispatch, getState ) => {
 
 		if( queryString !== '' ) {
+
+			const state = getState();
+
+			if( state.ajax.active && state.ajax.fetchOnSearch ) {
+				dispatch( clearOptions() );
+				if( timeout ) {
+					clearTimeout( timeout );
+				}
+
+				timeout = setTimeout( () => {
+					dispatch( fetchOptions() )
+					.then( () => {
+						dispatch( findFocusedItem() );
+						dispatch( {
+							type: SEARCH_OPTIONS,
+							queryString
+						} )
+					} )
+					.catch( err => console.error( err ) )
+
+				}, state.ajax.timeout );
+
+			}
+
 			dispatch( {
 				type: SEARCH_OPTIONS,
 				queryString
@@ -142,17 +183,55 @@ export const searchOptions = ( queryString ) => {
 export const fetchOptions = () => {
 
 	return( dispatch, getState ) => {
-		dispatch( { type: FETCHING_OPTIONS } );
-		let state = getState();
-		fetch( state.ajax.url )
-		.then( res => {
-			const contentType = res.headers.get( 'content-type' );
-			if( contentType && contentType.includes( 'application/json' ) ) {
-				return res.json();
+		return new Promise( ( resolve, reject ) => {
+
+			dispatch( { type: FETCHING_OPTIONS } );
+
+			let state = getState();
+			let url = state.ajax.url;
+
+			if( state.ajax.fetchOnSearch ) {
+				url += state.ajax.q.replace( '{q}', state.search.queryString );
 			}
+
+			fetch( url )
+			.then( res => {
+
+				if( ! res.ok ) {
+					throw `Your ajax url ${ state.ajax.url } failed with a status ${ res.status }`;
+				}
+
+				const contentType = res.headers.get( 'content-type' );
+				if( contentType && contentType.includes( 'application/json' ) ) {
+					return res.json();
+				}
+				else {
+					throw `Your ajax url ${ state.ajax.url } response was not a json`;
+				}
+
+			} )
+			.then( data => {
+				if( state.ajax.nestedKey ) {
+					if( ! data.hasOwnProperty( state.ajax.nestedKey ) ) {
+						throw `Invalid nested key on ${ state.ajax.url } response`;
+					}
+					else {
+						data = data[ state.ajax.nestedKey ];
+					}
+				}
+				if( ! isArray( data ) ) {
+					throw `Invalid data type on ${ state.ajax.url } response. Expected array.`;
+				}
+				console.log( data );
+				dispatch( setupAjaxOptions( data ) );
+				resolve( data );
+			} )
+			.catch( err => {
+				reject( err );
+			} )
+
 		} )
-		.then( data => dispatch( setupAjaxOptions( data ) ) )
-		.catch( err => console.err( 'not a json' ) )
+
 	}
 
 }
@@ -162,6 +241,7 @@ export const setupAjaxOptions = ( data ) => {
 	return( dispatch, getState ) => {
 
 		let state = getState();
+
 		const key = state.customKeys && state.customKeys.hasOwnProperty( 'key' ) ? state.customKeys.key : 'key';
 		const labelKey = state.customKeys && state.customKeys.hasOwnProperty( 'label' ) ? state.customKeys.label : 'label';
 
@@ -198,33 +278,13 @@ export const toggleSelect = () => {
 
 	return ( dispatch, getState ) => {
 		let state = getState();
-		dispatch( {
-			type: state.isOpen ? CLOSE_SELECT : OPEN_SELECT
-		} )
+		state.isOpen ? dispatch( closeSelect() ) : dispatch( openSelect() );
+		// dispatch( {
+		// 	type: state.isOpen ? CLOSE_SELECT : OPEN_SELECT
+		// } )
 
 		state = getState();
 
-		if( state.ajax.active ) {
-			return dispatch( fetchOptions() );
-		}
-
-		if( state.settings.isDropDown ) {
-			return dispatch( focusItem( 0 ) );
-		}
-
-		if( state.isOpen && ( state.selected.length === 0 || state.settings.multiple || state.settings.checkBoxes ) && state.focusedItem === null ) {
-			if( state.settings.checkBoxes && ! state.settings.multiple ) {
-				dispatch( focusItem( state.selectedIndex[ 0 ] ) );
-			}
-			else if( state.settings.multiple && state.settings.commaSeperated && state.selected.length > 0 ) {
-				const index = state.settings.lifo ? state.selectedIndex[ 0 ] : state.selectedIndex[ state.selectedIndex.length - 1 ];
-				dispatch( focusItem( index ) );
-			}
-			else {
-				dispatch( moveFocus( 'down' ) );
-			}
-
-		}
 
 	}
 }
@@ -256,7 +316,9 @@ export const selectItem = ( index, isKeyboard = false ) => {
 			options = [ ... options ].filter( o => ! state.selected.includes( o.key ) );
 		}
 
-		const targetIndex = state.search.active ? state.options.findIndex( o => o.key === options[ index ].key ) : index;
+		const targetIndex = state.search.active || ( state.settings.multiple && ! state.settings.commaSeperated && ! state.settings.checkBoxes )
+			? state.options.findIndex( o => o.key === options[ index ].key )
+			: index;
 
 		if( ( state.settings.commaSeperated || state.settings.checkBoxes ) && state.selectedIndex.includes( targetIndex ) ) {
 			return dispatch( removeItem( targetIndex ) );
@@ -317,6 +379,7 @@ export const clearSelect = ( stayOpen = false ) => {
 }
 
 export const openSelect = () => {
+
 	return ( dispatch, getState ) => {
 
 		dispatch( {
@@ -324,12 +387,44 @@ export const openSelect = () => {
 		} );
 
 		const state = getState();
-		if( state.settings.multiple ) {
-			return dispatch( moveFocus( 'down' ) );
+
+		if( state.ajax.active && ! state.ajax.fetchOnSearch && state.ajax.needsUpdate ) {
+			dispatch( fetchOptions() )
+			.then( () => dispatch( findFocusedItem() ) )
+			.catch( err => console.error( err ) )
+			return;
 		}
+
+		dispatch( findFocusedItem() );
+
+	}
+
+}
+
+export const findFocusedItem = () => {
+
+	return ( dispatch, getState ) => {
+
+		const state = getState();
+
 		if( state.settings.isDropDown ) {
 			return dispatch( focusItem( 0 ) );
 		}
+
+		if( state.isOpen && ( state.selected.length === 0 || state.settings.multiple || state.settings.checkBoxes ) && state.focusedItem === null ) {
+			if( state.settings.checkBoxes && ! state.settings.multiple ) {
+				dispatch( focusItem( state.selectedIndex[ 0 ] ) );
+			}
+			else if( state.settings.multiple && state.settings.commaSeperated && state.selected.length > 0 ) {
+				const index = state.settings.lifo ? state.selectedIndex[ 0 ] : state.selectedIndex[ state.selectedIndex.length - 1 ];
+				dispatch( focusItem( index ) );
+			}
+			else {
+				dispatch( moveFocus( 'down' ) );
+			}
+
+		}
+
 	}
 
 }

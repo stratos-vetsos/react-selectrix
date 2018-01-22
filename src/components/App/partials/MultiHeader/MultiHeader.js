@@ -68,7 +68,8 @@ MultiHeader.propTypes = {
 	selectedIndex: PropTypes.array.isRequired,
 	options: PropTypes.array.isRequired,
 	removeItem: PropTypes.func.isRequired,
-	focused: PropTypes.bool.isRequired
+	focused: PropTypes.bool.isRequired,
+	ajax: PropTypes.object.isRequired
 }
 
 export default MultiHeader;

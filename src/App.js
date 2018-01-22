@@ -7,7 +7,7 @@ export default class App extends React.Component {
 		super( props );
 		this.state = {
 			value: '',
-			multiple: false
+			multiple: true
 		};
 
 		this.setValue = this.setValue.bind( this );
@@ -111,12 +111,13 @@ export default class App extends React.Component {
 					height={ 190 }
 					checkBoxes={ false }
 					materialize={ true }
-					isDropDown={ true }
-					customKeys={ { key: 'id', label: 'name' } }
+					isDropDown={ false }
+					customKeys={ { key: 'url', label: 'title' } }
 					ajax={{
-						url: 'https://jsonplaceholder.typicode.com/users',
-						fetchOnSearch: false,
-						q: '/q={q}'
+						url: 'https://newsapi.org/v2/everything?apiKey=9342a9a707ca49c4b2da34e9ea238ea6',
+						fetchOnSearch: true,
+						q: '&q={q}',
+						nestedKey: 'articles'
 					}}
 				/>
 			</div>

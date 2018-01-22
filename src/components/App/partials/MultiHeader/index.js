@@ -10,7 +10,8 @@ const mapStateToProps = ( state ) => {
 		selectedIndex: state.selectedIndex,
 		options: state.options,
 		isOpen: state.isOpen,
-		focused: state.focused
+		focused: state.focused,
+		ajax: state.ajax
 	}
 
 }

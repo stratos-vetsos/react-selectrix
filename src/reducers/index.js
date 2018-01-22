@@ -1,4 +1,4 @@
-import { SETUP_INSTANCE, CLOSE_SELECT, OPEN_SELECT, SELECT_ITEM, FOCUS_ITEM, CLEAR_SELECT, FOCUS_SELECT, BLUR_SELECT, SCROLL_SELECT, SEARCH_OPTIONS, UNLOCK_MOUSE_FOCUS, REMOVE_ITEM, CLEAR_SEARCH, CHECK_FOR_SCROLL, SELECT_ALL, FETCHING_OPTIONS, SETUP_AJAX_OPTIONS } from 'actions';
+import { SETUP_INSTANCE, CLOSE_SELECT, OPEN_SELECT, SELECT_ITEM, FOCUS_ITEM, CLEAR_SELECT, FOCUS_SELECT, BLUR_SELECT, SCROLL_SELECT, SEARCH_OPTIONS, UNLOCK_MOUSE_FOCUS, REMOVE_ITEM, CLEAR_SEARCH, CHECK_FOR_SCROLL, SELECT_ALL, FETCHING_OPTIONS, SETUP_AJAX_OPTIONS, CLEAR_OPTIONS } from 'actions';
 
 const initialState = {
 	settings: {
@@ -118,8 +118,8 @@ const reducer = ( state = initialState, action ) => {
 				search: Object.assign( {}, state.search, {
 					active: true,
 					queryString: action.queryString,
-					resultSet: state.options.filter( o =>
-						o.label.toLowerCase().includes( queryString ) || o.key.toLowerCase().includes( queryString )
+					resultSet: state.ajax.active && state.ajax.fetchOnSearch ? state.options : state.options.filter( o =>
+						o.label.toLowerCase().includes( queryString ) || o.key.toString().toLowerCase().includes( queryString )
 					)
 				} ),
 				isOpen: true,
@@ -199,7 +199,7 @@ const reducer = ( state = initialState, action ) => {
 				isOpen: state.settings.stayOpen,
 				mouseEventLocked: state.settings.stayOpen,
 				checkForHover: state.settings.stayOpen && ! action.isKeyboard,
-				search: state.settings.stayOpen && state.settings.searchable
+				search: ( state.settings.stayOpen || state.ajax.active && state.ajax.fetchOnSearch ) && state.settings.searchable
 					? state.search
 					: initialState.search
 			} )
@@ -246,7 +246,17 @@ const reducer = ( state = initialState, action ) => {
 			return Object.assign( {}, state, {
 				options: action.options,
 				ajax: Object.assign( {}, state.ajax, {
-					fetching: false
+					fetching: false,
+					needsUpdate: false
+				} )
+			} )
+		}
+
+		case CLEAR_OPTIONS: {
+			return Object.assign( {}, state, {
+				options: [],
+				ajax: Object.assign( {}, state.ajax, {
+					fetching: true
 				} )
 			} )
 		}

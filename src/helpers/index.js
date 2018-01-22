@@ -1,6 +1,4 @@
-export const isArray = ( variable ) => (
-	variable.constructor === Array ? true : false
-)
+export const isArray = ( variable ) => variable instanceof Array;
 
 export const isString = ( v ) => typeof v === 'string';
 
