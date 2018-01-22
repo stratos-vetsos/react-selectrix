@@ -2,60 +2,98 @@ import React from 'react';
 import Searchable from './../Header/partials/Searchable/';
 import PropTypes from 'prop-types';
 
-const MultiHeader = ( props ) => {
+export default class MultiHeader extends React.Component {
 
-	const { settings, isOpen, selected, selectedIndex, options, focused } = props;
-
-	let toggleClassName = 'rs-toggle';
-
-	if( focused ) {
-		toggleClassName += ' rs-focused';
+	constructor( props ) {
+		super( props );
 	}
 
-	return (
-		<div
-			className="rs-header"
-			onClick={ ( e ) => {
-				if( settings.searchable ) {
-					isOpen ? e.preventDefault() : props.openSelect();
-				}
-				else {
-					props.toggleSelect();
-				}
-			}}
-		>
-			{ selected.length > 0 &&
-				<span className="rs-reset-wrapper vertical-align">
-					<span className="rs-reset" onClick={ ( e ) => props.clearSelect( e ) }>×</span>
+	getHTML() {
+
+		const { selected, settings, selectedIndex, options, ajax } = this.props;
+		const html = [];
+		let iterable = [];
+
+		if( selected.length === 0 ) {
+			html.push( settings.searchable ? '' : settings.placeholder );
+		}
+		else {
+
+			iterable = ajax.active && ajax.fetchOnSearch ? selected : selectedIndex;
+
+			if( settings.commaSeperated ) {
+				<span className="rs-commaseperated-wrapper">
+					{ selectedIndex.map( s => options[ s ].label ).join( ', ' ) }
 				</span>
 			}
-			{ settings.arrow &&
-				<span className="rs-arrow-wrapper vertical-align">
-					<span className={ `rs-arrow-indicator ${ isOpen ? 'up' : 'down' }` }></span>
-				</span>
-			}
-			<div tabIndex="0" className={ toggleClassName }>
-				{ selected.length === 0
-					? settings.searchable ? '' : settings.placeholder
-					: settings.commaSeperated ? <span className="rs-commaseperated-wrapper">{ selectedIndex.map( s => options[ s ].label ).join( ', ' ) }</span> : selectedIndex.map( s => (
-						<div key={ `selection-${ s }` } className="rs-selection">
+			else {
+				iterable.map( s => {
+					const key = ajax.active && ajax.fetchOnSearch ? s.key : s;
+					const label = ajax.active && ajax.fetchOnSearch ? s.label : options[ s ].label;
+					html.push(
+						<div key={ `selection-${ key }` } className="rs-selection">
 							<span className="rs-remove vertical-align" onClick={ ( e ) => {
 								e.stopPropagation();
-								props.removeItem( s )
+								this.props.removeItem( key )
 							}}>
 								<span>×</span>
 							</span>
-							{ options[ s ].label }
+							{ label }
 						</div>
-					) )
-				}
-				{ settings.searchable &&
-					<Searchable />
-				}
-			</div>
+					)
+				} )
+			}
 
-		</div>
-	)
+		}
+
+		if( settings.searchable ) {
+			html.push( <Searchable /> );
+		}
+
+		return html;
+
+	}
+
+	render() {
+
+		const props = this.props;
+		const { settings, isOpen, selected, focused } = props;
+
+		let toggleClassName = 'rs-toggle';
+
+		if( focused ) {
+			toggleClassName += ' rs-focused';
+		}
+
+		return (
+			<div
+				className="rs-header"
+				onClick={ ( e ) => {
+					if( settings.searchable ) {
+						isOpen ? e.preventDefault() : props.openSelect();
+					}
+					else {
+						props.toggleSelect();
+					}
+				}}
+			>
+				{ selected.length > 0 &&
+					<span className="rs-reset-wrapper vertical-align">
+						<span className="rs-reset" onClick={ ( e ) => props.clearSelect( e ) }>×</span>
+					</span>
+				}
+				{ settings.arrow &&
+					<span className="rs-arrow-wrapper vertical-align">
+						<span className={ `rs-arrow-indicator ${ isOpen ? 'up' : 'down' }` }></span>
+					</span>
+				}
+				<div tabIndex="0" className={ toggleClassName }>
+					{ this.getHTML() }
+				</div>
+
+			</div>
+		)
+	}
 }
 
 MultiHeader.propTypes = {
@@ -71,5 +109,3 @@ MultiHeader.propTypes = {
 	focused: PropTypes.bool.isRequired,
 	ajax: PropTypes.object.isRequired
 }
-
-export default MultiHeader;

@@ -1,4 +1,4 @@
-import { SETUP_INSTANCE, CLOSE_SELECT, OPEN_SELECT, SELECT_ITEM, FOCUS_ITEM, CLEAR_SELECT, FOCUS_SELECT, BLUR_SELECT, SCROLL_SELECT, SEARCH_OPTIONS, UNLOCK_MOUSE_FOCUS, REMOVE_ITEM, CLEAR_SEARCH, CHECK_FOR_SCROLL, SELECT_ALL, FETCHING_OPTIONS, SETUP_AJAX_OPTIONS, CLEAR_OPTIONS } from 'actions';
+import { SETUP_INSTANCE, CLOSE_SELECT, OPEN_SELECT, SELECT_ITEM, FOCUS_ITEM, CLEAR_SELECT, FOCUS_SELECT, BLUR_SELECT, SCROLL_SELECT, SEARCH_OPTIONS, UNLOCK_MOUSE_FOCUS, REMOVE_ITEM, CLEAR_SEARCH, CHECK_FOR_SCROLL, SELECT_ALL, FETCHING_OPTIONS, SETUP_AJAX_OPTIONS, CLEAR_OPTIONS, SELECT_ITEM_ASYNC } from 'actions';
 
 const initialState = {
 	settings: {
@@ -70,8 +70,11 @@ const reducer = ( state = initialState, action ) => {
 		}
 
 		case REMOVE_ITEM: {
+
 			return Object.assign( {}, state, {
-				selected: [ ... state.selected ].filter( k => k !== state.options[ action.index ].key ),
+				selected: state.ajax.active && state.ajax.fetchOnSearch
+				? [ ... state.selected ].filter( k => k.key !== action.index )
+				: [ ... state.selected ].filter( k => k !== state.options[ action.index ].key ),
 				selectedIndex: [ ... state.selectedIndex ].filter( i => i !== action.index ),
 				isOpen: true
 			} )
@@ -186,14 +189,16 @@ const reducer = ( state = initialState, action ) => {
 			return Object.assign( {}, state, {
 				selected: state.settings.multiple
 					? state.settings.lifo
-						? [ ... [ action.item.key ], ... state.selected ]
-						: [ ... state.selected, ... [ action.item.key ] ]
+						? [ ... [ state.ajax.active && state.ajax.fetchOnSearch ? action.item : action.item.key ], ... state.selected ]
+						: [ ... state.selected, ... [ state.ajax.active && state.ajax.fetchOnSearch ? action.item : action.item.key ] ]
 					: [ action.item.key ],
-				selectedIndex: state.settings.multiple
-					? state.settings.lifo
-						? [ ... [ action.index ], ... state.selectedIndex ]
-						: [ ... state.selectedIndex, ... [ action.index ] ]
-					: [ action.index ],
+				selectedIndex: state.ajax.active && state.ajax.fetchOnSearch
+					? []
+					: state.settings.multiple
+						? state.settings.lifo
+							? [ ... [ action.index ], ... state.selectedIndex ]
+							: [ ... state.selectedIndex, ... [ action.index ] ]
+						: [ action.index ],
 				focusedItem: state.settings.stayOpen ? state.focusedItem : null,
 				focusedItemIndex: state.settings.stayOpen ? state.focusedItemIndex : null,
 				isOpen: state.settings.stayOpen,
