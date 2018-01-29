@@ -42,8 +42,10 @@ html {
 		}
 	}
 
-	.rs-toggle-wrapper {
+	.rs-toggle-wrapper, .rs-search-prompt {
 		padding: 10px 15px;
+		font-size: 11px;
+		color: $toggle-all-color;
 	}
 
 	button.rs-toggle-button {
@@ -280,11 +282,15 @@ html {
 	}
 
 	.rs-option {
+
 		cursor: pointer;
 		padding: 11px 20px;
 		color: $font-color;
 		font-size: 14px;
 		user-select: none;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 
 		&.disabled {
 			opacity: 0.6;

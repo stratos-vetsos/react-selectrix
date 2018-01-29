@@ -3,6 +3,7 @@ import { buildClassName } from 'helpers';
 import PropTypes from 'prop-types';
 import Header from './partials/Header/';
 import MultiHeader from './partials/MultiHeader/';
+import SearchPrompt from './partials/SearchPrompt/';
 
 export default class App extends React.Component {
 
@@ -158,16 +159,17 @@ export default class App extends React.Component {
 							ref={ ( ref ) => this.rsBodyRef = ref }
 							style={{ maxHeight: this.props.height }}
 						>
-							{ settings.selectAllButton &&
+							{ settings.selectAllButton && options.length > 0 &&
 								<div className="rs-toggle-wrapper">
 									<button
 										type="button"
 										className="rs-toggle-button"
-										onClick={ () => originalCount > selected.length ? this.props.selectAll() : this.props.clearSelect( false, true ) }>
-										{ originalCount > selected.length ? 'Select All' : 'Deselect All' }
+										onClick={ () => originalCount > selected.length || ajax.fetchOnSearch ? this.props.selectAll() : this.props.clearSelect( false, true ) }>
+										{ originalCount > selected.length || ajax.fetchOnSearch ? 'Select All' : 'Deselect All' }
 									</button>
 								</div>
 							}
+							<SearchPrompt />
 							<ul>
 								{ ajax.active && ajax.fetching &&
 									<div className="rs-loader">

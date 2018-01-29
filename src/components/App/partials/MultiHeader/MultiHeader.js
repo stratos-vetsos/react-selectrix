@@ -47,7 +47,7 @@ export default class MultiHeader extends React.Component {
 		}
 
 		if( settings.searchable ) {
-			html.push( <Searchable /> );
+			html.push( <Searchable key="searchable" /> );
 		}
 
 		return html;

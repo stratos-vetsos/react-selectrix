@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import Searchable from './Searchable';
 import { searchOptions, focusSelect, blurSelect } from 'actions';
+import { debounce } from 'helpers';
 
 const mapStateToProps = ( state ) => {
 

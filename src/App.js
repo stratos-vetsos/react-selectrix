@@ -103,7 +103,7 @@ export default class App extends React.Component {
 					isOpen={ false }
 					searchable={ true }
 					multiple={ this.state.multiple }
-					stayOpen={ false }
+					stayOpen={ true }
 					commaSeperated={ false }
 					singleLine={ true }
 					lifo={ false }
@@ -117,7 +117,8 @@ export default class App extends React.Component {
 						url: 'https://newsapi.org/v2/everything?apiKey=9342a9a707ca49c4b2da34e9ea238ea6',
 						fetchOnSearch: true,
 						q: '&q={q}',
-						nestedKey: 'articles'
+						nestedKey: 'articles',
+						minLength: 3
 					}}
 				/>
 			</div>

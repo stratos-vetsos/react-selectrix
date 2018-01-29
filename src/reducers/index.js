@@ -1,4 +1,4 @@
-import { SETUP_INSTANCE, CLOSE_SELECT, OPEN_SELECT, SELECT_ITEM, FOCUS_ITEM, CLEAR_SELECT, FOCUS_SELECT, BLUR_SELECT, SCROLL_SELECT, SEARCH_OPTIONS, UNLOCK_MOUSE_FOCUS, REMOVE_ITEM, CLEAR_SEARCH, CHECK_FOR_SCROLL, SELECT_ALL, FETCHING_OPTIONS, SETUP_AJAX_OPTIONS, CLEAR_OPTIONS, SELECT_ITEM_ASYNC } from 'actions';
+import { SETUP_INSTANCE, CLOSE_SELECT, OPEN_SELECT, SELECT_ITEM, FOCUS_ITEM, CLEAR_SELECT, FOCUS_SELECT, BLUR_SELECT, SCROLL_SELECT, SEARCH_OPTIONS, UNLOCK_MOUSE_FOCUS, REMOVE_ITEM, CLEAR_SEARCH, CHECK_FOR_SCROLL, SELECT_ALL, FETCHING_OPTIONS, SETUP_AJAX_OPTIONS, CLEAR_OPTIONS, SET_QUERY_STRING } from 'actions';
 
 const initialState = {
 	settings: {
@@ -50,19 +50,21 @@ const reducer = ( state = initialState, action ) => {
 
 		case SELECT_ALL: {
 
+			const selected = state.ajax.fetchOnSearch ? state.selected.map( s => s.key ) : state.selected;
 			let options = state.search.active ? [ ... state.search.resultSet ] : [ ... state.options ]
-			.filter( o => ! state.selected.includes( o.key ) );
+			options = options.filter( o => ! selected.includes( o.key ) );
 
-			let keys = options.map( o => o.key );
+			const keys = [ ... options ].map( o => o.key );
+			let selectedKeys = state.ajax.fetchOnSearch ? options : keys;
 			let indexes = [ ... state.options ].map( ( option, index ) => keys.includes( option.key ) ? index : null ).filter( x => x !== null );
 
 			if( state.settings.lifo ) {
-				keys = keys.reverse();
+				selectedKeys = selectedKeys.reverse();
 				indexes = indexes.reverse();
 			}
 
 			return Object.assign( {}, state, {
-				selected: state.settings.lifo ? [ ... keys, ... state.selected ] : [ ... state.selected, ... keys ],
+				selected: state.settings.lifo ? [ ... selectedKeys, ... state.selected ] : [ ... state.selected, ... selectedKeys ],
 				selectedIndex: state.settings.lifo ? [ ... indexes, ... state.selectedIndex ] : [ ... state.selectedIndex, ... indexes ],
 				isOpen: state.settings.stayOpen
 			} )
@@ -78,6 +80,17 @@ const reducer = ( state = initialState, action ) => {
 				selectedIndex: [ ... state.selectedIndex ].filter( i => i !== action.index ),
 				isOpen: true
 			} )
+		}
+
+		case SET_QUERY_STRING: {
+
+			return Object.assign( {}, state, {
+				search: Object.assign( {}, state.search, {
+					active: true,
+					queryString: action.queryString,
+				} )
+			} )
+
 		}
 
 		case SETUP_INSTANCE: {
@@ -121,7 +134,7 @@ const reducer = ( state = initialState, action ) => {
 				search: Object.assign( {}, state.search, {
 					active: true,
 					queryString: action.queryString,
-					resultSet: state.ajax.active && state.ajax.fetchOnSearch ? state.options : state.options.filter( o =>
+					resultSet: state.ajax.active && state.ajax.fetchOnSearch ? action.queryString.length < state.ajax.minLength ? [] : state.options : state.options.filter( o =>
 						o.label.toLowerCase().includes( queryString ) || o.key.toString().toLowerCase().includes( queryString )
 					)
 				} ),
@@ -141,7 +154,8 @@ const reducer = ( state = initialState, action ) => {
 			return Object.assign( {}, state, {
 				search: initialState.search,
 				focusedItem: null,
-				focusedItemIndex: null
+				focusedItemIndex: null,
+				options: state.ajax.active && state.ajax.fetchOnSearch ? [] : state.options
 			} )
 		}
 
@@ -150,7 +164,8 @@ const reducer = ( state = initialState, action ) => {
 				isOpen: false,
 				focusedItem: null,
 				focusedItemIndex: null,
-				search: initialState.search
+				search: initialState.search,
+				options: state.ajax.fetchOnSearch ? [] : state.options
 			} )
 		}
 
@@ -168,7 +183,8 @@ const reducer = ( state = initialState, action ) => {
 				focusedItem: null,
 				focusedItemIndex: null,
 				isOpen: action.stayOpen,
-				search: action.stayOpen ? state.search : initialState.search
+				search: action.stayOpen ? state.search : initialState.search,
+				options: state.ajax.fetchOnSearch ? [] : state.options
 			} )
 		}
 
@@ -192,9 +208,7 @@ const reducer = ( state = initialState, action ) => {
 						? [ ... [ state.ajax.active && state.ajax.fetchOnSearch ? action.item : action.item.key ], ... state.selected ]
 						: [ ... state.selected, ... [ state.ajax.active && state.ajax.fetchOnSearch ? action.item : action.item.key ] ]
 					: [ action.item.key ],
-				selectedIndex: state.ajax.active && state.ajax.fetchOnSearch
-					? []
-					: state.settings.multiple
+				selectedIndex: state.settings.multiple
 						? state.settings.lifo
 							? [ ... [ action.index ], ... state.selectedIndex ]
 							: [ ... state.selectedIndex, ... [ action.index ] ]
@@ -204,7 +218,7 @@ const reducer = ( state = initialState, action ) => {
 				isOpen: state.settings.stayOpen,
 				mouseEventLocked: state.settings.stayOpen,
 				checkForHover: state.settings.stayOpen && ! action.isKeyboard,
-				search: ( state.settings.stayOpen || state.ajax.active && state.ajax.fetchOnSearch ) && state.settings.searchable
+				search: state.settings.stayOpen && state.settings.searchable
 					? state.search
 					: initialState.search
 			} )
@@ -262,6 +276,9 @@ const reducer = ( state = initialState, action ) => {
 				options: [],
 				ajax: Object.assign( {}, state.ajax, {
 					fetching: true
+				} ),
+				search: Object.assign( {}, state.search, {
+					resultSet: []
 				} )
 			} )
 		}

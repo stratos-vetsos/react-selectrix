@@ -19,6 +19,7 @@ export const SELECT_ALL = 'SELECT_ALL';
 export const FETCHING_OPTIONS = 'FETCHING_OPTIONS';
 export const SETUP_AJAX_OPTIONS = 'SETUP_AJAX_OPTIONS';
 export const CLEAR_OPTIONS = 'CLEAR_OPTIONS';
+export const SET_QUERY_STRING = 'SET_QUERY_STRING';
 
 let timeout = null;
 
@@ -68,7 +69,9 @@ export const setupInstance = ( props ) => {
 		q: '',
 		fetching: false,
 		needsUpdate: true,
-		nestedKey: false
+		nestedKey: false,
+		searchPrompt: true,
+		minLength: 1
 	};
 
 	if( props.customKeys ) {
@@ -103,12 +106,22 @@ export const setupInstance = ( props ) => {
 		if( props.ajax.hasOwnProperty( 'timeout' ) && isNumeric( props.ajax.timeout ) ) {
 			ajax.timeout = props.ajax.timeout;
 		}
+
 		if( props.ajax.fetchOnSearch && !isEmpty( props.ajax.q ) && isString( props.ajax.q )  ) {
 			ajax.fetchOnSearch = true;
 			ajax.q = props.ajax.q;
 		}
+
 		if( props.ajax.hasOwnProperty( 'nestedKey' ) && isString( props.ajax.nestedKey ) ) {
 			ajax.nestedKey = props.ajax.nestedKey;
+		}
+
+		if( props.ajax.hasOwnProperty( 'searchPrompt' ) ) {
+			ajax.searchPrompt = ajax.fetchOnSearch && props.ajax.searchPrompt === false;
+		}
+
+		if( props.ajax.hasOwnProperty( 'minLength' ) && isNumeric( props.ajax.minLength ) && ajax.fetchOnSearch ) {
+			ajax.minLength = props.ajax.minLength;
 		}
 
 	}
@@ -130,6 +143,17 @@ export const clearOptions = () => {
 	}
 }
 
+export const setQueryString = ( queryString ) => {
+	return {
+		type: SET_QUERY_STRING,
+		queryString
+	}
+}
+
+export const ajaxSearch = ( queryString ) => {
+
+}
+
 export const searchOptions = ( queryString ) => {
 
 	return ( dispatch, getState ) => {
@@ -138,24 +162,41 @@ export const searchOptions = ( queryString ) => {
 
 			const state = getState();
 
-			if( state.ajax.active && state.ajax.fetchOnSearch ) {
+			if( state.ajax.active && state.ajax.fetchOnSearch && queryString.length >= state.ajax.minLength ) {
+
 				dispatch( clearOptions() );
+				dispatch( setQueryString( queryString ) );
+
 				if( timeout ) {
 					clearTimeout( timeout );
 				}
 
-				timeout = setTimeout( () => {
-					dispatch( fetchOptions() )
-					.then( () => {
-						dispatch( findFocusedItem() );
-						dispatch( {
-							type: SEARCH_OPTIONS,
-							queryString
-						} )
+				dispatch( fetchOptions() )
+				.then( () => {
+					dispatch( findFocusedItem() );
+					dispatch( {
+						type: SEARCH_OPTIONS,
+						queryString
 					} )
-					.catch( err => console.error( err ) )
+				} )
+				.catch( err => console.error( err ) )
 
-				}, state.ajax.timeout );
+				// TODO: DEBOUNCE.
+
+				// timeout = setTimeout( () => {
+				// 	dispatch( fetchOptions() )
+				// 	.then( () => {
+				// 		dispatch( findFocusedItem() );
+				// 		dispatch( {
+				// 			type: SEARCH_OPTIONS,
+				// 			queryString
+				// 		} )
+				// 	} )
+				// 	.catch( err => console.error( err ) )
+                //
+				// }, state.ajax.timeout );
+
+				return;
 
 			}
 
@@ -163,6 +204,7 @@ export const searchOptions = ( queryString ) => {
 				type: SEARCH_OPTIONS,
 				queryString
 			} )
+
 		}
 		else {
 			dispatch( {
@@ -222,7 +264,6 @@ export const fetchOptions = () => {
 				if( ! isArray( data ) ) {
 					throw `Invalid data type on ${ state.ajax.url } response. Expected array.`;
 				}
-				console.log( data );
 				dispatch( setupAjaxOptions( data ) );
 				resolve( data );
 			} )
@@ -290,6 +331,7 @@ export const toggleSelect = () => {
 }
 
 export const selectAll = () => {
+
 	return ( dispatch, getState ) => {
 		dispatch( {
 			type: SELECT_ALL
@@ -311,9 +353,10 @@ export const selectItem = ( index, isKeyboard = false ) => {
 
 		let state = getState();
 		let options = state.search.active ? state.search.resultSet : state.options;
+		const selected = state.ajax.fetchOnSearch ? state.selected.map( s => s.key ) : state.selected;
 
 		if( state.settings.multiple && ! state.settings.commaSeperated && ! state.settings.checkBoxes ) {
-			options = [ ... options ].filter( o => ! state.selected.includes( o.key ) );
+			options = [ ... options ].filter( o => ! selected.includes( o.key ) );
 		}
 
 		const targetIndex = state.search.active || ( state.settings.multiple && ! state.settings.commaSeperated && ! state.settings.checkBoxes )
@@ -328,7 +371,7 @@ export const selectItem = ( index, isKeyboard = false ) => {
 				dispatch( {
 					type: SELECT_ITEM,
 					item: options[ index ],
-					index: state.search.active || ( state.settings.multiple && state.selected.length ) ? targetIndex : index,
+					index: state.search.active || ( state.settings.multiple && selected.length ) ? targetIndex : index,
 					isKeyboard
 				} )
 			}
@@ -588,9 +631,10 @@ export const focusItem = ( index, mouseEvent ) => {
 
 		const state = getState();
 		let options = state.search.active ? state.search.resultSet : state.options;
+		const selected = state.ajax.fetchOnSearch ? state.selected.map( s => s.key ) : state.selected;
 
 		if( state.settings.multiple && ! state.settings.commaSeperated && ! state.settings.checkBoxes ) {
-			options = [ ... options ].filter( o => ! state.selected.includes( o.key ) );
+			options = [ ... options ].filter( o => ! selected.includes( o.key ) );
 		}
 
 		if( options[ index ] || index === -1 ) {

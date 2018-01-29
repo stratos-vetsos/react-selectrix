@@ -7,15 +7,16 @@ const mapStateToProps = ( state ) => {
 	const queryString = state.search.queryString.toLowerCase();
 
 	let options = ! state.search.active || queryString === '' ? [ ... state.options ] : [ ... state.search.resultSet ];
+	const selected = state.ajax.fetchOnSearch ? state.selected.map( s => s.key ) : state.selected;
 	const originalCount = state.search.active ? options.length : state.options.length;
 
 	if( state.settings.multiple && ! state.settings.commaSeperated && ! state.settings.checkBoxes ) {
-		options = options.filter( o => ! state.selected.includes( o.key ) );
+		options = options.filter( o => ! selected.includes( o.key ) );
 	}
 
     return {
 		settings: state.settings,
-		selected: state.selected,
+		selected,
 		selectedIndex: state.selectedIndex,
 		isOpen: state.isOpen,
 		options,
