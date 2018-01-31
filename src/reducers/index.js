@@ -88,7 +88,12 @@ const reducer = ( state = initialState, action ) => {
 				search: Object.assign( {}, state.search, {
 					active: true,
 					queryString: action.queryString,
-				} )
+					resultSet: []
+				} ),
+				ajax: Object.assign( {}, state.ajax, {
+					fetching: true
+				} ),
+				options: []
 			} )
 
 		}
@@ -267,7 +272,11 @@ const reducer = ( state = initialState, action ) => {
 				ajax: Object.assign( {}, state.ajax, {
 					fetching: false,
 					needsUpdate: false
-				} )
+				} ),
+				search: state.ajax.fetchOnSearch ? Object.assign( {}, state.search, {}, {
+					active: true,
+					resultSet: action.options
+				} ) : state.search
 			} )
 		}
 

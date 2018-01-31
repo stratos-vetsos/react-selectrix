@@ -1,5 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { debounce } from 'helpers';
+
+const onSearch = debounce( ( searchOptions, value ) => {
+	searchOptions( value );
+}, 250 );
 
 export default class Searchable extends React.Component {
 
@@ -11,11 +16,15 @@ export default class Searchable extends React.Component {
 		}
 
 		this.calculateSize = this.calculateSize.bind( this );
+		this.onSearch = this.onSearch.bind( this );
 		this.focus = this.focus.bind( this );
-
 		this.removeFocus = false;
 
 	}
+
+	onSearch = debounce( ( value ) => {
+		this.props.searchOptions( value );
+	}, this.props.ajax.debounce )
 
 	calculateSize( props ) {
 
@@ -103,7 +112,14 @@ export default class Searchable extends React.Component {
 				placeholder={ placeholder }
 				value={ this.props.queryString }
 				onBlur={ this.focus }
-				onChange={ ( e ) => this.props.searchOptions( e.target.value ) }
+				onChange={ e => {
+					const value = e.target.value;
+					if( this.props.ajax.fetchOnSearch ) {
+						this.props.setQueryString( value );
+						return this.onSearch( value );
+					}
+					this.props.searchOptions( value );
+				} }
 				size={ this.state.size }
 			/>
 		)
@@ -123,5 +139,7 @@ Searchable.propTypes = {
 	] ),
 	settings: PropTypes.object.isRequired,
 	isOpen: PropTypes.bool.isRequired,
-	focused: PropTypes.bool.isRequired
+	focused: PropTypes.bool.isRequired,
+	ajax: PropTypes.object.isRequired,
+	setQueryString: PropTypes.func.isRequired
 }

@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
 import Searchable from './Searchable';
-import { searchOptions, focusSelect, blurSelect } from 'actions';
-import { debounce } from 'helpers';
+import { searchOptions, focusSelect, blurSelect, setQueryString } from 'actions';
 
 const mapStateToProps = ( state ) => {
 
@@ -10,7 +9,8 @@ const mapStateToProps = ( state ) => {
 		selected: state.settings.multiple ? state.selected : state.selected.length > 0 ? state.options[ state.selectedIndex ] : null,
 		isOpen: state.isOpen,
 		queryString: state.search.queryString,
-		focused: state.focused
+		focused: state.focused,
+		ajax: state.ajax
 	}
 
 }
@@ -29,6 +29,10 @@ const mapDispatchToProps = ( dispatch ) => {
 
 		blurSelect: () => {
 			dispatch( blurSelect() );
+		},
+
+		setQueryString: ( queryString ) => {
+			dispatch( setQueryString( queryString ) );
 		}
 
     }

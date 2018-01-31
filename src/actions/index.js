@@ -21,8 +21,6 @@ export const SETUP_AJAX_OPTIONS = 'SETUP_AJAX_OPTIONS';
 export const CLEAR_OPTIONS = 'CLEAR_OPTIONS';
 export const SET_QUERY_STRING = 'SET_QUERY_STRING';
 
-let timeout = null;
-
 export const removeItem = ( index ) => {
 
 	return ( dispatch, getState ) => {
@@ -64,7 +62,7 @@ export const setupInstance = ( props ) => {
 	let ajax = {
 		active: false,
 		url: '',
-		timeout: 200,
+		debounce: 200,
 		fetchOnSearch: false,
 		q: '',
 		fetching: false,
@@ -103,8 +101,8 @@ export const setupInstance = ( props ) => {
 		ajax.active = true;
 		ajax.url = props.ajax.url;
 
-		if( props.ajax.hasOwnProperty( 'timeout' ) && isNumeric( props.ajax.timeout ) ) {
-			ajax.timeout = props.ajax.timeout;
+		if( props.ajax.hasOwnProperty( 'debounce' ) && isNumeric( props.ajax.debounce ) ) {
+			ajax.debounce = props.ajax.debounce;
 		}
 
 		if( props.ajax.fetchOnSearch && !isEmpty( props.ajax.q ) && isString( props.ajax.q )  ) {
@@ -150,10 +148,6 @@ export const setQueryString = ( queryString ) => {
 	}
 }
 
-export const ajaxSearch = ( queryString ) => {
-
-}
-
 export const searchOptions = ( queryString ) => {
 
 	return ( dispatch, getState ) => {
@@ -163,41 +157,10 @@ export const searchOptions = ( queryString ) => {
 			const state = getState();
 
 			if( state.ajax.active && state.ajax.fetchOnSearch && queryString.length >= state.ajax.minLength ) {
-
 				dispatch( clearOptions() );
-				dispatch( setQueryString( queryString ) );
-
-				if( timeout ) {
-					clearTimeout( timeout );
-				}
-
-				dispatch( fetchOptions() )
-				.then( () => {
-					dispatch( findFocusedItem() );
-					dispatch( {
-						type: SEARCH_OPTIONS,
-						queryString
-					} )
-				} )
+				return dispatch( fetchOptions() )
+				.then( dispatch( findFocusedItem() ) )
 				.catch( err => console.error( err ) )
-
-				// TODO: DEBOUNCE.
-
-				// timeout = setTimeout( () => {
-				// 	dispatch( fetchOptions() )
-				// 	.then( () => {
-				// 		dispatch( findFocusedItem() );
-				// 		dispatch( {
-				// 			type: SEARCH_OPTIONS,
-				// 			queryString
-				// 		} )
-				// 	} )
-				// 	.catch( err => console.error( err ) )
-                //
-				// }, state.ajax.timeout );
-
-				return;
-
 			}
 
 			dispatch( {
