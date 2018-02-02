@@ -155,6 +155,10 @@ export const searchOptions = ( queryString ) => {
 		if( queryString !== '' ) {
 
 			const state = getState();
+			
+			if( ! state.isOpen ) {
+				return;
+			}
 
 			if( state.ajax.active && state.ajax.fetchOnSearch && queryString.length >= state.ajax.minLength ) {
 				dispatch( clearOptions() );
@@ -190,9 +194,14 @@ export const fetchOptions = () => {
 	return( dispatch, getState ) => {
 		return new Promise( ( resolve, reject ) => {
 
+			let state = getState();
+			if( ! state.isOpen ) {
+				return;
+			}
+
 			dispatch( { type: FETCHING_OPTIONS } );
 
-			let state = getState();
+
 			let url = state.ajax.url;
 
 			if( state.ajax.fetchOnSearch ) {
@@ -245,6 +254,9 @@ export const setupAjaxOptions = ( data ) => {
 	return( dispatch, getState ) => {
 
 		let state = getState();
+		if( ! state.isOpen ) {
+			return;
+		}
 
 		const key = state.customKeys && state.customKeys.hasOwnProperty( 'key' ) ? state.customKeys.key : 'key';
 		const labelKey = state.customKeys && state.customKeys.hasOwnProperty( 'label' ) ? state.customKeys.label : 'label';

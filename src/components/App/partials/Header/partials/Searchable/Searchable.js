@@ -2,10 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { debounce } from 'helpers';
 
-const onSearch = debounce( ( searchOptions, value ) => {
-	searchOptions( value );
-}, 250 );
-
 export default class Searchable extends React.Component {
 
 	constructor( props ) {

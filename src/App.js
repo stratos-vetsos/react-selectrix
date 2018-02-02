@@ -14,7 +14,6 @@ export default class App extends React.Component {
 	}
 
 	setValue( value ) {
-		console.log( value );
 		this.setState( { value } );
 	}
 
@@ -120,6 +119,7 @@ export default class App extends React.Component {
 						nestedKey: 'articles',
 						minLength: 3
 					}}
+					onRender={ () => {} }
 				/>
 			</div>
 		)

@@ -170,7 +170,10 @@ const reducer = ( state = initialState, action ) => {
 				focusedItem: null,
 				focusedItemIndex: null,
 				search: initialState.search,
-				options: state.ajax.fetchOnSearch ? [] : state.options
+				options: state.ajax.fetchOnSearch ? [] : state.options,
+				ajax: Object.assign( {}, state.ajax, {
+					fetching: false
+				} )
 			} )
 		}
 
