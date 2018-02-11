@@ -12,13 +12,4 @@ const mapStateToProps = ( state ) => {
 
 }
 
-const mapDispatchToProps = ( dispatch ) => {
-
-    return {
-
-
-
-    }
-}
-
-export default connect( mapStateToProps, mapDispatchToProps )( SearchPrompt );
+export default connect( mapStateToProps, undefined )( SearchPrompt );

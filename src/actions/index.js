@@ -20,6 +20,34 @@ export const FETCHING_OPTIONS = 'FETCHING_OPTIONS';
 export const SETUP_AJAX_OPTIONS = 'SETUP_AJAX_OPTIONS';
 export const CLEAR_OPTIONS = 'CLEAR_OPTIONS';
 export const SET_QUERY_STRING = 'SET_QUERY_STRING';
+export const CREATE_TAG = 'CREATE_TAG';
+export const FOCUS_TAG = 'FOCUS_TAG';
+
+export const createTag = ( tag ) => {
+	return ( dispatch, getState ) => {
+
+		let state = getState();
+		const tagObj = { key: `tag-${ tag }`, label: tag };
+		const options = [ ... state.options, tagObj ];
+		const resultSet = [ ...state.search.resultSet, tagObj ];
+
+		dispatch( {
+			type: CREATE_TAG,
+			tag,
+			options,
+			resultSet
+		} );
+
+		state = getState();
+		const length = [ ... state.search.resultSet ].filter( o => ! state.selected.includes( o .key ) ).length;
+
+		dispatch( selectItem( length - 1 ) );
+		dispatch( {
+			type: CLEAR_SEARCH
+		} );
+
+	}
+}
 
 export const removeItem = ( index ) => {
 
@@ -105,7 +133,7 @@ export const setupInstance = ( props ) => {
 			ajax.debounce = props.ajax.debounce;
 		}
 
-		if( props.ajax.fetchOnSearch && !isEmpty( props.ajax.q ) && isString( props.ajax.q )  ) {
+		if( props.ajax.fetchOnSearch && ! isEmpty( props.ajax.q ) && isString( props.ajax.q )  ) {
 			ajax.fetchOnSearch = true;
 			ajax.q = props.ajax.q;
 		}
@@ -155,9 +183,9 @@ export const searchOptions = ( queryString ) => {
 		if( queryString !== '' ) {
 
 			const state = getState();
-			
+
 			if( ! state.isOpen ) {
-				return;
+				dispatch( openSelect() );
 			}
 
 			if( state.ajax.active && state.ajax.fetchOnSearch && queryString.length >= state.ajax.minLength ) {
@@ -180,12 +208,23 @@ export const searchOptions = ( queryString ) => {
 		}
 
 		const state = getState();
+
+		if( state.tags.active ) {
+			return dispatch( focusTag() );
+		}
+
 		if( state.settings.multiple ) {
-			dispatch( focusItem( 0 ) );
+			return dispatch( focusItem( 0 ) );
 		}
-		else {
-			state.search.active ? dispatch( focusItem( 0 ) ) : dispatch( checkForScroll() );
-		}
+
+		state.search.active ? dispatch( focusItem( 0 ) ) : dispatch( checkForScroll() );
+
+	}
+}
+
+export const focusTag = () => {
+	return {
+		type: FOCUS_TAG
 	}
 }
 
@@ -490,6 +529,9 @@ export const handleKeyDown = ( e ) => {
 						dispatch( selectItem( state.focusedItemIndex, true ) );
 					}
 					else {
+						if( state.tags.active ) {
+							return dispatch( createTag( state.search.queryString ) );
+						}
 						dispatch( closeSelect() );
 					}
 				}
@@ -508,6 +550,9 @@ export const handleKeyDown = ( e ) => {
 			case 'Left':
 			case 'ArrowUp':
 			case 'ArrowLeft': {
+				if( state.search.active && state.search.queryString.length > 0 && [ 'Left', 'ArrowLeft' ].includes( key ) ) {
+					return;
+				}
 				e.preventDefault();
 				dispatch( moveFocus( 'up' ) );
 				break;
@@ -517,6 +562,9 @@ export const handleKeyDown = ( e ) => {
 			case 'Right':
 			case 'ArrowDown':
 			case 'ArrowRight': {
+				if( state.search.active && state.search.queryString.length > 0 && [ 'Right', 'ArrowRight' ].includes( key ) ) {
+					return;
+				}
 				e.preventDefault();
 				dispatch( moveFocus( 'down' ) );
 				break;
@@ -560,21 +608,31 @@ export const moveFocus = ( direction ) => {
 
 		if( index !== false ) {
 			if( direction === 'up' ) {
-				targetIndex = index > 0 || placeHolderInside ? index - 1 : 0;
+				if( state.tags.active && index === 0 ) {
+					targetIndex = 'tag';
+				}
+				else {
+					targetIndex = index > 0 || placeHolderInside ? index - 1 : 0;
+				}
 			}
 			else {
 				targetIndex = index + 1 < options.length ? index + 1 : options.length - 1;
 			}
 		}
 		else {
-			targetIndex = direction === 'up' ? options.length - 1 : placeHolderInside ? -1 : 0;
+			if( state.tags.active && direction === 'up' ) {
+				targetIndex = 'tag';
+			}
+			else {
+				targetIndex = direction === 'up' ? options.length - 1 : placeHolderInside ? -1 : 0;
+			}
 		}
 
 		if( targetIndex !== false ) {
 			if( state.isOpen === false ) {
 				dispatch( openSelect() );
 			}
-			dispatch( focusItem( targetIndex, false ) );
+			targetIndex === 'tag' ? dispatch( focusTag() ) : dispatch( focusItem( targetIndex, false ) );
 		}
 
 	}

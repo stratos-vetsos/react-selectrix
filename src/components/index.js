@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { setupInstance } from 'actions';
-import ReactSelectrix from './ReactSelectrix';
+import Selectrix from './Selectrix';
 
 const mapStateToProps = ( state, ownProps ) => {
 
@@ -19,4 +19,4 @@ const mapDispatchToProps = ( dispatch ) => {
     }
 }
 
-export default connect( mapStateToProps, mapDispatchToProps )( ReactSelectrix );
+export default connect( mapStateToProps, mapDispatchToProps )( Selectrix );

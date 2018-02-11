@@ -6,7 +6,7 @@ export const isObject = ( variable ) => (
     variable !== null && typeof variable === 'object' ? true : false
 )
 
-export const isNumeric = ( n ) => !isNaN( parseFloat( n ) ) && isFinite( n );
+export const isNumeric = ( n ) => ! isNaN( parseFloat( n ) ) && isFinite( n );
 
 export const isEmpty = ( variable ) => {
 
