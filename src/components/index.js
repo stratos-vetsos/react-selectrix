@@ -14,7 +14,11 @@ const mapDispatchToProps = ( dispatch ) => {
 
         setupInstance: ( props ) => {
             dispatch( setupInstance( props ) );
-        }
+        },
+
+		updateInstance: ( props ) => {
+			dispatch( setupInstance( props, true ) );
+		}
 
     }
 }

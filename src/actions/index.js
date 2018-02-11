@@ -1,6 +1,7 @@
 import { normalizeSelected, isInViewport, isEmpty, isNumeric, isString, isArray } from 'helpers';
 
 export const SETUP_INSTANCE = 'SETUP_INSTANCE';
+export const UPDATE_INSTANCE = 'UPDATE_INSTANCE';
 export const CLOSE_SELECT = 'CLOSE_SELECT';
 export const OPEN_SELECT = 'OPEN_SELECT';
 export const SELECT_ITEM = 'SELECT_ITEM';
@@ -81,86 +82,95 @@ export const checkForScroll = () => {
 	}
 }
 
-export const setupInstance = ( props ) => {
+export const setupInstance = ( props, update = false ) => {
 
-	let { selected, selectedIndex } = normalizeSelected( props.selected, [ ... props.options ] );
-	let customKeys = {},
-		options = [ ... props.options ];
+	return ( dispatch, getState ) => {
 
-	let ajax = {
-		active: false,
-		url: '',
-		debounce: 200,
-		fetchOnSearch: false,
-		q: '',
-		fetching: false,
-		needsUpdate: true,
-		nestedKey: false,
-		searchPrompt: true,
-		minLength: 1
-	};
+		const state = getState();
+		let { selected, selectedIndex } = props.value
+		? normalizeSelected( props.value, [ ... props.options ] )
+		: { selected: state.selected, selectedIndex: state.selectedIndex };
 
-	if( props.customKeys ) {
-		const target = [ 'key', 'label' ];
-		Object.keys( props.customKeys ).forEach( key => {
-			if( target.includes( key ) ) {
-				customKeys[ key ] = props.customKeys[ key ];
+		let customKeys = {},
+			options = [ ... props.options ];
+
+		let ajax = {
+			active: false,
+			url: '',
+			debounce: 200,
+			fetchOnSearch: false,
+			q: '',
+			fetching: false,
+			needsUpdate: true,
+			nestedKey: false,
+			searchPrompt: true,
+			minLength: 1
+		};
+
+		if( props.customKeys ) {
+			const target = [ 'key', 'label' ];
+			Object.keys( props.customKeys ).forEach( key => {
+				if( target.includes( key ) ) {
+					customKeys[ key ] = props.customKeys[ key ];
+				}
+			} );
+		}
+
+		customKeys = isEmpty( customKeys ) ? false : Object.assign( { key: 'key', label: 'label' }, customKeys );
+
+		if( customKeys ) {
+			options = options.map( o => {
+				if( o.hasOwnProperty( customKeys.key ) && o.hasOwnProperty( customKeys.label ) ) {
+					return {
+						key: o[ customKeys.key ],
+						label: o[ customKeys.label ]
+					};
+				}
+				return null;
+			} ).filter( x => x );
+		}
+
+		if( props.ajax && props.ajax.hasOwnProperty( 'url' ) && props.ajax.url !== '' ) {
+
+			options = selected = selectedIndex = [];
+			ajax.active = true;
+			ajax.url = props.ajax.url;
+
+			if( props.ajax.hasOwnProperty( 'debounce' ) && isNumeric( props.ajax.debounce ) ) {
+				ajax.debounce = props.ajax.debounce;
 			}
+
+			if( props.ajax.fetchOnSearch && ! isEmpty( props.ajax.q ) && isString( props.ajax.q )  ) {
+				ajax.fetchOnSearch = true;
+				ajax.q = props.ajax.q;
+			}
+
+			if( props.ajax.hasOwnProperty( 'nestedKey' ) && isString( props.ajax.nestedKey ) ) {
+				ajax.nestedKey = props.ajax.nestedKey;
+			}
+
+			if( props.ajax.hasOwnProperty( 'searchPrompt' ) ) {
+				ajax.searchPrompt = ajax.fetchOnSearch && props.ajax.searchPrompt === false;
+			}
+
+			if( props.ajax.hasOwnProperty( 'minLength' ) && isNumeric( props.ajax.minLength ) && ajax.fetchOnSearch ) {
+				ajax.minLength = props.ajax.minLength;
+			}
+
+		}
+
+		dispatch( {
+			type: update ? UPDATE_INSTANCE : SETUP_INSTANCE,
+			props,
+			selected,
+			selectedIndex,
+			options,
+			customKeys,
+			ajax
 		} );
 	}
 
-	customKeys = isEmpty( customKeys ) ? false : Object.assign( { key: 'key', label: 'label' }, customKeys );
 
-	if( customKeys ) {
-		options = options.map( o => {
-			if( o.hasOwnProperty( customKeys.key ) && o.hasOwnProperty( customKeys.label ) ) {
-				return {
-					key: o[ customKeys.key ],
-					label: o[ customKeys.label ]
-				};
-			}
-			return null;
-		} ).filter( x => x );
-	}
-
-	if( props.ajax && props.ajax.hasOwnProperty( 'url' ) && props.ajax.url !== '' ) {
-
-		options = selected = selectedIndex = [];
-		ajax.active = true;
-		ajax.url = props.ajax.url;
-
-		if( props.ajax.hasOwnProperty( 'debounce' ) && isNumeric( props.ajax.debounce ) ) {
-			ajax.debounce = props.ajax.debounce;
-		}
-
-		if( props.ajax.fetchOnSearch && ! isEmpty( props.ajax.q ) && isString( props.ajax.q )  ) {
-			ajax.fetchOnSearch = true;
-			ajax.q = props.ajax.q;
-		}
-
-		if( props.ajax.hasOwnProperty( 'nestedKey' ) && isString( props.ajax.nestedKey ) ) {
-			ajax.nestedKey = props.ajax.nestedKey;
-		}
-
-		if( props.ajax.hasOwnProperty( 'searchPrompt' ) ) {
-			ajax.searchPrompt = ajax.fetchOnSearch && props.ajax.searchPrompt === false;
-		}
-
-		if( props.ajax.hasOwnProperty( 'minLength' ) && isNumeric( props.ajax.minLength ) && ajax.fetchOnSearch ) {
-			ajax.minLength = props.ajax.minLength;
-		}
-
-	}
-
-	return {
-		type: SETUP_INSTANCE,
-		props,
-		selected,
-		selectedIndex,
-		options,
-		customKeys,
-		ajax
-	}
 }
 
 export const clearOptions = () => {

@@ -4,16 +4,79 @@ import Selectrix from 'components/';
 export default class App extends React.Component {
 
 	constructor( props ) {
+
 		super( props );
+
+		this.changeSetting = this.changeSetting.bind( this );
+
+		this.conditionals = {
+			multiple: [ 'commaSeperated', 'lifo', 'selectAllButton' ],
+			single: [ 'isDropDown', 'placeHolderInside' ]
+		}
+
 		this.state = {
-			value: '',
-			multiple: true,
-			searchable: true
+			value: [],
+			settings: {
+				arrow: true,
+				placeHolderInside: false,
+				disabled: false,
+				isOpen: false,
+				searchable: true,
+				multiple: true,
+				stayOpen: true,
+				commaSeperated: false,
+				singleLine: false,
+				lifo: false,
+				selectAllButton: true,
+				height: 200,
+				checkBoxes: false,
+				materialize: true,
+				isDropDown: false,
+				// customKeys={ { key: 'url', label: 'title' } }
+				// ajax={{
+				// 	url: 'https://newsapi.org/v2/everything?apiKey=9342a9a707ca49c4b2da34e9ea238ea6',
+				// 	fetchOnSearch: true,
+				// 	q: '&q={q}',
+				// 	nestedKey: 'articles',
+				// 	minLength: 3
+				// }}
+				// onRenderOption={ this.onRenderOption }
+				// onRenderSelection={ this.onRenderSelection }
+				tags: true
+			}
 		};
 
 		this.setValue = this.setValue.bind( this );
 		this.onRenderOption = this.onRenderOption.bind( this );
 		this.onRenderSelection = this.onRenderSelection.bind( this );
+	}
+
+	changeSetting( e ) {
+
+		const { type, name } = e.target;
+		const value = type === 'checkbox' ? e.target.checked : e.target.value;
+
+		let settings = Object.assign( {}, this.state.settings );
+		settings [ name ] = value;
+
+		if( name === 'multiple' ) {
+			const target = this.conditionals[ value ? 'single' : 'multiple' ];
+
+			target.map( t => {
+				settings[ t ] = false;
+			} )
+		}
+		else if( this.conditionals.multiple.includes( name ) ) {
+			settings[ 'multiple' ] = true;
+		}
+		else if( this.conditionals.single.includes( name ) ) {
+			settings[ 'multiple' ] = false;
+		}
+
+		this.setState( {
+			settings: Object.assign( {}, this.state.settings, settings )
+		} )
+
 	}
 
 	setValue( value ) {
@@ -34,110 +97,94 @@ export default class App extends React.Component {
 
 	render() {
 
-		let options = [
+		const options = [
 			{
-				key: 'a',
-				label: 'Option A'
+				key: 'javascript',
+				label: 'Javascript'
 			},
 			{
-				key: 'b',
-				label: 'Option B'
+				key: 'go',
+				label: 'Go'
 			},
 			{
-				key: 'c',
-				label: 'Option C'
+				key: 'ruby',
+				label: 'Ruby On Rails'
 			},
 			{
-				key: 'd',
-				label: 'Option D'
+				key: 'dotnet',
+				label: '.NET'
 			},
 			{
-				key: 'e',
-				label: 'Option E'
+				key: 'php',
+				label: 'PHP'
 			},
 			{
-				key: 'f',
-				label: 'Option F'
+				key: 'csharp',
+				label: 'C#'
 			},
 			{
-				key: 'stratos',
-				label: 'Stratos'
+				key: 'java',
+				label: 'JAVA'
 			},
 			{
-				key: 'paok',
-				label: 'PAOK'
-			},
-			{
-				key: 'cron',
-				label: 'Cron'
-			},
-			{
-				key: 'test',
-				label: 'Test'
-			},
-			{
-				key: 'giorgos',
-				label: 'Giorgos'
-			},
-			{
-				key: 'antonis',
-				label: 'Antonis'
-			},
-			{
-				key: 'wxaman',
-				label: 'Wx Aman'
+				key: 'python',
+				label: 'Python'
 			}
 		];
-
 		return(
-			<div>
-				<div>Current value is
-					{ this.state.value !== '' &&
-						<pre>
-							{ this.state.multiple
-								? ` ${ this.state.value.map( v => v.label ).join( ', ' ) }`
-								: this.state.value.label
-							}
-						</pre>
-					}
+			<div className="example">
+				<h2>What is your favourite programming language?</h2>
+				<div className="example-wrapper">
+					<div className="value-wrapper">
+						Selections:
+						{ this.state.value.length > 0
+							? <span>
+								{ this.state.settings.multiple
+									? ` ${ this.state.value.map( v => v.label ).join( ', ' ) }`
+									: this.state.value[ 0 ].label
+								}
+							</span>
+							: <span>None</span>
+						}
+					</div>
+					<Selectrix
+						options={ options }
+						onChange={ this.setValue }
+						{ ... this.state.settings }
+						// customKeys={ { key: 'url', label: 'title' } }
+						// ajax={{
+						// 	url: 'https://newsapi.org/v2/everything?apiKey=9342a9a707ca49c4b2da34e9ea238ea6',
+						// 	fetchOnSearch: true,
+						// 	q: '&q={q}',
+						// 	nestedKey: 'articles',
+						// 	minLength: 3
+						// }}
+						// onRenderOption={ this.onRenderOption }
+						// onRenderSelection={ this.onRenderSelection }
+					/>
+					<div className="settings">
+						<div>
+							<div className="radio-wrapper">
+								<input type="radio" name="mode" />
+								<label>Single</label>
+
+							</div>
+							<div className="radio-wrapper">
+								<input type="radio" name="mode" />
+								<label>Multiple</label>
+							</div>
+						</div>
+						{ Object.entries( this.state.settings ).map( ( [ key, value ] ) => {
+							return(
+								<div key={ `setting-${ key }` } className="form-group">
+									<input type="checkbox" checked={ value } name={ key } onChange={ this.changeSetting } />
+									<label>{ key }</label>
+								</div>
+							)
+						} ) }
+					</div>
 				</div>
-				<select name="" id="">
-					<option value="te">a</option>
-					<option value="t2">2</option>
-				</select>
-				<input type="text" placeholder="test" style={{ marginBottom: 20  }}/>
-				<Selectrix
-					options={ options }
-					onChange={ this.setValue }
-					arrow={ true }
-					placeHolderInside={ false }
-					disabled={ false }
-					className="mister-selectrix"
-					selected={ 'f' }
-					isOpen={ false }
-					searchable={ this.state.searchable }
-					multiple={ this.state.multiple }
-					stayOpen={ false }
-					commaSeperated={ false }
-					singleLine={ true }
-					lifo={ false }
-					selectAllButton={ true }
-					height={ 190 }
-					checkBoxes={ false }
-					materialize={ true }
-					isDropDown={ false }
-					// customKeys={ { key: 'url', label: 'title' } }
-					// ajax={{
-					// 	url: 'https://newsapi.org/v2/everything?apiKey=9342a9a707ca49c4b2da34e9ea238ea6',
-					// 	fetchOnSearch: true,
-					// 	q: '&q={q}',
-					// 	nestedKey: 'articles',
-					// 	minLength: 3
-					// }}
-					// onRenderOption={ this.onRenderOption }
-					// onRenderSelection={ this.onRenderSelection }
-					tags={ true }
-				/>
+
 			</div>
 		)
 

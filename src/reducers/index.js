@@ -1,4 +1,4 @@
-import { SETUP_INSTANCE, CLOSE_SELECT, OPEN_SELECT, SELECT_ITEM, FOCUS_ITEM, CLEAR_SELECT, FOCUS_SELECT, BLUR_SELECT, SCROLL_SELECT, SEARCH_OPTIONS, UNLOCK_MOUSE_FOCUS, REMOVE_ITEM, CLEAR_SEARCH, CHECK_FOR_SCROLL, SELECT_ALL, FETCHING_OPTIONS, SETUP_AJAX_OPTIONS, CLEAR_OPTIONS, SET_QUERY_STRING, CREATE_TAG, FOCUS_TAG } from 'actions';
+import { SETUP_INSTANCE, UPDATE_INSTANCE, CLOSE_SELECT, OPEN_SELECT, SELECT_ITEM, FOCUS_ITEM, CLEAR_SELECT, FOCUS_SELECT, BLUR_SELECT, SCROLL_SELECT, SEARCH_OPTIONS, UNLOCK_MOUSE_FOCUS, REMOVE_ITEM, CLEAR_SEARCH, CHECK_FOR_SCROLL, SELECT_ALL, FETCHING_OPTIONS, SETUP_AJAX_OPTIONS, CLEAR_OPTIONS, SET_QUERY_STRING, CREATE_TAG, FOCUS_TAG } from 'actions';
 
 const initialState = {
 	settings: {
@@ -123,12 +123,13 @@ const reducer = ( state = initialState, action ) => {
 
 		}
 
-		case SETUP_INSTANCE: {
+		case SETUP_INSTANCE:
+		case UPDATE_INSTANCE: {
 
 			return Object.assign( {}, state, {
 				settings: Object.assign( {}, state.settings, {
 					className: action.props.className,
-					placeHolderInside: action.props.placeHolderInside,
+					placeHolderInside: ! action.props.multiple && action.props.placeHolderInside,
 					placeholder: action.props.placeholder,
 					arrow: action.props.arrow,
 					multiple: action.props.multiple,
@@ -146,7 +147,7 @@ const reducer = ( state = initialState, action ) => {
 				} ),
 				options: action.options,
 				height: action.props.height,
-				isOpen: action.props.isOpen,
+				isOpen: action.props.isOpen ? action.props.isOpen : action.type === UPDATE_INSTANCE ? state.isOpen : false,
 				selected: action.selected,
 				selectedIndex: action.selectedIndex,
 				customKeys: action.customKeys,
