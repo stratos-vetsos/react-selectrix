@@ -21,6 +21,19 @@ html {
 }
 
 .settings {
+
+	> div {
+		margin-bottom: 20px;
+	}
+
+	.radio-wrapper {
+		display: inline-block;
+		margin-right: 10px;
+		input {
+			margin-right: 5px;
+		}
+	}
+
 	margin-top: 50px;
 	.form-group {
 		float: left;

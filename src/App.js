@@ -54,7 +54,12 @@ export default class App extends React.Component {
 	changeSetting( e ) {
 
 		const { type, name } = e.target;
-		const value = type === 'checkbox' ? e.target.checked : e.target.value;
+		let value = type === 'checkbox' ? e.target.checked : e.target.value;
+
+		if( type === 'radio' ) {
+
+			value = value === 'false' ? false : true;
+		}
 
 		let settings = Object.assign( {}, this.state.settings );
 		settings [ name ] = value;
@@ -65,6 +70,7 @@ export default class App extends React.Component {
 			target.map( t => {
 				settings[ t ] = false;
 			} )
+
 		}
 		else if( this.conditionals.multiple.includes( name ) ) {
 			settings[ 'multiple' ] = true;
@@ -75,7 +81,7 @@ export default class App extends React.Component {
 
 		this.setState( {
 			settings: Object.assign( {}, this.state.settings, settings )
-		} )
+		}, () => console.log( settings ) )
 
 	}
 
@@ -131,6 +137,9 @@ export default class App extends React.Component {
 				label: 'Python'
 			}
 		];
+
+		const target = this.conditionals[ this.state.settings.multiple ? 'single' : 'multiple' ];
+
 		return(
 			<div className="example">
 				<h2>What is your favourite programming language?</h2>
@@ -165,19 +174,19 @@ export default class App extends React.Component {
 					<div className="settings">
 						<div>
 							<div className="radio-wrapper">
-								<input type="radio" name="mode" />
+								<input type="radio" name="multiple" checked={ ! this.state.settings.multiple } onChange={ this.changeSetting } value={ false } />
 								<label>Single</label>
-
 							</div>
 							<div className="radio-wrapper">
-								<input type="radio" name="mode" />
+								<input type="radio" name="multiple" checked={ this.state.settings.multiple } onChange={ this.changeSetting } value={ true } />
 								<label>Multiple</label>
 							</div>
 						</div>
 						{ Object.entries( this.state.settings ).map( ( [ key, value ] ) => {
+							console.log( target );
 							return(
 								<div key={ `setting-${ key }` } className="form-group">
-									<input type="checkbox" checked={ value } name={ key } onChange={ this.changeSetting } />
+									<input type="checkbox" checked={ value } name={ key } onChange={ this.changeSetting } disabled={ target.includes( key ) } />
 									<label>{ key }</label>
 								</div>
 							)
