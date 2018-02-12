@@ -8,7 +8,7 @@ const mapStateToProps = ( state ) => {
 
 	let options = ! state.search.active || queryString === '' ? [ ... state.options ] : [ ... state.search.resultSet ];
 	const selected = state.ajax.fetchOnSearch ? state.selected.map( s => s.key ) : state.selected;
-	const originalCount = state.search.active ? options.length : state.options.length;
+	const originalCount = state.options.length;
 
 	if( state.settings.multiple && ! state.settings.commaSeperated && ! state.settings.checkBoxes ) {
 		options = options.filter( o => ! selected.includes( o.key ) );
@@ -28,7 +28,9 @@ const mapStateToProps = ( state ) => {
 		checkForHover: state.checkForHover,
 		originalCount,
 		height: state.height,
-		ajax: state.ajax
+		ajax: state.ajax,
+		onRenderOption: state.onRenderOption,
+		tags: state.tags
 	}
 
 }

@@ -8,14 +8,14 @@ export default class MultiHeader extends React.Component {
 		super( props );
 	}
 
-	getHTML() {
+	getJSX() {
 
-		const { selected, settings, selectedIndex, options, ajax } = this.props;
-		const html = [];
+		const { selected, settings, selectedIndex, options, ajax, onRenderSelection } = this.props;
+		const jsx = [];
 		let iterable = [];
 
 		if( selected.length === 0 ) {
-			html.push( settings.searchable ? '' : settings.placeholder );
+			jsx.push( settings.searchable ? '' : settings.placeholder );
 		}
 		else {
 
@@ -30,27 +30,35 @@ export default class MultiHeader extends React.Component {
 				iterable.map( s => {
 					const key = ajax.active && ajax.fetchOnSearch ? s.key : s;
 					const label = ajax.active && ajax.fetchOnSearch ? s.label : options[ s ].label;
-					html.push(
-						<div key={ `selection-${ key }` } className="rs-selection">
-							<span className="rs-remove vertical-align" onClick={ ( e ) => {
-								e.stopPropagation();
-								this.props.removeItem( key )
-							}}>
-								<span>×</span>
-							</span>
-							{ label }
-						</div>
-					)
+					const onClick = ( e ) => {
+						e.stopPropagation();
+						this.props.removeItem( key )
+					};
+
+					if( onRenderSelection !== false ) {
+						const html = onRenderSelection( options[ s ], settings, onClick );
+						if( html ) jsx.push( html );
+					}
+					else {
+						jsx.push(
+							<div key={ `selection-${ key }` } className="rs-selection">
+								<span className="rs-remove vertical-align" onClick={ onClick }>
+									<span>×</span>
+								</span>
+								{ label }
+							</div>
+						)
+					}
 				} )
 			}
 
 		}
 
 		if( settings.searchable ) {
-			html.push( <Searchable key="searchable" /> );
+			jsx.push( <Searchable key="searchable" /> );
 		}
 
-		return html;
+		return jsx;
 
 	}
 
@@ -88,7 +96,7 @@ export default class MultiHeader extends React.Component {
 					</span>
 				}
 				<div tabIndex="0" className={ toggleClassName }>
-					{ this.getHTML() }
+					{ this.getJSX() }
 				</div>
 
 			</div>
@@ -107,5 +115,9 @@ MultiHeader.propTypes = {
 	options: PropTypes.array.isRequired,
 	removeItem: PropTypes.func.isRequired,
 	focused: PropTypes.bool.isRequired,
-	ajax: PropTypes.object.isRequired
+	ajax: PropTypes.object.isRequired,
+	onRenderSelection: PropTypes.oneOfType( [
+		PropTypes.func,
+		PropTypes.bool
+	] )
 }

@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import Header from './partials/Header/';
 import MultiHeader from './partials/MultiHeader/';
 import SearchPrompt from './partials/SearchPrompt/';
+import Tags from './partials/Tags/';
+import NoResults from './partials/NoResults/';
 
 export default class App extends React.Component {
 
@@ -67,7 +69,7 @@ export default class App extends React.Component {
 
 	checkIfHovered() {
 
-		if( ! this.props.settings.stayOpen || ! this.props.checkForHover || this.props.settings.commaSeperated || this.props.settings.checkBoxes || this.props.settings.isDropDown ) {
+		if( ! this.props.settings.stayOpen || ! this.props.checkForHover || this.props.settings.commaSeperated || this.props.settings.checkBoxes || this.props.settings.isDropDown || this.props.tags.focused ) {
 			return;
 		}
 
@@ -98,6 +100,10 @@ export default class App extends React.Component {
 			return;
 		}
 
+		if( this.props.tags.focused ) {
+			return this.props.maybeScroll( this.rsBodyRef, this.tagsRef );
+		}
+
 		if( this.props.focusedItem !== null ) {
 			this.props.maybeScroll( this.rsBodyRef, this[ `option-${ this.props.focusedItemIndex.toString() }` ] );
 		}
@@ -108,7 +114,6 @@ export default class App extends React.Component {
 	}
 
 	componentDidUpdate() {
-
 		this.checkIfHovered();
 		this.maybeScroll();
 
@@ -140,7 +145,7 @@ export default class App extends React.Component {
 
 	render() {
 
-		const { options, settings, isOpen, selected, originalCount, ajax } = this.props;
+		const { options, settings, isOpen, selected, originalCount, ajax, onRenderOption } = this.props;
 		const className = buildClassName( settings, isOpen, selected );
 
 		return(
@@ -159,6 +164,7 @@ export default class App extends React.Component {
 							ref={ ( ref ) => this.rsBodyRef = ref }
 							style={{ maxHeight: this.props.height }}
 						>
+							<Tags extractRef={ ( ref ) => this.tagsRef = ref } />
 							{ settings.selectAllButton && options.length > 0 &&
 								<div className="rs-toggle-wrapper">
 									<button
@@ -176,9 +182,10 @@ export default class App extends React.Component {
 										Loading...
 									</div>
 								}
+								<NoResults options={ options } />
 								{ ! settings.multiple && settings.placeHolderInside &&
 									<li
-										onClick={ () => this.props.clearSelect() }
+										onClick={ this.props.clearSelect }
 										className={ this.buildOptionClassName( { key: 'default' } ) }
 										onMouseEnter={ () => ! this.props.mouseEventLocked ? this.props.focusItem( -1, true ) : '' }
 									>
@@ -186,6 +193,21 @@ export default class App extends React.Component {
 									</li>
 								}
 								{ options.map( ( o, index ) => {
+
+									let jsx = (
+										settings.checkBoxes ?
+											<span className="rs-checkbox-wrapper">
+												<input type="checkbox" checked={ this.props.selected.includes( o.key ) } readOnly />
+												<label>{ o.label }</label>
+											</span> :
+											o.label
+									);
+
+									if( onRenderOption !== false ) {
+										const html = onRenderOption( o, index );
+										if( html ) jsx = html;
+									}
+
 									return(
 										<li
 											ref={ ( ref ) => this[ `option-${ index }` ] = ref }
@@ -198,13 +220,7 @@ export default class App extends React.Component {
 													: settings.stayOpen ? this.props.unlockMouseFocus() : ''
 											} }
 										>
-											{ settings.checkBoxes ?
-												<span className="rs-checkbox-wrapper">
-													<input type="checkbox" checked={ this.props.selected.includes( o.key ) } readOnly />
-													<label>{ o.label }</label>
-												</span> :
-												o.label
-											}
+											{ jsx }
 										</li>
 									)
 								} ) }
@@ -244,5 +260,10 @@ App.propTypes = {
 	checkForHover: PropTypes.bool.isRequired,
 	selectAll: PropTypes.func.isRequired,
 	originalCount: PropTypes.number.isRequired,
-	ajax: PropTypes.object.isRequired
+	ajax: PropTypes.object.isRequired,
+	onRenderOption: PropTypes.oneOfType( [
+		PropTypes.func,
+		PropTypes.bool
+	] ),
+	tags: PropTypes.object.isRequired
 }

@@ -3,7 +3,7 @@ import 'scss/react-selectrix.scss';
 import PropTypes from 'prop-types';
 import App from 'components/App/';
 
-export default class ReactSelectrix extends React.Component {
+export default class Selectrix extends React.Component {
 
 	constructor( props ) {
 
@@ -42,7 +42,7 @@ export default class ReactSelectrix extends React.Component {
 	}
 }
 
-ReactSelectrix.defaultProps = {
+Selectrix.defaultProps = {
 	options: [],
 	height: 190,
 	className: '',
@@ -66,10 +66,13 @@ ReactSelectrix.defaultProps = {
 	materialize: false,
 	isDropDown: false,
 	customKeys: false,
-	ajax: false
+	ajax: false,
+	onRenderOption: false,
+	onRenderSelection: false,
+	tags: false
 }
 
-ReactSelectrix.propTypes = {
+Selectrix.propTypes = {
 	options: PropTypes.array.isRequired,
 	height: PropTypes.oneOfType( [
 		PropTypes.number,
@@ -106,5 +109,14 @@ ReactSelectrix.propTypes = {
 		PropTypes.object,
 		PropTypes.bool
 	] ),
+	onRenderOption: PropTypes.oneOfType( [
+		PropTypes.func,
+		PropTypes.bool
+	] ),
+	onRenderSelection: PropTypes.oneOfType( [
+		PropTypes.func,
+		PropTypes.bool
+	] ),
+	tags: PropTypes.bool,
 	setupInstance: PropTypes.func.isRequired
 }

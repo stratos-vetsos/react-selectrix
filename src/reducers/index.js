@@ -1,4 +1,4 @@
-import { SETUP_INSTANCE, CLOSE_SELECT, OPEN_SELECT, SELECT_ITEM, FOCUS_ITEM, CLEAR_SELECT, FOCUS_SELECT, BLUR_SELECT, SCROLL_SELECT, SEARCH_OPTIONS, UNLOCK_MOUSE_FOCUS, REMOVE_ITEM, CLEAR_SEARCH, CHECK_FOR_SCROLL, SELECT_ALL, FETCHING_OPTIONS, SETUP_AJAX_OPTIONS, CLEAR_OPTIONS, SET_QUERY_STRING } from 'actions';
+import { SETUP_INSTANCE, CLOSE_SELECT, OPEN_SELECT, SELECT_ITEM, FOCUS_ITEM, CLEAR_SELECT, FOCUS_SELECT, BLUR_SELECT, SCROLL_SELECT, SEARCH_OPTIONS, UNLOCK_MOUSE_FOCUS, REMOVE_ITEM, CLEAR_SEARCH, CHECK_FOR_SCROLL, SELECT_ALL, FETCHING_OPTIONS, SETUP_AJAX_OPTIONS, CLEAR_OPTIONS, SET_QUERY_STRING, CREATE_TAG, FOCUS_TAG } from 'actions';
 
 const initialState = {
 	settings: {
@@ -31,6 +31,11 @@ const initialState = {
 	mouseEventLocked: false,
 	checkForScroll: false,
 	checkForHover: false,
+	tags: {
+		enabled: false,
+		active: false,
+		focused: false
+	},
 	scrolled: {
 		active: false,
 		scroll: 0
@@ -47,6 +52,26 @@ const initialState = {
 const reducer = ( state = initialState, action ) => {
 
     switch( action.type ) {
+
+		case FOCUS_TAG: {
+			return Object.assign( {}, state, {
+				tags: Object.assign( {}, state.tags, {
+					focused: true
+				} ),
+				focusedItem: null,
+				focusedItemIndex: null,
+				checkForScroll: true
+			} )
+		}
+
+		case CREATE_TAG: {
+			return Object.assign( {}, state, {
+				options: action.options,
+				search: Object.assign( {}, state.search, {
+					resultSet: action.resultSet
+				} )
+			} )
+		}
 
 		case SELECT_ALL: {
 
@@ -91,7 +116,7 @@ const reducer = ( state = initialState, action ) => {
 					resultSet: []
 				} ),
 				ajax: Object.assign( {}, state.ajax, {
-					fetching: true
+					fetching: action.queryString.length >= state.ajax.minLength
 				} ),
 				options: []
 			} )
@@ -101,7 +126,7 @@ const reducer = ( state = initialState, action ) => {
 		case SETUP_INSTANCE: {
 
 			return Object.assign( {}, state, {
-				settings: Object.assign( {}, state.props, {
+				settings: Object.assign( {}, state.settings, {
 					className: action.props.className,
 					placeHolderInside: action.props.placeHolderInside,
 					placeholder: action.props.placeholder,
@@ -128,7 +153,12 @@ const reducer = ( state = initialState, action ) => {
 				ajax: action.ajax,
 				initialized: true,
 				onChange: action.props.onChange,
-				checkForScroll: action.props.isOpen
+				checkForScroll: action.props.isOpen,
+				onRenderOption: action.props.onRenderOption,
+				onRenderSelection: action.props.onRenderSelection,
+				tags: Object.assign( {}, state.tags, {
+					enabled: action.props.tags
+				} )
 			} );
 		}
 
@@ -145,7 +175,14 @@ const reducer = ( state = initialState, action ) => {
 				} ),
 				isOpen: true,
 				focusedItem: null,
-				focusedItemIndex: null
+				focusedItemIndex: null,
+				tags: Object.assign( {}, state.tags, {
+					enabled: state.tags.enabled,
+					active: state.tags.enabled
+					&& action.queryString.length > 0
+					&& action.queryString.trim()
+					&& state.options.find( o => o.label === action.queryString ) === undefined
+				} )
 			} )
 		}
 
@@ -160,7 +197,11 @@ const reducer = ( state = initialState, action ) => {
 				search: initialState.search,
 				focusedItem: null,
 				focusedItemIndex: null,
-				options: state.ajax.active && state.ajax.fetchOnSearch ? [] : state.options
+				options: state.ajax.active && state.ajax.fetchOnSearch ? [] : state.options,
+				tags: Object.assign( {}, state.tags, {
+					enabled: state.tags.enabled,
+					active: false
+				} )
 			} )
 		}
 
@@ -173,6 +214,10 @@ const reducer = ( state = initialState, action ) => {
 				options: state.ajax.fetchOnSearch ? [] : state.options,
 				ajax: Object.assign( {}, state.ajax, {
 					fetching: false
+				} ),
+				tags: Object.assign( {}, state.tags, {
+					enabled: state.tags.enabled,
+					active: false
 				} )
 			} )
 		}
@@ -192,7 +237,11 @@ const reducer = ( state = initialState, action ) => {
 				focusedItemIndex: null,
 				isOpen: action.stayOpen,
 				search: action.stayOpen ? state.search : initialState.search,
-				options: state.ajax.fetchOnSearch ? [] : state.options
+				options: state.ajax.fetchOnSearch ? [] : state.options,
+				tags: Object.assign( {}, state.tags, {
+					enabled: state.tags.enabled,
+					active: false
+				} )
 			} )
 		}
 
@@ -228,7 +277,11 @@ const reducer = ( state = initialState, action ) => {
 				checkForHover: state.settings.stayOpen && ! action.isKeyboard,
 				search: state.settings.stayOpen && state.settings.searchable
 					? state.search
-					: initialState.search
+					: initialState.search,
+				tags: Object.assign( {}, state.tags, {
+					enabled: state.tags.enabled,
+					active: false
+				} )
 			} )
 		}
 
@@ -239,7 +292,10 @@ const reducer = ( state = initialState, action ) => {
 				focusedItemIndex: action.index,
 				mouseEventLocked: ! action.mouseEvent,
 				checkForScroll: ! action.mouseEvent,
-				checkForHover: false
+				checkForHover: false,
+				tags: Object.assign( {}, state.tags, {
+					focused: false
+				} )
 			} )
 		}
 

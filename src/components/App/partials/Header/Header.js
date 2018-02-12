@@ -4,7 +4,20 @@ import PropTypes from 'prop-types';
 
 const Header = ( props ) => {
 
-	const { settings, isOpen, selected, focused } = props;
+	const { settings, isOpen, selected, focused, onRenderSelection } = props;
+
+	let jsx = (
+		settings.searchable
+			? <Searchable />
+			: <div tabIndex="0" className={ `rs-toggle${ focused ? ' rs-focused' : '' }` }>
+				{ ( selected === null || settings.isDropDown ) ? settings.placeholder : selected.label }
+			</div>
+	);
+
+	if( ! settings.searchable && onRenderSelection !== false ) {
+		const html = onRenderSelection( selected, settings );
+		if( html ) jsx = html;
+	}
 
 	return (
 		<div className="rs-header" onClick={ props.toggleSelect }>
@@ -19,12 +32,7 @@ const Header = ( props ) => {
 					<span className={ `rs-arrow-indicator ${ isOpen ? 'up' : 'down' }` }></span>
 				</span>
 			}
-			{ settings.searchable
-				? <Searchable />
-				: <div tabIndex="0" className={ `rs-toggle${ focused ? ' rs-focused' : '' }` }>
-					{ ( selected === null || settings.isDropDown ) ? settings.placeholder : selected.label }
-				</div>
-			}
+			{ jsx }
 
 		</div>
 	)
@@ -36,7 +44,11 @@ Header.propTypes = {
 	selected: PropTypes.object,
 	toggleSelect: PropTypes.func.isRequired,
 	clearSelect: PropTypes.func.isRequired,
-	focused: PropTypes.bool.isRequired
+	focused: PropTypes.bool.isRequired,
+	onRenderSelection: PropTypes.oneOfType( [
+		PropTypes.func,
+		PropTypes.bool
+	] )
 }
 
 export default Header;
