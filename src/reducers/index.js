@@ -221,8 +221,8 @@ const reducer = ( state = initialState, action ) => {
 							? [ ... [ action.index ], ... state.selectedIndex ]
 							: [ ... state.selectedIndex, ... [ action.index ] ]
 						: [ action.index ],
-				focusedItem: state.settings.stayOpen ? state.focusedItem : null,
-				focusedItemIndex: state.settings.stayOpen ? state.focusedItemIndex : null,
+				focusedItem: state.settings.stayOpen && state.selected.length < state.options.length - 1 ? state.focusedItem : null,
+				focusedItemIndex: state.settings.stayOpen && state.selected.length < state.options.length - 1 ? state.focusedItemIndex : null,
 				isOpen: state.settings.stayOpen,
 				mouseEventLocked: state.settings.stayOpen,
 				checkForHover: state.settings.stayOpen && ! action.isKeyboard,

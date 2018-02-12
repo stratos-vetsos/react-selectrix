@@ -155,7 +155,7 @@ export const searchOptions = ( queryString ) => {
 		if( queryString !== '' ) {
 
 			const state = getState();
-			
+
 			if( ! state.isOpen ) {
 				return;
 			}
@@ -612,7 +612,7 @@ export const focusItem = ( index, mouseEvent ) => {
 			options = [ ... options ].filter( o => ! selected.includes( o.key ) );
 		}
 
-		if( options[ index ] || index === -1 ) {
+		if( options[ index ] || ( index === -1 && state.settings.placeHolderInside ) ) {
 			dispatch( {
 				type: FOCUS_ITEM,
 				item: index !== -1 ? options[ index ] : { key: 'default' },
