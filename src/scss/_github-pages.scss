@@ -44,6 +44,17 @@ html {
 			padding-left: 5px;
 			font-size: 14px;
 		}
+		input[ type="number" ] {
+			width: 50px;
+			font-size: 12px;
+			height: 22px;
+		}
+		input:disabled {
+			+ label {
+				opacity: .5;
+			}
+
+		}
 	}
 }
 

@@ -9,7 +9,7 @@
 .react-selectrix {
 	position: relative;
 
-	* {
+	*, ::after, ::before {
 		box-sizing: border-box;
 	}
 
@@ -146,8 +146,8 @@
 		&.rs-base-commaseperated {
 			&:not(.rs-base-empty) {
 				.rs-toggle {
-					padding: 6px 50px 6px 15px;
-					line-height: 1.75;
+					padding: 7px 50px 7px 15px;
+					line-height: 1.8;
 				}
 			}
 			&.rs-base-singleline {
@@ -166,6 +166,8 @@
 					display: block;
 					padding-right: 10px;
 					max-width: 100%;
+					overflow: hidden;
+					text-overflow: ellipsis;
 				}
 			}
 		}
@@ -187,6 +189,16 @@
 			border: 1px solid $multi-selection-border-color;
 			position: relative;
 			cursor: pointer;
+			max-width: 100%;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			overflow: hidden;
+		}
+
+		&:not(.rs-base-empty) {
+			.rs-selection, .rs-searchable {
+				vertical-align: middle;
+			}
 		}
 
 		.rs-remove {
@@ -421,10 +433,10 @@
 				&:checked {
 					+ label {
 						&:before {
-							top: 2px;
-						    left: 1px;
-						    width: 2px;
-						    height: 6px;
+							top: 1px;
+						    left: 0px;
+						    width: 6px;
+						    height: 10px;
 							border-top: 2px solid transparent;
 							border-left: 2px solid transparent;
 							border-right: 2px solid #fff;
@@ -495,7 +507,7 @@
 
 	&.rs-base-materialize {
 
-		&.rs-base-multiple:not(.rs-base-empty):not(.rs-base-commaseperated) {
+		&.rs-base-multiple:not(.rs-base-empty) {
 			.rs-toggle {
 				padding-left: 0;
 			}

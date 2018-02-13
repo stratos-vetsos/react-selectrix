@@ -10,24 +10,27 @@ export default class MultiHeader extends React.Component {
 
 	getJSX() {
 
-		const { selected, settings, selectedIndex, options, ajax, onRenderSelection } = this.props;
+		const { selected, settings, selectedIndex, options, ajax, onRenderSelection, tags } = this.props;
 		const jsx = [];
 		let iterable = [];
 
 		if( selected.length === 0 ) {
-			jsx.push( settings.searchable ? '' : settings.placeholder );
+			jsx.push( settings.searchable || tags.enabled ? '' : settings.placeholder );
 		}
 		else {
 
 			iterable = ajax.active && ajax.fetchOnSearch ? selected : selectedIndex;
 
 			if( settings.commaSeperated ) {
-				<span className="rs-commaseperated-wrapper">
-					{ selectedIndex.map( s => options[ s ].label ).join( ', ' ) }
-				</span>
+				jsx.push(
+					<span key="commaSeperated" className="rs-commaseperated-wrapper">
+						{ selectedIndex.map( s => options[ s ].label ).join( ', ' ) }
+					</span>
+				)
 			}
 			else {
 				iterable.map( s => {
+
 					const key = ajax.active && ajax.fetchOnSearch ? s.key : s;
 					const label = ajax.active && ajax.fetchOnSearch ? s.label : options[ s ].label;
 					const onClick = ( e ) => {
@@ -54,7 +57,7 @@ export default class MultiHeader extends React.Component {
 
 		}
 
-		if( settings.searchable ) {
+		if( settings.searchable || tags.enabled ) {
 			jsx.push( <Searchable key="searchable" /> );
 		}
 
@@ -119,5 +122,6 @@ MultiHeader.propTypes = {
 	onRenderSelection: PropTypes.oneOfType( [
 		PropTypes.func,
 		PropTypes.bool
-	] )
+	] ),
+	tags: PropTypes.object.isRequired
 }

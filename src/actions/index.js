@@ -23,6 +23,7 @@ export const CLEAR_OPTIONS = 'CLEAR_OPTIONS';
 export const SET_QUERY_STRING = 'SET_QUERY_STRING';
 export const CREATE_TAG = 'CREATE_TAG';
 export const FOCUS_TAG = 'FOCUS_TAG';
+export const SET_TAG = 'SET_TAG';
 
 export const createTag = ( tag ) => {
 	return ( dispatch, getState ) => {
@@ -34,15 +35,18 @@ export const createTag = ( tag ) => {
 
 		dispatch( {
 			type: CREATE_TAG,
-			tag,
+			tag: tagObj,
 			options,
 			resultSet
 		} );
 
 		state = getState();
-		const length = [ ... state.search.resultSet ].filter( o => ! state.selected.includes( o .key ) ).length;
+		let dataSet = [ ... state.settings.searchable ? state.search.resultSet : state.options ];
+		if( state.settings.commaSeperated || state.settings.checkBoxes ) {
+			dataSet = dataSet.filter( o => ! state.selected.includes( o .key ) );
+		}
 
-		dispatch( selectItem( length - 1 ) );
+		dispatch( selectItem( dataSet.length - 1 ) );
 		dispatch( {
 			type: CLEAR_SEARCH
 		} );
@@ -93,6 +97,10 @@ export const setupInstance = ( props, update = false ) => {
 
 		let customKeys = {},
 			options = [ ... props.options ];
+
+		if( update && state.tags.tagSet.length > 0 ) {
+			options = [ ... props.options, ... state.tags.tagSet ];
+		}
 
 		let ajax = {
 			active: false,
@@ -185,6 +193,21 @@ export const setQueryString = ( queryString ) => {
 		queryString
 	}
 }
+
+
+export const setTag = ( queryString ) => {
+	return ( dispatch, getState ) => {
+		if( ! getState().isOpen ) {
+			dispatch( openSelect() );
+		}
+		dispatch( {
+			type: SET_TAG,
+			tag: queryString
+		} );
+		dispatch( focusTag() )
+	}
+}
+
 
 export const searchOptions = ( queryString ) => {
 

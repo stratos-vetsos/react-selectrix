@@ -59,7 +59,6 @@ Selectrix.defaultProps = {
 	onChange: () => {},
 	customScrollbar: false,
 	searchable: true,
-	stayOpen: false,
 	initialized: false,
 	commaSeperated: false,
 	singleLine: false,

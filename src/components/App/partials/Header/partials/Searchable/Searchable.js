@@ -81,7 +81,7 @@ export default class Searchable extends React.Component {
 
 		let className = 'rs-searchable';
 		const multiple = this.props.settings.multiple;
-		const focused = this.props.focused;
+		const { focused, tags } = this.props;
 		let placeholder = '';
 
 		if( multiple ) {
@@ -114,7 +114,7 @@ export default class Searchable extends React.Component {
 						this.props.setQueryString( value );
 						return this.onSearch( value );
 					}
-					this.props.searchOptions( value );
+					this.props.settings.searchable ? this.props.searchOptions( value ) : this.props.setTag( value );
 				} }
 				size={ this.state.size }
 			/>
@@ -137,5 +137,7 @@ Searchable.propTypes = {
 	isOpen: PropTypes.bool.isRequired,
 	focused: PropTypes.bool.isRequired,
 	ajax: PropTypes.object.isRequired,
-	setQueryString: PropTypes.func.isRequired
+	setQueryString: PropTypes.func.isRequired,
+	setTag: PropTypes.func.isRequired,
+	tags: PropTypes.object.isRequired
 }

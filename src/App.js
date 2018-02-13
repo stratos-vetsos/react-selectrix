@@ -54,29 +54,30 @@ export default class App extends React.Component {
 	changeSetting( e ) {
 
 		const { type, name } = e.target;
-		let value = type === 'checkbox' ? e.target.checked : e.target.value;
+		let value = type === 'checkbox' ? e.target.checked : e.target.value,
+			settings = Object.assign( {}, this.state.settings );
 
 		if( type === 'radio' ) {
-
 			value = value === 'false' ? false : true;
 		}
+		else if( name === 'height' ) {
+			value = parseInt( value );
+		}
 
-		let settings = Object.assign( {}, this.state.settings );
-		settings [ name ] = value;
+		settings[ name ] = value;
 
 		if( name === 'multiple' ) {
+
 			const target = this.conditionals[ value ? 'single' : 'multiple' ];
 
 			target.map( t => {
 				settings[ t ] = false;
 			} )
 
-		}
-		else if( this.conditionals.multiple.includes( name ) ) {
-			settings[ 'multiple' ] = true;
-		}
-		else if( this.conditionals.single.includes( name ) ) {
-			settings[ 'multiple' ] = false;
+			if( ! value ) {
+				settings[ 'stayOpen' ] = value;
+			}
+
 		}
 
 		this.setState( {
@@ -117,10 +118,6 @@ export default class App extends React.Component {
 				label: 'Ruby On Rails'
 			},
 			{
-				key: 'dotnet',
-				label: '.NET'
-			},
-			{
 				key: 'php',
 				label: 'PHP'
 			},
@@ -135,6 +132,18 @@ export default class App extends React.Component {
 			{
 				key: 'python',
 				label: 'Python'
+			},
+			{
+				key: 'scala',
+				label: 'Scala'
+			},
+			{
+				key: 'typescript',
+				label: 'Typescript'
+			},
+			{
+				key: 'verylong',
+				label: 'TypescriptTypescriptTypescriptTypescriptTypescriptTypescriptTypescriptTypescriptTypescriptTypescriptTypescriptTypescriptTypescriptTypescriptTypescriptTypescript'
 			}
 		];
 
@@ -142,7 +151,7 @@ export default class App extends React.Component {
 
 		return(
 			<div className="example">
-				<h2>What is your favourite programming language?</h2>
+				<h2>{ `What ${ this.state.settings.multiple ? 'are' : 'is' } your favourite programming language${ this.state.settings.multiple ? 's' : '' }?` }</h2>
 				<div className="example-wrapper">
 					<div className="value-wrapper">
 						Selections:
@@ -183,17 +192,19 @@ export default class App extends React.Component {
 							</div>
 						</div>
 						{ Object.entries( this.state.settings ).map( ( [ key, value ] ) => {
-							console.log( target );
+							if( key === 'multiple' ) return null;
 							return(
 								<div key={ `setting-${ key }` } className="form-group">
-									<input type="checkbox" checked={ value } name={ key } onChange={ this.changeSetting } disabled={ target.includes( key ) } />
+									{ key !== 'height'
+										? <input type="checkbox" checked={ value } name={ key } onChange={ this.changeSetting } disabled={ target.includes( key ) } />
+										: <input type="number" value={ value } min={ 0 } step={ 50 } name={ key } onChange={ this.changeSetting } />
+									}
 									<label>{ key }</label>
 								</div>
 							)
 						} ) }
 					</div>
 				</div>
-
 			</div>
 		)
 
