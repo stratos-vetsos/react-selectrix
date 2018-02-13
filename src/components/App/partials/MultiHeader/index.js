@@ -12,7 +12,8 @@ const mapStateToProps = ( state ) => {
 		isOpen: state.isOpen,
 		focused: state.focused,
 		ajax: state.ajax,
-		onRenderSelection: state.onRenderSelection
+		onRenderSelection: state.onRenderSelection,
+		tags: state.tags
 	}
 
 }

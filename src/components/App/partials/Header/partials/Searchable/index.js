@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import Searchable from './Searchable';
-import { searchOptions, focusSelect, blurSelect, setQueryString } from 'actions';
+import { searchOptions, focusSelect, blurSelect, setQueryString, setTag } from 'actions';
 
 const mapStateToProps = ( state ) => {
 
@@ -10,7 +10,8 @@ const mapStateToProps = ( state ) => {
 		isOpen: state.isOpen,
 		queryString: state.search.queryString,
 		focused: state.focused,
-		ajax: state.ajax
+		ajax: state.ajax,
+		tags: state.tags
 	}
 
 }
@@ -25,6 +26,10 @@ const mapDispatchToProps = ( dispatch ) => {
 
 		focusSelect: () => {
 			dispatch( focusSelect() );
+		},
+
+		setTag: ( queryString ) => {
+			dispatch( setTag( queryString ) );
 		},
 
 		blurSelect: () => {

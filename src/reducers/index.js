@@ -1,4 +1,4 @@
-import { SETUP_INSTANCE, CLOSE_SELECT, OPEN_SELECT, SELECT_ITEM, FOCUS_ITEM, CLEAR_SELECT, FOCUS_SELECT, BLUR_SELECT, SCROLL_SELECT, SEARCH_OPTIONS, UNLOCK_MOUSE_FOCUS, REMOVE_ITEM, CLEAR_SEARCH, CHECK_FOR_SCROLL, SELECT_ALL, FETCHING_OPTIONS, SETUP_AJAX_OPTIONS, CLEAR_OPTIONS, SET_QUERY_STRING, CREATE_TAG, FOCUS_TAG } from 'actions';
+import { SETUP_INSTANCE, UPDATE_INSTANCE, CLOSE_SELECT, OPEN_SELECT, SELECT_ITEM, FOCUS_ITEM, CLEAR_SELECT, FOCUS_SELECT, BLUR_SELECT, SCROLL_SELECT, SEARCH_OPTIONS, UNLOCK_MOUSE_FOCUS, REMOVE_ITEM, CLEAR_SEARCH, CHECK_FOR_SCROLL, SELECT_ALL, FETCHING_OPTIONS, SETUP_AJAX_OPTIONS, CLEAR_OPTIONS, SET_QUERY_STRING, CREATE_TAG, FOCUS_TAG, SET_TAG } from 'actions';
 
 const initialState = {
 	settings: {
@@ -34,7 +34,8 @@ const initialState = {
 	tags: {
 		enabled: false,
 		active: false,
-		focused: false
+		focused: false,
+		tagSet: []
 	},
 	scrolled: {
 		active: false,
@@ -69,6 +70,9 @@ const reducer = ( state = initialState, action ) => {
 				options: action.options,
 				search: Object.assign( {}, state.search, {
 					resultSet: action.resultSet
+				} ),
+				tags: Object.assign( {}, state.tags, {
+					tagSet: [ ... state.tags.tagSet, action.tag ]
 				} )
 			} )
 		}
@@ -123,19 +127,22 @@ const reducer = ( state = initialState, action ) => {
 
 		}
 
-		case SETUP_INSTANCE: {
+		case SETUP_INSTANCE:
+		case UPDATE_INSTANCE: {
 
 			return Object.assign( {}, state, {
 				settings: Object.assign( {}, state.settings, {
 					className: action.props.className,
-					placeHolderInside: action.props.placeHolderInside,
+					placeHolderInside: ! action.props.multiple && action.props.placeHolderInside,
 					placeholder: action.props.placeholder,
 					arrow: action.props.arrow,
 					multiple: action.props.multiple,
 					disabled: action.props.disabled,
 					customScrollbar: action.props.customScrollbar,
 					searchable: action.props.searchable,
-					stayOpen: action.props.stayOpen && ! action.props.isDropDown,
+					stayOpen: action.props.hasOwnProperty( 'stayOpen' )
+					? action.props.stayOpen && ! action.props.isDropDown
+					: action.props.multiple ? true : false,
 					commaSeperated: action.props.multiple && action.props.commaSeperated,
 					singleLine: action.props.multiple && action.props.commaSeperated && action.props.singleLine,
 					lifo: action.props.multiple && action.props.lifo,
@@ -146,7 +153,7 @@ const reducer = ( state = initialState, action ) => {
 				} ),
 				options: action.options,
 				height: action.props.height,
-				isOpen: action.props.isOpen,
+				isOpen: action.props.isOpen ? action.props.isOpen : action.type === UPDATE_INSTANCE ? state.isOpen : false,
 				selected: action.selected,
 				selectedIndex: action.selectedIndex,
 				customKeys: action.customKeys,
@@ -160,6 +167,23 @@ const reducer = ( state = initialState, action ) => {
 					enabled: action.props.tags
 				} )
 			} );
+		}
+
+		case SET_TAG: {
+
+			return Object.assign( {}, state, {
+				tags: Object.assign( {}, state.tags, {
+					enabled: state.tags.enabled,
+					active: state.tags.enabled
+					&& action.tag.length > 0
+					&& action.tag.trim()
+					&& state.options.find( o => o.label === action.tag ) === undefined
+				} ),
+				search: Object.assign( {}, state.search, {
+					queryString: action.tag
+				} )
+			} );
+
 		}
 
 		case SEARCH_OPTIONS: {
