@@ -143,9 +143,21 @@ html {
 		pointer-events: none;
 	}
 
-	&.rs-base-searchable {
+	&.rs-base-searchable, &.rs-base-tags {
 		.rs-header {
 			padding: 0;
+		}
+		.rs-toggle {
+			cursor: text;
+		}
+	}
+
+	&.rs-base-singleline {
+		.rs-toggle {
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			display: block;
 		}
 	}
 
@@ -163,14 +175,7 @@ html {
 					line-height: 1.8;
 				}
 			}
-			&.rs-base-singleline {
-				.rs-commaseperated-wrapper {
-					white-space: nowrap;
-					overflow: hidden;
-					text-overflow: ellipsis;
-					display: block;
-				}
-			}
+
 			&.rs-base-searchable {
 				.rs-toggle {
 					display: flex;
@@ -182,12 +187,6 @@ html {
 					overflow: hidden;
 					text-overflow: ellipsis;
 				}
-			}
-		}
-
-		&.rs-base-searchable {
-			.rs-toggle {
-				cursor: text;
 			}
 		}
 

@@ -47,7 +47,9 @@ const initialState = {
 		resultSet: []
 	},
 	ajax: false,
-	onChange: () => {}
+	onChange: () => {},
+	onOpen: () => {},
+	onClose: () => {}
 };
 
 const reducer = ( state = initialState, action ) => {
@@ -94,8 +96,7 @@ const reducer = ( state = initialState, action ) => {
 
 			return Object.assign( {}, state, {
 				selected: state.settings.lifo ? [ ... selectedKeys, ... state.selected ] : [ ... state.selected, ... selectedKeys ],
-				selectedIndex: state.settings.lifo ? [ ... indexes, ... state.selectedIndex ] : [ ... state.selectedIndex, ... indexes ],
-				isOpen: state.settings.stayOpen
+				selectedIndex: state.settings.lifo ? [ ... indexes, ... state.selectedIndex ] : [ ... state.selectedIndex, ... indexes ]
 			} )
 
 		}
@@ -106,8 +107,7 @@ const reducer = ( state = initialState, action ) => {
 				selected: state.ajax.active && state.ajax.fetchOnSearch
 				? [ ... state.selected ].filter( k => k.key !== action.index )
 				: [ ... state.selected ].filter( k => k !== state.options[ action.index ].key ),
-				selectedIndex: [ ... state.selectedIndex ].filter( i => i !== action.index ),
-				isOpen: true
+				selectedIndex: [ ... state.selectedIndex ].filter( i => i !== action.index )
 			} )
 		}
 
@@ -144,23 +144,25 @@ const reducer = ( state = initialState, action ) => {
 					? action.props.stayOpen && ! action.props.isDropDown
 					: action.props.multiple ? true : false,
 					commaSeperated: action.props.multiple && action.props.commaSeperated,
-					singleLine: action.props.multiple && action.props.commaSeperated && action.props.singleLine,
+					singleLine: action.props.singleLine,
 					lifo: action.props.multiple && action.props.lifo,
 					selectAllButton: action.props.multiple && action.props.selectAllButton,
 					checkBoxes: action.props.checkBoxes,
 					materialize: action.props.materialize,
 					isDropDown: action.props.isDropDown && ! action.props.multiple
 				} ),
-				options: action.options,
+				options: action.type === UPDATE_INSTANCE && state.ajax.active && state.settings.multiple === action.props.multiple ? state.options : action.options,
 				height: action.props.height,
 				isOpen: action.props.isOpen ? action.props.isOpen : action.type === UPDATE_INSTANCE ? state.isOpen : false,
-				selected: action.selected,
-				selectedIndex: action.selectedIndex,
+				selected: action.type === UPDATE_INSTANCE && state.ajax.active && state.settings.multiple === action.props.multiple ? state.selected : action.selected,
+				selectedIndex: action.type === UPDATE_INSTANCE && state.ajax.active && state.settings.multiple === action.props.multiple ? state.selectedIndex : action.selectedIndex,
 				customKeys: action.customKeys,
 				ajax: action.ajax,
 				initialized: true,
 				onChange: action.props.onChange,
-				checkForScroll: action.props.isOpen,
+				onOpen: action.props.onOpen,
+				onClose: action.props.onClose,
+				checkForScroll: action.type === UPDATE_INSTANCE ? state.isOpen : action.props.isOpen,
 				onRenderOption: action.props.onRenderOption,
 				onRenderSelection: action.props.onRenderSelection,
 				tags: Object.assign( {}, state.tags, {
@@ -197,7 +199,6 @@ const reducer = ( state = initialState, action ) => {
 						o.label.toLowerCase().includes( queryString ) || o.key.toString().toLowerCase().includes( queryString )
 					)
 				} ),
-				isOpen: true,
 				focusedItem: null,
 				focusedItemIndex: null,
 				tags: Object.assign( {}, state.tags, {
@@ -235,7 +236,7 @@ const reducer = ( state = initialState, action ) => {
 				focusedItem: null,
 				focusedItemIndex: null,
 				search: initialState.search,
-				options: state.ajax.fetchOnSearch ? [] : state.options,
+				options: state.ajax.fetchOnSearch && state.settings.multiple ? [] : state.options,
 				ajax: Object.assign( {}, state.ajax, {
 					fetching: false
 				} ),
@@ -259,7 +260,6 @@ const reducer = ( state = initialState, action ) => {
 				selectedIndex: [],
 				focusedItem: null,
 				focusedItemIndex: null,
-				isOpen: action.stayOpen,
 				search: action.stayOpen ? state.search : initialState.search,
 				options: state.ajax.fetchOnSearch ? [] : state.options,
 				tags: Object.assign( {}, state.tags, {
@@ -296,7 +296,6 @@ const reducer = ( state = initialState, action ) => {
 						: [ action.index ],
 				focusedItem: state.settings.stayOpen && state.selected.length < state.options.length - 1 ? state.focusedItem : null,
 				focusedItemIndex: state.settings.stayOpen && state.selected.length < state.options.length - 1 ? state.focusedItemIndex : null,
-				isOpen: state.settings.stayOpen,
 				mouseEventLocked: state.settings.stayOpen,
 				checkForHover: state.settings.stayOpen && ! action.isKeyboard,
 				search: state.settings.stayOpen && state.settings.searchable

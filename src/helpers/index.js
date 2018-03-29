@@ -1,28 +1,28 @@
-export const isArray = ( variable ) => variable instanceof Array;
+export const isArray = variable => variable instanceof Array;
 
-export const isString = ( v ) => typeof v === 'string';
+export const isString = v => typeof v === 'string';
 
-export const isObject = ( variable ) => (
-    variable !== null && typeof variable === 'object' ? true : false
-)
+export const isObject = variable => variable !== null && typeof variable === 'object' && ! Array.isArray( variable )
 
-export const isNumeric = ( n ) => ! isNaN( parseFloat( n ) ) && isFinite( n );
+export const isNumeric = n => ! isNaN( parseFloat( n ) ) && isFinite( n );
 
-export const isEmpty = ( variable ) => {
+export const isEmpty = variable => {
 
     if( variable.constructor === String ) {
         return variable === '' ? true : false;
     }
-    else if( variable.constructor === Object ) {
+    else if( variable.constructor === Object && ! Array.isArray( variable ) ) {
         return Object.keys( variable ).length === 0 ? true : false;
     }
     else if( variable.constructor === Array ) {
         return variable.length === 0 ? true : false;
     }
-    throw 'Incorrect variable type. Use object or array';
+
+	return false;
+
 }
 
-export const buildClassName = ( props, isOpen, selected ) => {
+export const buildClassName = ( props, isOpen, selected, tags ) => {
 
 	const targetProps = [
 		'disabled',
@@ -34,7 +34,8 @@ export const buildClassName = ( props, isOpen, selected ) => {
 		'commaSeperated',
 		'singleLine',
 		'checkBoxes',
-		'materialize'
+		'materialize',
+		'tags'
 	];
 
 	let className = '';
@@ -51,6 +52,10 @@ export const buildClassName = ( props, isOpen, selected ) => {
 
 	if( selected.length === 0 ) {
 		className += 'rs-base-empty ';
+	}
+
+	if( tags.enabled ) {
+		className += 'rs-base-tags ';
 	}
 
 	if( props.className !== '' ) {

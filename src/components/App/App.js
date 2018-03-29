@@ -145,8 +145,8 @@ export default class App extends React.Component {
 
 	render() {
 
-		const { options, settings, isOpen, selected, originalCount, ajax, onRenderOption } = this.props;
-		const className = buildClassName( settings, isOpen, selected );
+		const { options, settings, isOpen, selected, originalCount, ajax, onRenderOption, tags, queryString } = this.props;
+		const className = buildClassName( settings, isOpen, selected, tags );
 
 		return(
 
@@ -183,7 +183,7 @@ export default class App extends React.Component {
 									</div>
 								}
 								<NoResults options={ options } />
-								{ ! settings.multiple && settings.placeHolderInside &&
+								{ ! settings.multiple && settings.placeHolderInside && ! ajax.fetching && ajax.minLength <= queryString &&
 									<li
 										onClick={ this.props.clearSelect }
 										className={ this.buildOptionClassName( { key: 'default' } ) }
@@ -228,7 +228,6 @@ export default class App extends React.Component {
 						</div>
 					}
 				</div>
-
 			</div>
 		)
 	}
@@ -265,5 +264,6 @@ App.propTypes = {
 		PropTypes.func,
 		PropTypes.bool
 	] ),
-	tags: PropTypes.object.isRequired
+	tags: PropTypes.object.isRequired,
+	queryString: PropTypes.string.isRequired
 }

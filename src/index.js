@@ -1,6 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
+import App from 'components/';
 import { createStore, applyMiddleware } from 'redux';
 import { AppContainer } from 'react-hot-loader';
 import { createLogger } from 'redux-logger';
@@ -9,34 +8,31 @@ import thunkMiddleware from 'redux-thunk';
 import reducer from 'reducers';
 
 const loggerMiddleware = createLogger();
-const store = createStore(
-    reducer,
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
-    applyMiddleware(
-        thunkMiddleware,
-        loggerMiddleware
-    )
-);
 
-const elRoot = document.getElementById( 'root' );
+const ReduxStore = ( ownProps ) => {
 
-const ReduxStore = () => (
-	<Provider store={ store }>
-		<App />
-	</Provider>
-);
+	const store = createStore(
+		reducer,
+		window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+		applyMiddleware(
+			thunkMiddleware,
+			loggerMiddleware
+		)
+	);
+
+	return(
+		<Provider store={ store }>
+			<App { ...ownProps } />
+		</Provider>
+	);
+}
 
 const render = () => {
-	ReactDOM.render(
+	return(
 		<AppContainer>
 			<ReduxStore />
-		</AppContainer>,
-		elRoot
+		</AppContainer>
 	)
 }
 
-render();
-
-if( module.hot ) {
-    module.hot.accept( () => render() );
-}
+export default ReduxStore;

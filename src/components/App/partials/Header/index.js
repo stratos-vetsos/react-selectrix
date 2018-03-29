@@ -9,7 +9,8 @@ const mapStateToProps = ( state ) => {
 		selected: state.selected.length > 0 ? state.options[ state.selectedIndex ] : null,
 		isOpen: state.isOpen,
 		focused: state.focused,
-		onRenderSelection: state.onRenderSelection
+		onRenderSelection: state.onRenderSelection,
+		tags: state.tags
 	}
 
 }
