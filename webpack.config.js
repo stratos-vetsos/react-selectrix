@@ -1,5 +1,4 @@
 const path = require( 'path' );
-const CommonsChunkPlugin = require( 'webpack/lib/optimize/CommonsChunkPlugin' );
 const webpack = require( 'webpack' );
 
 module.exports = {
@@ -11,7 +10,7 @@ module.exports = {
             'react-hot-loader/patch',
             'webpack-dev-server/client?http://localhost:3010',
             'webpack/hot/only-dev-server',
-            './src/index'
+            './src/gh-pages'
         ]
     },
 

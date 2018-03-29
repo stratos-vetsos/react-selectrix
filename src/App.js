@@ -1,5 +1,11 @@
 import React from 'react';
-import Selectrix from 'components/';
+import Modal from 'react-modal';
+import defaults from 'dummy/defaults';
+import { modalStyles } from 'dummy/dummy-data';
+import BasicExample from 'examples/BasicExample';
+import AjaxExample from 'examples/AjaxExample';
+import AjaxSearchExample from 'examples/AjaxSearchExample';
+import { isObject, isString, isArray } from 'helpers';
 
 export default class App extends React.Component {
 
@@ -7,87 +13,101 @@ export default class App extends React.Component {
 
 		super( props );
 
-		this.changeSetting = this.changeSetting.bind( this );
-
-		this.conditionals = {
-			multiple: [ 'commaSeperated', 'lifo', 'selectAllButton' ],
-			single: [ 'isDropDown', 'placeHolderInside' ]
-		}
+		[ 'onRenderOption',
+		'onRenderSelection',
+		'getSource',
+		'buildComponentSource',
+		'handleBodyClick',
+		'closeModal',
+		'handleKeyDown',
+		'copyCode' ]
+		.forEach( fn => this[ fn ] = this[ fn ].bind( this ) );
 
 		this.state = {
-			value: [],
-			settings: {
-				arrow: true,
-				placeHolderInside: false,
-				disabled: false,
-				isOpen: false,
-				searchable: true,
-				multiple: true,
-				stayOpen: true,
-				commaSeperated: false,
-				singleLine: false,
-				lifo: false,
-				selectAllButton: true,
-				height: 200,
-				checkBoxes: false,
-				materialize: true,
-				isDropDown: false,
-				// customKeys={ { key: 'url', label: 'title' } }
-				// ajax={{
-				// 	url: 'https://newsapi.org/v2/everything?apiKey=9342a9a707ca49c4b2da34e9ea238ea6',
-				// 	fetchOnSearch: true,
-				// 	q: '&q={q}',
-				// 	nestedKey: 'articles',
-				// 	minLength: 3
-				// }}
-				// onRenderOption={ this.onRenderOption }
-				// onRenderSelection={ this.onRenderSelection }
-				tags: true
-			}
-		};
+			modalIsOpen: false,
+			copied: false,
+			src: ''
+		}
 
-		this.setValue = this.setValue.bind( this );
-		this.onRenderOption = this.onRenderOption.bind( this );
-		this.onRenderSelection = this.onRenderSelection.bind( this );
 	}
 
-	changeSetting( e ) {
+	componentWillMount() {
+		document.body.addEventListener( 'click', this.handleBodyClick );
+		document.body.addEventListener( 'keydown', this.handleKeyDown );
+	}
 
-		const { type, name } = e.target;
-		let value = type === 'checkbox' ? e.target.checked : e.target.value,
-			settings = Object.assign( {}, this.state.settings );
+	componentWillUnmount() {
+		document.body.removeEventListener( 'click', this.handleBodyClick );
+		document.body.removeEventListener( 'keydown', this.handleKeyDown );
+	}
 
-		if( type === 'radio' ) {
-			value = value === 'false' ? false : true;
-		}
-		else if( name === 'height' ) {
-			value = parseInt( value );
-		}
-
-		settings[ name ] = value;
-
-		if( name === 'multiple' ) {
-
-			const target = this.conditionals[ value ? 'single' : 'multiple' ];
-
-			target.map( t => {
-				settings[ t ] = false;
-			} )
-
-			if( ! value ) {
-				settings[ 'stayOpen' ] = value;
+	handleBodyClick( e ) {
+		if( this.state.modalIsOpen ) {
+			if( this.modalRef && ! this.modalRef.contains( e.target ) ) {
+				this.setState( {
+					modalIsOpen: false
+				} )
 			}
-
 		}
+	}
+
+	closeModal() {
+		this.setState( { modalIsOpen: false } );
+	}
+
+	handleKeyDown( e ) {
+		if( e.key === 'Escape' && this.state.modalIsOpen ) {
+			this.closeModal();
+		}
+	}
+
+	getSource( activeSettings ) {
 
 		this.setState( {
-			settings: Object.assign( {}, this.state.settings, settings )
-		}, () => console.log( settings ) )
+			modalIsOpen: true,
+			src: this.buildComponentSource( activeSettings )
+		} )
 
 	}
 
-	setValue( value ) {
-		this.setState( { value } );
+	buildComponentSource( activeSettings ) {
+		let options = '';
+		for( let [ key, value ] of Object.entries( activeSettings ) ) {
+			if( value !== defaults[ key ] ) {
+				if( isObject( value ) ) {
+					options += `\n\t${ key }={{`;
+					for( let [ nkey, nvalue ] of Object.entries( value ) ) {
+						if( isString( nvalue ) ) {
+							nvalue = `"${ nvalue }"`;
+						}
+						options += `\n\t\t${ nkey }: ${ nvalue },`;
+					}
+					options = options.slice( 0, -1 );
+					options += '\n\t}}';
+				}
+				else if( isArray( value ) ) {
+					options += `\n\t${ key }={[`;
+					for( let nvalue of value ) {
+						options += `\n\t\t{`;
+						for( let [ nnkey, nnvalue ] of Object.entries( nvalue ) ) {
+
+							if( isString( nnvalue ) ) {
+								nnvalue = `"${ nnvalue }"`;
+							}
+							options += `\n\t\t\t${ nnkey }: ${ nnvalue },`;
+						}
+						options = options.slice( 0, -1 );
+						options += '\n\t\t},';
+					}
+					options = options.slice( 0, -1 );
+					options += '\n\t]}';
+				}
+				else {
+					options += `\n\t${ key }={${ value }}`;
+				}
+			}
+		}
+		return `<Selectrix ${ options } \n/>`;
 	}
 
 	onRenderOption( option, index ) {
@@ -102,109 +122,57 @@ export default class App extends React.Component {
 		)
 	}
 
+	copyCode() {
+
+		const selection = window.getSelection();
+		const range = document.createRange();
+		range.selectNodeContents( this.srcRef );
+		selection.removeAllRanges();
+		selection.addRange( range );
+		try {
+			document.execCommand( 'copy' );
+			selection.removeAllRanges();
+			this.setState( { copied: true },
+				() => setTimeout( () => this.setState( { copied: false } ), 1400 )
+			)
+		} catch( e ) {
+			console.error( e );
+		}
+	}
+
 	render() {
 
-		const options = [
-			{
-				key: 'javascript',
-				label: 'Javascript'
-			},
-			{
-				key: 'go',
-				label: 'Go'
-			},
-			{
-				key: 'ruby',
-				label: 'Ruby On Rails'
-			},
-			{
-				key: 'php',
-				label: 'PHP'
-			},
-			{
-				key: 'csharp',
-				label: 'C#'
-			},
-			{
-				key: 'java',
-				label: 'JAVA'
-			},
-			{
-				key: 'python',
-				label: 'Python'
-			},
-			{
-				key: 'scala',
-				label: 'Scala'
-			},
-			{
-				key: 'typescript',
-				label: 'Typescript'
-			},
-			{
-				key: 'verylong',
-				label: 'TypescriptTypescriptTypescriptTypescriptTypescriptTypescriptTypescriptTypescriptTypescriptTypescriptTypescriptTypescriptTypescriptTypescriptTypescriptTypescript'
-			}
-		];
-
-		const target = this.conditionals[ this.state.settings.multiple ? 'single' : 'multiple' ];
-
 		return(
-			<div className="example">
-				<h2>{ `What ${ this.state.settings.multiple ? 'are' : 'is' } your favourite programming language${ this.state.settings.multiple ? 's' : '' }?` }</h2>
-				<div className="example-wrapper">
-					<div className="value-wrapper">
-						Selections:
-						{ this.state.value.length > 0
-							? <span>
-								{ this.state.settings.multiple
-									? ` ${ this.state.value.map( v => v.label ).join( ', ' ) }`
-									: this.state.value[ 0 ].label
-								}
-							</span>
-							: <span>None</span>
-						}
-					</div>
-					<Selectrix
-						options={ options }
-						onChange={ this.setValue }
-						{ ... this.state.settings }
-						// customKeys={ { key: 'url', label: 'title' } }
-						// ajax={{
-						// 	url: 'https://newsapi.org/v2/everything?apiKey=9342a9a707ca49c4b2da34e9ea238ea6',
-						// 	fetchOnSearch: true,
-						// 	q: '&q={q}',
-						// 	nestedKey: 'articles',
-						// 	minLength: 3
-						// }}
-						// onRenderOption={ this.onRenderOption }
-						// onRenderSelection={ this.onRenderSelection }
-					/>
-					<div className="settings">
-						<div>
-							<div className="radio-wrapper">
-								<input type="radio" name="multiple" checked={ ! this.state.settings.multiple } onChange={ this.changeSetting } value={ false } />
-								<label>Single</label>
-							</div>
-							<div className="radio-wrapper">
-								<input type="radio" name="multiple" checked={ this.state.settings.multiple } onChange={ this.changeSetting } value={ true } />
-								<label>Multiple</label>
-							</div>
+			<div className="examples">
+				<Modal
+					isOpen={ this.state.modalIsOpen }
+					contentLabel="Modal"
+					style={ modalStyles }
+					ariaHideApp={ false }
+					closeTimeoutMS={ 150 }
+				>
+					<div
+						className="component-source"
+						style={{ whiteSpace: 'pre-wrap' }}
+						ref={ ref => this.modalRef = ref }
+					>
+						<span className="close" onClick={ this.closeModal }>×</span>
+						<div className="source-code" ref={ ref => this.srcRef = ref }>
+							{ this.state.src }
 						</div>
-						{ Object.entries( this.state.settings ).map( ( [ key, value ] ) => {
-							if( key === 'multiple' ) return null;
-							return(
-								<div key={ `setting-${ key }` } className="form-group">
-									{ key !== 'height'
-										? <input type="checkbox" checked={ value } name={ key } onChange={ this.changeSetting } disabled={ target.includes( key ) } />
-										: <input type="number" value={ value } min={ 0 } step={ 50 } name={ key } onChange={ this.changeSetting } />
-									}
-									<label>{ key }</label>
-								</div>
-							)
-						} ) }
+						<div className="actions">
+							<button className={ `btn btn-primary blue${ this.state.copied ? ' disabled' : '' }` } onClick={ ( e ) => this.copyCode( e, this.state.src ) }>
+								{ this.state.copied ? 'Copied successfully!' : 'Copy' }
+							</button>
+						</div>
 					</div>
-				</div>
+				</Modal>
+				<BasicExample defaults={ defaults } getSource={ this.getSource } />
+				<AjaxExample defaults={ defaults } getSource={ this.getSource } />
+				<AjaxSearchExample defaults={ defaults } getSource={ this.getSource } />
+				{/* <TagsExample /> */}
+
+
 			</div>
 		)
 

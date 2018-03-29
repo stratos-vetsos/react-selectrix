@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { toggleSelect, selectItem, focusItem, getSelectedIndex, move, clearSelect, openSelect, closeSelect, focusSelect, blurSelect, handleKeyDown, maybeScroll, unlockMouseFocus, selectAll } from 'actions';
 import App from './App';
 
-const mapStateToProps = ( state ) => {
+const mapStateToProps = state => {
 
 	const queryString = state.search.queryString.toLowerCase();
 
@@ -30,7 +30,8 @@ const mapStateToProps = ( state ) => {
 		height: state.height,
 		ajax: state.ajax,
 		onRenderOption: state.onRenderOption,
-		tags: state.tags
+		tags: state.tags,
+		queryString
 	}
 
 }

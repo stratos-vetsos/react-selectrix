@@ -64,9 +64,8 @@ export const removeItem = ( index ) => {
 		} );
 
 		const state = getState();
-
-		if( state.settings.multiple && ! state.settings.commaSeperated && ! state.settings.checkBoxes ) {
-			dispatch( focusItem( 0 ) );
+		if( ! state.isOpen ) {
+			dispatch( openSelect() );
 		}
 
 		state.onChange( [ ... state.selectedIndex ].map( i => {
@@ -102,7 +101,7 @@ export const setupInstance = ( props, update = false ) => {
 			options = [ ... props.options, ... state.tags.tagSet ];
 		}
 
-		let ajax = {
+		const ajax = {
 			active: false,
 			url: '',
 			debounce: 200,
@@ -365,15 +364,28 @@ export const setupAjaxOptions = ( data ) => {
 export const toggleSelect = () => {
 
 	return ( dispatch, getState ) => {
+
 		let state = getState();
 		state.isOpen ? dispatch( closeSelect() ) : dispatch( openSelect() );
-		// dispatch( {
-		// 	type: state.isOpen ? CLOSE_SELECT : OPEN_SELECT
-		// } )
 
-		state = getState();
+	}
+}
 
+export const returnValue = () => {
+	return ( dispatch, getState ) => {
+		const state = getState();
+		const { selected, selectedIndex, ajax, options } = state;
+		const multiple = state.settings.multiple;
 
+		if( multiple ) {
+			if( ajax.fetchOnSearch ) {
+				return state.onChange( selected );
+			}
+			state.onChange( [ ... selectedIndex ].map( i => options[ i ] ) );
+		}
+		else {
+			state.onChange( options[ selectedIndex[ 0 ] ] );
+		}
 	}
 }
 
@@ -385,12 +397,12 @@ export const selectAll = () => {
 		} )
 
 		const state = getState();
-		state.onChange( [ ... state.selectedIndex ].map( i => {
-			return state.customKeys ? Object.assign( {}, {
-				[ state.customKeys.key ]: state.options[ i ].key,
-				[ state.customKeys.label ]: state.options[ i ].label
-			} ) : state.options[ i ];
-		} ) );
+		dispatch( returnValue() );
+
+		if( ! state.settings.stayOpen ) {
+			dispatch( closeSelect() );
+		}
+
 	}
 }
 
@@ -421,6 +433,9 @@ export const selectItem = ( index, isKeyboard = false ) => {
 					index: state.search.active || ( state.settings.multiple && selected.length ) ? targetIndex : index,
 					isKeyboard
 				} )
+				if( ! state.settings.stayOpen ) {
+					dispatch( closeSelect() );
+				}
 			}
 		}
 
@@ -437,22 +452,7 @@ export const selectItem = ( index, isKeyboard = false ) => {
 
 		}
 
-		if( state.settings.multiple ) {
-			state.onChange( [ ... state.selectedIndex ].map( i => {
-				return state.customKeys ? Object.assign( {}, {
-					[ state.customKeys.key ]: state.options[ i ].key,
-					[ state.customKeys.label ]: state.options[ i ].label
-				} ) : state.options[ i ];
-			} ) );
-		}
-		else {
-
-			state.onChange( state.customKeys ? Object.assign( {}, {
-				[ state.customKeys.key ]: options[ index ].key,
-				[ state.customKeys.label ]: options[ index ].label
-			} ) : options[ index ] );
-
-		}
+		dispatch( returnValue () );
 
 	}
 }
@@ -464,6 +464,9 @@ export const clearSelect = ( stayOpen = false ) => {
 		const state = getState();
 		dispatch( { type: CLEAR_SELECT, stayOpen } )
 		state.onChange( '' );
+		if( ! state.settings.stayOpen ) {
+			dispatch( closeSelect() );
+		}
 
 	}
 }
@@ -477,6 +480,7 @@ export const openSelect = () => {
 		} );
 
 		const state = getState();
+		state.onOpen();
 
 		if( state.ajax.active && ! state.ajax.fetchOnSearch && state.ajax.needsUpdate ) {
 			dispatch( fetchOptions() )
@@ -521,8 +525,14 @@ export const findFocusedItem = () => {
 
 export const closeSelect = () => {
 
-	return {
-		type: CLOSE_SELECT
+	return ( dispatch, getState ) => {
+
+		dispatch( {
+			type: CLOSE_SELECT
+		} );
+
+		getState().onClose();
+
 	}
 
 }

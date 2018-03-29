@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 
 const Header = ( props ) => {
 
-	const { settings, isOpen, selected, focused, onRenderSelection } = props;
+	const { settings, isOpen, selected, focused, onRenderSelection, tags } = props;
 
 	let jsx = (
-		settings.searchable
+		settings.searchable || tags.enabled
 			? <Searchable />
 			: <div tabIndex="0" className={ `rs-toggle${ focused ? ' rs-focused' : '' }` }>
 				{ ( selected === null || settings.isDropDown ) ? settings.placeholder : selected.label }
@@ -48,7 +48,8 @@ Header.propTypes = {
 	onRenderSelection: PropTypes.oneOfType( [
 		PropTypes.func,
 		PropTypes.bool
-	] )
+	] ),
+	tags: PropTypes.object.isRequired
 }
 
 export default Header;
