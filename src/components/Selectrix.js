@@ -33,6 +33,10 @@ export default class Selectrix extends React.Component {
 		this.props.setupInstance( this.props );
 	}
 
+	componentWillReceiveProps( nextProps ) {
+		this.props.updateInstance( nextProps );
+	}
+
 	render() {
 
 		return(
@@ -50,7 +54,7 @@ Selectrix.defaultProps = {
 	placeHolderInside: true,
 	placeholder: 'Please Select',
 	arrow: true,
-	selected: [],
+	defaultValue: false,
 	multiple: false,
 	disabled: false,
 	onChange: () => {},
@@ -71,7 +75,8 @@ Selectrix.defaultProps = {
 	ajax: false,
 	onRenderOption: false,
 	onRenderSelection: false,
-	tags: false
+	tags: false,
+	updateInstance: () => {}
 }
 
 Selectrix.propTypes = {
@@ -85,7 +90,7 @@ Selectrix.propTypes = {
 	placeHolderInside: PropTypes.bool,
 	placeholder: PropTypes.string,
 	arrow: PropTypes.bool,
-	selected: PropTypes.oneOfType( [
+	defaultValue: PropTypes.oneOfType( [
 		PropTypes.string,
 		PropTypes.array,
 		PropTypes.bool
@@ -120,5 +125,6 @@ Selectrix.propTypes = {
 		PropTypes.bool
 	] ),
 	tags: PropTypes.bool,
-	setupInstance: PropTypes.func.isRequired
+	setupInstance: PropTypes.func.isRequired,
+	updateInstance: PropTypes.func.isRequired
 }
