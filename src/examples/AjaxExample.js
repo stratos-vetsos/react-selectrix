@@ -34,7 +34,6 @@ export default class AjaxExample extends React.Component {
 	}
 
 	setValue( value ) {
-		console.log( value );
 		const { multiple } = this.state.settings;
 		this.setState( { value: multiple ? value : [ value ] } );
 	}
@@ -55,7 +54,8 @@ export default class AjaxExample extends React.Component {
 
 		return (
 			<div className="example">
-				<h2>{ `What ${ multiple ? 'are' : 'is' } your favourite bitcoin article${ multiple ? 's' : '' }` }, the last 6 months? ( AJAX )</h2>
+				<h2>AJAX Example</h2>
+				<h3>{ `What ${ multiple ? 'are' : 'is' } your favourite bitcoin article${ multiple ? 's' : '' }` }, the last 6 months?</h3>
 				<small>Many thanks to <a href="https://newsapi.org/" target="_blank" rel="noopener noreferrer">newsapi.org</a> for their feeds.</small>
 				<div className="example-wrapper">
 					<ShowValue value={ value } multiple={ multiple } />
@@ -70,6 +70,7 @@ export default class AjaxExample extends React.Component {
 						target={ target }
 						assignSettings={ this.assignSettings }
 						conditionals={ conditionals }
+						disabled={ [ 'ajax' ] }
 					/>
 					<div className="get-source">
 						<button

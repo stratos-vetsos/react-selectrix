@@ -51,7 +51,8 @@ export default class BasicExample extends React.Component {
 
 		return (
 			<div className="example">
-				<h2>{ `What ${ multiple ? 'are' : 'is' } your favourite programming language${ multiple ? 's' : '' }?` }</h2>
+				<h2>Basic Example</h2>
+				<h3>{ `What ${ multiple ? 'are' : 'is' } your favourite programming language${ multiple ? 's' : '' }?` }</h3>
 				<div className="example-wrapper">
 					<ShowValue value={ value } multiple={ multiple } />
 					<Selectrix
@@ -59,6 +60,7 @@ export default class BasicExample extends React.Component {
 						onChange={ this.setValue }
 						{ ... this.state.settings }
 						onClose={ this.closed }
+						defaultValue={ [ "scala", "php" ] }
 					/>
 					<Settings
 						multiple={ multiple }

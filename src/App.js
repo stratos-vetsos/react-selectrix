@@ -5,6 +5,9 @@ import { modalStyles } from 'dummy/dummy-data';
 import BasicExample from 'examples/BasicExample';
 import AjaxExample from 'examples/AjaxExample';
 import AjaxSearchExample from 'examples/AjaxSearchExample';
+import TagsExample from 'examples/TagsExample';
+import CheckboxesExample from 'examples/CheckboxesExample';
+import CustomExample from 'examples/CustomExample';
 import { isObject, isString, isArray } from 'helpers';
 
 export default class App extends React.Component {
@@ -13,9 +16,7 @@ export default class App extends React.Component {
 
 		super( props );
 
-		[ 'onRenderOption',
-		'onRenderSelection',
-		'getSource',
+		[ 'getSource',
 		'buildComponentSource',
 		'handleBodyClick',
 		'closeModal',
@@ -61,16 +62,16 @@ export default class App extends React.Component {
 		}
 	}
 
-	getSource( activeSettings ) {
+	getSource( activeSettings, customMarkup = false ) {
 
 		this.setState( {
 			modalIsOpen: true,
-			src: this.buildComponentSource( activeSettings )
+			src: this.buildComponentSource( activeSettings, customMarkup )
 		} )
 
 	}
 
-	buildComponentSource( activeSettings ) {
+	buildComponentSource( activeSettings, customMarkup ) {
 		let options = '';
 		for( let [ key, value ] of Object.entries( activeSettings ) ) {
 			if( value !== defaults[ key ] ) {
@@ -107,19 +108,15 @@ export default class App extends React.Component {
 				}
 			}
 		}
-		return `<Selectrix ${ options } \n/>`;
-	}
 
-	onRenderOption( option, index ) {
-		return(
-			<li>{ option.label }</li>
-		)
-	}
+		let markup = `<Selectrix ${ options } \n/>`;
 
-	onRenderSelection( selected, settings, deselect ) {
-		return(
-			<p><span onClick={ deselect }>remove</span>{ selected.label }</p>
-		)
+		if( customMarkup ) {
+			markup += `\n\nconst onRenderOption = ( option, index ) => (\n\t<li><i className="fa fa-laptop"></i>{ option.label }</li>\n)`;
+			markup += `\n\nconst onRenderSelection = ( selected, settings, deselect ) => (\n\t<span style={{ marginRight: 10, border: "1px solid #eee", padding: 5 }}>\n\t\t{ selected.label }\n\t\t<i style={{ paddingLeft: 5, cursor: "pointer" }} onClick={ deselect } className="fa fa-window-close"></i>\n\t</span>\n)`
+		}
+
+		return markup;
 	}
 
 	copyCode() {
@@ -170,9 +167,9 @@ export default class App extends React.Component {
 				<BasicExample defaults={ defaults } getSource={ this.getSource } />
 				<AjaxExample defaults={ defaults } getSource={ this.getSource } />
 				<AjaxSearchExample defaults={ defaults } getSource={ this.getSource } />
-				{/* <TagsExample /> */}
-
-
+				<TagsExample defaults={ defaults } getSource={ this.getSource } />
+				<CheckboxesExample defaults={ defaults } getSource={ this.getSource } />
+				<CustomExample defaults={ defaults } getSource={ this.getSource } />
 			</div>
 		)
 

@@ -90,8 +90,8 @@ export const setupInstance = ( props, update = false ) => {
 	return ( dispatch, getState ) => {
 
 		const state = getState();
-		let { selected, selectedIndex } = props.value
-		? normalizeSelected( props.value, [ ... props.options ] )
+		let { selected, selectedIndex } = props.defaultValue
+		? normalizeSelected( props.defaultValue, [ ... props.options ] )
 		: { selected: state.selected, selectedIndex: state.selectedIndex };
 
 		let customKeys = {},

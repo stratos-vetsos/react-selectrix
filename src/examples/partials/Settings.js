@@ -85,7 +85,7 @@ export default class Settings extends React.Component {
 							)
 						} ) }
 					</div>
-					{ settings.hasOwnProperty( 'ajax' ) &&
+					{ settings.hasOwnProperty( 'ajax' ) && Object.keys( settings.ajax ).length > 2 &&
 						<div className="ajax-settings">
 							{ Object.entries( settings.ajax ).map( ( [ k, v ] ) => {
 								if( ajaxDisabled.includes( k ) ) return null;

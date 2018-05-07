@@ -43,7 +43,7 @@ export const modalStyles = {
 	},
 	content : {
 		position: 'relative',
-		maxWidth: '400px',
+		maxWidth: '440px',
 		top                   : '200px',
 		right                 : 'auto',
 		bottom                : 'auto',

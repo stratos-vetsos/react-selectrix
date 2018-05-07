@@ -1,11 +1,11 @@
 import React from 'react';
-import { conditionals } from 'dummy/dummy-data';
+import { conditionals, options } from 'dummy/dummy-data';
 import ShowValue from './partials/ShowValue';
 import Settings from './partials/Settings';
 import Selectrix from 'index.js';
 import PropTypes from 'prop-types';
 
-export default class AjaxExample extends React.Component {
+export default class CustomExample extends React.Component {
 
 	constructor( props ) {
 
@@ -15,23 +15,34 @@ export default class AjaxExample extends React.Component {
 			value: [],
 			settings: Object.assign( {}, this.props.defaults, {
 				multiple: true,
-				materialize: true,
-				stayOpen: true,
-				customKeys: { key: 'url', label: 'title' },
-				ajax: {
-					url: 'https://newsapi.org/v2/top-headlines?apiKey=9342a9a707ca49c4b2da34e9ea238ea6',
-					fetchOnSearch: true,
-					q: '&q={q}',
-					nestedKey: 'articles',
-					minLength: 3,
-					debounce: 300
-				}
+				materialize: true
 			} )
 		};
 
-		[ 'assignSettings', 'setValue', 'closed' ]
+		[ 'assignSettings', 'setValue', 'closed', 'onRenderOption', 'onRenderSelection' ]
 		.forEach( fn => this[ fn ] = this[ fn ].bind( this ) );
 
+	}
+
+	onRenderOption( option ) {
+		return(
+			<li><i className="fa fa-laptop"></i>{ option.label }</li>
+		)
+	}
+
+	onRenderSelection( selected, settings, deselect ) {
+		return(
+			<span
+				style={{
+					marginRight: 10,
+					border: "1px solid #eee",
+					padding: 5
+				}}
+			>
+				{ selected.label }
+				<i style={{ paddingLeft: 5, cursor: "pointer" }} onClick={ deselect } className="fa fa-window-close"></i>
+			</span>
+		)
 	}
 
 	assignSettings( settings ) {
@@ -61,15 +72,17 @@ export default class AjaxExample extends React.Component {
 
 		return (
 			<div className="example">
-				<h2>AJAX - Fetch On Search Example</h2>
-				<h3>{ `What ${ multiple ? 'are' : 'is' } your favourite top headline${ multiple ? 's' : '' }` }, right now?</h3>
-				<small>Many thanks to <a href="https://newsapi.org/" target="_blank" rel="noopener noreferrer">newsapi.org</a> for their feeds.</small>
+				<h2>Custom Selections and Options Example</h2>
+				<h3>{ `What ${ multiple ? 'are' : 'is' } your favourite programming language${ multiple ? 's' : '' }?` }</h3>
 				<div className="example-wrapper">
 					<ShowValue value={ value } multiple={ multiple } />
 					<Selectrix
+						options={ options }
 						onChange={ this.setValue }
 						{ ... this.state.settings }
 						onClose={ this.closed }
+						onRenderOption={ this.onRenderOption }
+						onRenderSelection={ this.onRenderSelection }
 					/>
 					<Settings
 						multiple={ multiple }
@@ -77,13 +90,18 @@ export default class AjaxExample extends React.Component {
 						target={ target }
 						assignSettings={ this.assignSettings }
 						conditionals={ conditionals }
-						disabled={ [ 'ajax', 'customKeys' ] }
 					/>
 					<div className="get-source">
 						<button
 							type="button"
 							className="btn btn-primary blue"
-							onClick={ () => this.props.getSource( this.state.settings ) }
+							onClick={ () => this.props.getSource(
+								Object.assign( {}, this.state.settings, {
+									options,
+									onRenderOption: "onRenderOption",
+									onRenderSelection: "onRenderSelection",
+									onChange: ' value => console.log( value ) '
+								} ), true ) }
 						>
 							Get Source Code
 						</button>
@@ -94,7 +112,7 @@ export default class AjaxExample extends React.Component {
 	}
 }
 
-AjaxExample.propTypes = {
+CustomExample.propTypes = {
 	defaults: PropTypes.object.isRequired,
 	getSource: PropTypes.func.isRequired
 }
