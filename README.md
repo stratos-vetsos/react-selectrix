@@ -68,7 +68,7 @@ onRenderSelection | function / boolean | false | Use this function to render cus
 ###ajax prop - analysis
 
 Name  | Type | Default Value | Description
-------------- | -------------
+--- | --- | --- | ---
 url | string | '' | The url which the Select going to fetch the available options.
 debounce | number | 200 | The debounce of the ajax calls in milliseconds.
 fetchOnSearch | boolean | false | Whether you don't want to have the options prepopulated, when the Select opens, but you want to query them based on user's search value.
