@@ -60,7 +60,6 @@ export default class BasicExample extends React.Component {
 						onChange={ this.setValue }
 						{ ... this.state.settings }
 						onClose={ this.closed }
-						defaultValue={ [ "scala", "php" ] }
 					/>
 					<Settings
 						multiple={ multiple }
