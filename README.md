@@ -36,7 +36,7 @@ import Selectrix from "react-selectrix";
 />
 ```
 
-###Props
+### Props
 
 Name  | Type | Default Value | Description
 ------------- | -------------
