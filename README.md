@@ -77,7 +77,7 @@ nestedKey | string / boolean | false | If your REST API returns the actual data 
 searchPrompt | boolean | true | This property goes alongside with fetchOnSearch property and indicates the user how many more characters should type, before the ajax search will happen.
 minLength | number | 1 | This property goes alongside with fetchOnSearch property and searchPrompt setted to "true". It is the min length of characters the user should type, before the ajax call search takes place.
 
-###Ajax Example
+### Ajax Example
 Many thanks to [newsapi.org](https://newsapi.org/) for their great api.
 Check this example in action, in our [demo](https://newsapi.org/) page.
 
@@ -94,7 +94,7 @@ Check this example in action, in our [demo](https://newsapi.org/) page.
 />
 ```
 
-###Ajax Example with fetchOnSearch
+### Ajax Example with fetchOnSearch
 Check this example in action, in our [demo](https://newsapi.org/) page.
 
 ```javascript
@@ -117,8 +117,8 @@ Check this example in action, in our [demo](https://newsapi.org/) page.
 />
 ```
 
-###License
+### License
 MIT Licensed. Stratos Vetsos.
 
-###Contributions
+### Contributions
 Contributions are more than welcome, when we pass the 0.1 beta stage.
