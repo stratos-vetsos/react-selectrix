@@ -1,5 +1,6 @@
 const path = require( 'path' );
 const webpack = require( 'webpack' );
+const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
 
 module.exports = {
 
@@ -59,7 +60,7 @@ module.exports = {
 			{
 				test: /\.scss$/,
 				use: [ {
-					loader: "style-loader" // creates style nodes from JS strings
+					loader: MiniCssExtractPlugin.loader // creates style nodes from JS strings
 				}, {
 					loader: "css-loader" // translates CSS into CommonJS
 				}, {
@@ -72,6 +73,13 @@ module.exports = {
     plugins: [
 
         //new webpack.ProvidePlugin({ 'Promise': 'es6-promise', 'fetch': 'imports-loader?this=>global!exports-loader?global.fetch!whatwg-fetch' }),
+
+		new MiniCssExtractPlugin( {
+            // Options similar to the same options in webpackOptions.output
+            // both options are optional
+            filename: "[name].css",
+            chunkFilename: "[id].css"
+        } ),
 
         new webpack.HotModuleReplacementPlugin( ),
         // enable HMR globally

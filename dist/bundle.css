@@ -1,0 +1,560 @@
+/* temp  git hub pages */
+body,
+html {
+  height: 100%;
+  font-family: 'Open Sans'; }
+
+.example {
+  margin-top: 30px;
+  margin-bottom: 100px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 30px; }
+
+.value-wrapper {
+  padding: 25px 0 5px;
+  margin-bottom: 50px;
+  font-size: 11px; }
+  .value-wrapper span {
+    color: #00b2ee; }
+    .value-wrapper span:first-child {
+      margin-left: 10px; }
+
+.btn.blue {
+  font-size: 11px;
+  outline: none;
+  box-shadow: none !important; }
+
+.ReactModal__Content {
+  transition: all 0.35s ease-in-out;
+  transform: translateY(-50px);
+  opacity: 1; }
+  .ReactModal__Content--after-open {
+    opacity: 1;
+    transform: translateY(0); }
+  .ReactModal__Content--before-close {
+    opacity: 0;
+    transform: translateY(-50px); }
+
+.ReactModal__Overlay {
+  opacity: 0; }
+
+.ReactModal__Overlay--after-open {
+  opacity: 1;
+  transition: opacity 200ms ease-in-out; }
+
+.ReactModal__Overlay--before-close {
+  opacity: 0; }
+
+.component-source {
+  padding: 20px 25px;
+  font-size: 12px; }
+  .component-source ::-webkit-scrollbar {
+    width: 0px; }
+  .component-source ::-webkit-scrollbar-track-piece {
+    background-color: transparent;
+    -webkit-border-radius: 6px; }
+  .component-source > div.source-code {
+    word-break: break-all;
+    margin-bottom: 20px;
+    max-height: 360px;
+    overflow: auto; }
+
+.settings {
+  margin: 50px 0 20px; }
+  .settings > div {
+    margin-bottom: 20px; }
+  .settings .radio-wrapper {
+    display: inline-block;
+    margin-right: 10px; }
+    .settings .radio-wrapper input {
+      margin-right: 5px; }
+  .settings .ajax-settings {
+    padding: 5px;
+    border: 1px solid #eee; }
+    .settings .ajax-settings .form-group {
+      float: none;
+      width: 100%; }
+      .settings .ajax-settings .form-group label {
+        font-size: 12px; }
+    .settings .ajax-settings input {
+      display: inline-block;
+      max-width: 200px; }
+      .settings .ajax-settings input[type="text"] {
+        font-size: 12px;
+        height: 22px; }
+  .settings .form-group {
+    float: left;
+    width: 33.33%;
+    margin: 0; }
+    .settings .form-group label {
+      padding-left: 5px;
+      font-size: 14px; }
+    .settings .form-group input[type="number"] {
+      width: 50px;
+      font-size: 12px;
+      height: 22px; }
+    .settings .form-group input:disabled + label {
+      opacity: 0.5; }
+
+.vertical-align {
+  height: 100%; }
+  .vertical-align:before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    margin-right: 0; }
+  .vertical-align > * {
+    display: inline-block;
+    vertical-align: middle; }
+
+#root {
+  padding: 15px;
+  max-width: 500px;
+  margin: 0 auto; }
+  #root h2 {
+    color: #545b5d;
+    margin-bottom: 25px; }
+  #root h3 {
+    color: #545b5d;
+    font-weight: 300;
+    font-size: 1.6rem; }
+
+footer {
+  display: none; }
+
+header {
+  padding: 80px 0;
+  background-color: #00b2ee;
+  text-align: center; }
+  header h1 {
+    color: white;
+    font-size: 70px; }
+  header p {
+    text-align: left;
+    color: white;
+    font-size: 20px;
+    margin: 0; }
+    header p a {
+      color: white; }
+      header p a:hover {
+        color: inherit;
+        text-decoration: none; }
+    header p span {
+      padding-right: 10px;
+      width: 100px;
+      font-size: 14px;
+      display: inline-block;
+      text-align: right; }
+    header p i.fa {
+      color: black;
+      font-size: 16px; }
+
+/* end temp */
+.react-selectrix {
+  position: relative; }
+  .react-selectrix *, .react-selectrix ::after, .react-selectrix ::before {
+    box-sizing: border-box; }
+  .react-selectrix .hidden {
+    display: none; }
+  .react-selectrix .clearfix:after, .react-selectrix .clearfix:before {
+    content: "";
+    display: table; }
+  .react-selectrix .clearfix:after {
+    clear: both; }
+  .react-selectrix .rs-toggle-wrapper, .react-selectrix .rs-search-prompt {
+    padding: 11px 20px;
+    font-size: 11px;
+    color: #92a2b9; }
+  .react-selectrix .rs-tag-wrapper {
+    padding: 11px 20px;
+    font-size: 12px;
+    cursor: pointer;
+    color: #6a7f9d;
+    box-shadow: 0 0px 4px rgba(0, 0, 0, 0.1); }
+    .react-selectrix .rs-tag-wrapper:hover, .react-selectrix .rs-tag-wrapper:focus, .react-selectrix .rs-tag-wrapper:active {
+      background-color: #faf7f7; }
+    .react-selectrix .rs-tag-wrapper.focused {
+      background-color: #faf7f7; }
+  .react-selectrix button.rs-toggle-button {
+    background-color: #ffffff;
+    border: none;
+    font-size: 11px;
+    cursor: pointer;
+    outline: none;
+    color: #92a2b9;
+    padding: 0; }
+    .react-selectrix button.rs-toggle-button:hover {
+      text-decoration: underline; }
+  .react-selectrix .vertical-align:before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    margin-right: 0; }
+  .react-selectrix .vertical-align > * {
+    display: inline-block;
+    vertical-align: middle; }
+  .react-selectrix .rs-header {
+    border: 1px solid #bdc8d5;
+    color: #6a7f9d;
+    border-radius: 2px;
+    background-color: #ffffff;
+    position: relative;
+    font-size: 14px;
+    margin: 0;
+    user-select: none; }
+    .react-selectrix .rs-header ::-webkit-input-placeholder {
+      color: #6a7f9d; }
+    .react-selectrix .rs-header ::-moz-placeholder {
+      color: #6a7f9d; }
+    .react-selectrix .rs-header :-ms-input-placeholder {
+      color: #6a7f9d; }
+    .react-selectrix .rs-header :-moz-placeholder {
+      color: #6a7f9d; }
+  .react-selectrix.rs-base-arrow .rs-reset-wrapper {
+    right: 25px; }
+  .react-selectrix.rs-base-customscrollbar ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px; }
+  .react-selectrix.rs-base-customscrollbar ::-webkit-scrollbar-thumb {
+    background: #6f747b; }
+  .react-selectrix.rs-base-customscrollbar ::-webkit-scrollbar-track {
+    background: #dfdfdf; }
+  .react-selectrix.rs-base-disabled {
+    opacity: 0.6;
+    pointer-events: none; }
+  .react-selectrix.rs-base-searchable .rs-header, .react-selectrix.rs-base-tags .rs-header {
+    padding: 0; }
+  .react-selectrix.rs-base-searchable .rs-toggle, .react-selectrix.rs-base-tags .rs-toggle {
+    cursor: text; }
+  .react-selectrix.rs-base-singleline .rs-toggle {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block; }
+  .react-selectrix.rs-base-multiple:not(.rs-base-empty):not(.rs-base-commaseperated) .rs-toggle {
+    padding: 5px 50px 5px 5px; }
+  .react-selectrix.rs-base-multiple.rs-base-commaseperated:not(.rs-base-empty) .rs-toggle {
+    padding: 7px 50px 7px 15px;
+    line-height: 1.8; }
+  .react-selectrix.rs-base-multiple.rs-base-commaseperated.rs-base-searchable .rs-toggle {
+    display: flex; }
+  .react-selectrix.rs-base-multiple.rs-base-commaseperated.rs-base-searchable .rs-commaseperated-wrapper {
+    display: block;
+    padding-right: 10px;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis; }
+  .react-selectrix.rs-base-multiple .rs-selection {
+    display: inline-block;
+    background-color: #00B2EE;
+    padding: 3px 10px 3px 25px;
+    color: #ffffff;
+    margin: 2px;
+    font-size: 12px;
+    border-radius: 2px;
+    border: 1px solid #21a4cf;
+    position: relative;
+    cursor: pointer;
+    max-width: 100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden; }
+  .react-selectrix.rs-base-multiple:not(.rs-base-empty) .rs-selection, .react-selectrix.rs-base-multiple:not(.rs-base-empty) .rs-searchable {
+    vertical-align: middle; }
+  .react-selectrix.rs-base-multiple .rs-remove {
+    font-size: 15px;
+    color: #fff3f3;
+    position: absolute;
+    left: 0;
+    width: 20px;
+    text-align: center;
+    border-right: 1px solid #d9d6d6;
+    top: 0;
+    height: 100%;
+    transition: 0.2s background-color ease-in-out;
+    font-family: "Arial" !important; }
+    .react-selectrix.rs-base-multiple .rs-remove:hover {
+      background-color: #23c8ff; }
+  .react-selectrix.rs-base-multiple .rs-searchable {
+    border: none;
+    box-shadow: none;
+    outline: none;
+    -webkit-appearance: none;
+    max-width: 100%;
+    color: #6a7f9d;
+    padding: 0;
+    font-size: 14px; }
+  .react-selectrix .rs-reset {
+    font-size: 20px;
+    color: #6a7f9d;
+    position: relative;
+    top: 1px;
+    font-family: "Arial" !important; }
+    .react-selectrix .rs-reset:hover {
+      color: #b90e0e; }
+  .react-selectrix .rs-arrow-wrapper {
+    position: absolute;
+    width: 10px;
+    height: 100%;
+    top: 0;
+    right: 10px; }
+  .react-selectrix .rs-reset-wrapper {
+    position: absolute;
+    width: 10px;
+    height: 100%;
+    top: 0;
+    right: 10px;
+    cursor: pointer; }
+    .react-selectrix .rs-reset-wrapper:before {
+      margin-right: -0.15em; }
+  .react-selectrix .rs-arrow-indicator {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 5px 5px 0 5px;
+    border-color: #6a7f9d transparent transparent;
+    transition: 0.1s transform ease-in-out; }
+    .react-selectrix .rs-arrow-indicator.up {
+      transform: rotate(180deg); }
+  .react-selectrix .rs-body {
+    border-radius: 2px;
+    background-color: #ffffff;
+    box-shadow: 0 3px 7px 0 rgba(139, 155, 175, 0.5);
+    position: absolute;
+    width: 100%;
+    left: 0;
+    z-index: 1;
+    overflow: auto; }
+    .react-selectrix .rs-body > ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      overflow: hidden; }
+  .react-selectrix .rs-option {
+    cursor: pointer;
+    padding: 11px 20px;
+    color: #6a7f9d;
+    font-size: 14px;
+    user-select: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: normal; }
+    .react-selectrix .rs-option.disabled {
+      opacity: 0.6;
+      pointer-events: none; }
+    .react-selectrix .rs-option:not(.disabled).focused {
+      background-color: #faf7f7; }
+    .react-selectrix .rs-option:not(.disabled).selected {
+      background-color: #eeeeee; }
+  .react-selectrix .rs-no-results {
+    padding: 11px 20px;
+    color: #6a7f9d;
+    font-size: 12px; }
+  .react-selectrix .rs-toggle {
+    border: none;
+    outline: none;
+    padding: 10px 50px 10px 15px;
+    width: 100%;
+    cursor: pointer;
+    color: #6a7f9d;
+    font-size: 14px;
+    line-height: normal; }
+    .react-selectrix .rs-toggle.rs-focused {
+      outline: 0;
+      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(81, 152, 209, 0.6); }
+    .react-selectrix .rs-toggle.rs-searchable:focus {
+      cursor: text; }
+  .react-selectrix.rs-base-checkboxes .rs-option:not(.disabled).selected {
+    background-color: inherit; }
+  .react-selectrix.rs-base-checkboxes .rs-option:not(.disabled).focused {
+    background-color: #faf7f7; }
+  .react-selectrix.rs-base-checkboxes .rs-option input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    margin: 0; }
+    .react-selectrix.rs-base-checkboxes .rs-option input[type="checkbox"]:not(:checked) + label:before {
+      width: 0;
+      height: 0;
+      border: 3px solid transparent;
+      left: 6px;
+      top: 10px;
+      -webkit-transform: rotateZ(37deg);
+      transform: rotateZ(37deg);
+      -webkit-transform-origin: 100% 100%;
+      transform-origin: 100% 100%; }
+    .react-selectrix.rs-base-checkboxes .rs-option input[type="checkbox"]:not(:checked) + label:after {
+      height: 13px;
+      width: 13px;
+      background-color: transparent;
+      border: 1px solid #D5D9DF;
+      border-radius: 2px;
+      top: 0;
+      z-index: 0; }
+    .react-selectrix.rs-base-checkboxes .rs-option input[type="checkbox"] + label {
+      position: relative;
+      padding-left: 25px;
+      cursor: pointer;
+      display: inline-block;
+      user-select: none;
+      font-size: 14px;
+      line-height: 14px;
+      font-weight: 400;
+      margin-bottom: 0; }
+      .react-selectrix.rs-base-checkboxes .rs-option input[type="checkbox"] + label:after, .react-selectrix.rs-base-checkboxes .rs-option input[type="checkbox"] + label:before {
+        content: '';
+        left: 0;
+        position: absolute;
+        -webkit-transition: border 0.25s, background-color 0.25s, width 0.20s 0.1s, height 0.20s 0.1s, top 0.20s 0.1s, left 0.20s 0.1s;
+        transition: border 0.25s, background-color 0.25s, width 0.20s 0.1s, height 0.20s 0.1s, top 0.20s 0.1s, left 0.20s 0.1s;
+        z-index: 1; }
+      .react-selectrix.rs-base-checkboxes .rs-option input[type="checkbox"] + label:after {
+        height: 13px;
+        width: 13px;
+        background-color: transparent;
+        border: 2px solid #5a5a5a;
+        top: 0;
+        z-index: 0; }
+    .react-selectrix.rs-base-checkboxes .rs-option input[type="checkbox"]:checked + label:before {
+      top: 1px;
+      left: 0px;
+      width: 6px;
+      height: 10px;
+      border-top: 2px solid transparent;
+      border-left: 2px solid transparent;
+      border-right: 2px solid #fff;
+      border-bottom: 2px solid #fff;
+      -webkit-transform: rotateZ(37deg);
+      transform: rotateZ(37deg);
+      -webkit-transform-origin: 100% 100%;
+      transform-origin: 100% 100%; }
+    .react-selectrix.rs-base-checkboxes .rs-option input[type="checkbox"]:checked + label:after {
+      top: 0;
+      height: 13px;
+      width: 13px;
+      border: 1px solid #1DA4CF;
+      background-color: #1DA4CF;
+      z-index: 0;
+      border-radius: 2px; }
+    .react-selectrix.rs-base-checkboxes .rs-option input[type="checkbox"]:disabled + label {
+      opacity: 0.4;
+      cursor: not-allowed; }
+  .react-selectrix.rs-base-open.rs-base-materialize .rs-header:after {
+    content: "";
+    height: 2px;
+    background-color: #4379db;
+    display: block;
+    width: 100%;
+    left: 0;
+    visibility: visible; }
+  .react-selectrix.rs-base-open.rs-base-materialize .rs-arrow-indicator {
+    border-color: #4379db transparent transparent; }
+  .react-selectrix.rs-base-open.rs-base-materialize .rs-body {
+    opacity: 1;
+    -webkit-transform: scale(1) translateY(0);
+    -ms-transform: scale(1) translateY(0);
+    transform: scale(1) translateY(0);
+    visibility: visible;
+    height: auto; }
+  .react-selectrix .rs-arrow-indicator {
+    transition: 0.2s transform ease-in-out; }
+  .react-selectrix.rs-base-materialize.rs-base-multiple:not(.rs-base-empty) .rs-toggle {
+    padding-left: 0; }
+  .react-selectrix.rs-base-materialize .rs-header {
+    border: none;
+    border-bottom: 1px solid #eee;
+    border-radius: 0; }
+    .react-selectrix.rs-base-materialize .rs-header:after {
+      content: "";
+      height: 1px;
+      background-color: transparent;
+      position: absolute;
+      bottom: -1px;
+      display: block;
+      width: 15px;
+      left: 45%;
+      transition-duration: .2s;
+      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      visibility: hidden; }
+  .react-selectrix.rs-base-materialize .rs-body {
+    display: block;
+    opacity: 0;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.15), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    transform-origin: 50% 0;
+    transform: scale(0.8) translateY(-15px);
+    transition: all 0.2s cubic-bezier(0.5, 0, 0, 1.25), opacity 0.15s ease-in-out;
+    visibility: hidden;
+    height: 0; }
+  .react-selectrix.rs-base-materialize .rs-toggle {
+    padding-left: 0; }
+    .react-selectrix.rs-base-materialize .rs-toggle.rs-focused {
+      box-shadow: none; }
+  .react-selectrix .rs-loader {
+    font-size: 10px;
+    margin: 15px auto;
+    overflow: hidden;
+    text-indent: -9999em;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #00B2EE;
+    background: -moz-linear-gradient(left, #00B2EE 10%, rgba(255, 255, 255, 0) 42%);
+    background: -webkit-linear-gradient(left, #00B2EE 10%, rgba(255, 255, 255, 0) 42%);
+    background: -o-linear-gradient(left, #00B2EE 10%, rgba(255, 255, 255, 0) 42%);
+    background: -ms-linear-gradient(left, #00B2EE 10%, rgba(255, 255, 255, 0) 42%);
+    background: linear-gradient(to right, #00B2EE 10%, rgba(255, 255, 255, 0) 42%);
+    position: relative;
+    -webkit-animation: load3 1.4s infinite linear;
+    animation: load3 1.4s infinite linear;
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0); }
+  .react-selectrix.rs-base-materialize .rs-loader {
+    background: #4379db;
+    background: -moz-linear-gradient(left, #4379db 10%, rgba(255, 255, 255, 0) 42%);
+    background: -webkit-linear-gradient(left, #4379db 10%, rgba(255, 255, 255, 0) 42%);
+    background: -o-linear-gradient(left, #4379db 10%, rgba(255, 255, 255, 0) 42%);
+    background: -ms-linear-gradient(left, #4379db 10%, rgba(255, 255, 255, 0) 42%);
+    background: linear-gradient(to right, #4379db 10%, rgba(255, 255, 255, 0) 42%); }
+    .react-selectrix.rs-base-materialize .rs-loader:before {
+      background: #4379db; }
+  .react-selectrix .rs-loader:before {
+    width: 50%;
+    height: 50%;
+    background: #00B2EE;
+    border-radius: 100% 0 0 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: ''; }
+  .react-selectrix .rs-loader:after {
+    background: white;
+    width: 75%;
+    height: 75%;
+    border-radius: 50%;
+    content: '';
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0; }
+
+@-webkit-keyframes load3 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg); }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg); } }
+
+@keyframes load3 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg); }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg); } }
+
