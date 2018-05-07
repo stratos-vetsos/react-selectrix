@@ -65,7 +65,7 @@ ajax | boolean / object | false | Whether to enable ajax. The library supports a
 onRenderOption | function / boolean | false | Use this function to render custom option items
 onRenderSelection | function / boolean | false | Use this function to render custom selected items
 
-###ajax prop - analysis
+### ajax prop - analysis
 
 Name  | Type | Default Value | Description
 --- | --- | --- | ---
