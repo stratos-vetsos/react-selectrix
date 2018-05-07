@@ -39,7 +39,7 @@ import Selectrix from "react-selectrix";
 ### Props
 
 Name  | Type | Default Value | Description
-------------- | -------------
+--- | --- | --- | ---
 options | array | [] | An array of the available options ( Objects with "key", "label" pairs and optionally "disabled" property ).
 multiple | boolean | false | Whether the Select supports multiple values.
 searchable | boolean | true | Whether the Select is **searchable**.
