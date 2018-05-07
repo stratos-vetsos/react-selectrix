@@ -3,6 +3,9 @@ A beautiful, materialized, easy to use and flexible **Select** replacement for R
 ### Installing
 `$ npm -i react-selectrix`
 
+### Demo
+Check out the demo and use examples [here](https://stratos-vetsos.github.io/react-selectrix/)!
+
 ### Import to your project
 ```
 import Selectrix from "react-selectrix";
@@ -79,7 +82,7 @@ minLength | number | 1 | This property goes alongside with fetchOnSearch propert
 
 ### Ajax Example
 Many thanks to [newsapi.org](https://newsapi.org/) for their great api.
-Check this example in action, in our [demo](https://newsapi.org/) page.
+Check this example in action, in our [demo](https://stratos-vetsos.github.io/react-selectrix/) page.
 
 ```javascript
 <Selectrix
@@ -95,7 +98,7 @@ Check this example in action, in our [demo](https://newsapi.org/) page.
 ```
 
 ### Ajax Example with fetchOnSearch
-Check this example in action, in our [demo](https://newsapi.org/) page.
+Check this example in action, in our [demo](https://stratos-vetsos.github.io/react-selectrix/) page.
 
 ```javascript
 <Selectrix
