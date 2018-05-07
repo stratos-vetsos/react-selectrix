@@ -8,7 +8,7 @@ A beautiful, materialized, easy to use and flexible **Select** replacement for R
 import Selectrix from "react-selectrix";
 ```
 
-###Basic Example
+### Basic Example
 
 ```javascript
 <Selectrix
