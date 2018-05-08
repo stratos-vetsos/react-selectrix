@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { toggleSelect, selectItem, focusItem, getSelectedIndex, move, clearSelect, openSelect, closeSelect, focusSelect, blurSelect, handleKeyDown, maybeScroll, unlockMouseFocus, selectAll } from 'actions';
+import { toggleSelect, selectItem, focusItem, clearSelect, openSelect, closeSelect, focusSelect, blurSelect, handleKeyDown, maybeScroll, unlockMouseFocus, selectAll } from 'actions';
 import App from './App';
 
 const mapStateToProps = state => {
@@ -54,14 +54,6 @@ const mapDispatchToProps = ( dispatch ) => {
 
 		openSelect: () => {
 			dispatch( openSelect() );
-		},
-
-		move: () => {
-			dispatch( move() );
-		},
-
-		getSelectedIndex: () => {
-			dispatch( getSelectedIndex() );
 		},
 
 		clearSelect: ( event = false, stayOpen = false ) => {

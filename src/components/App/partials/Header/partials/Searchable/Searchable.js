@@ -81,7 +81,7 @@ export default class Searchable extends React.Component {
 
 		let className = 'rs-searchable';
 		const multiple = this.props.settings.multiple;
-		const { focused, tags } = this.props;
+		const { focused } = this.props;
 		let placeholder = '';
 
 		if( multiple ) {

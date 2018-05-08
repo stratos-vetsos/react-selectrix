@@ -21,7 +21,6 @@ const Header = ( props ) => {
 
 	return (
 		<div className="rs-header" onClick={ props.toggleSelect }>
-
 			{ ! settings.placeHolderInside && ! settings.isDropDown && selected !== null &&
 				<span className="rs-reset-wrapper vertical-align">
 					<span className="rs-reset" onClick={ ( e ) => props.clearSelect( e ) }>×</span>

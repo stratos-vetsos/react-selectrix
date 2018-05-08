@@ -1,16 +1,17 @@
 const path = require( 'path' );
 const webpack = require( 'webpack' );
-const BundleAnalyzerPlugin = require( 'webpack-bundle-analyzer' ).BundleAnalyzerPlugin;
+// const BundleAnalyzerPlugin = require( 'webpack-bundle-analyzer' ).BundleAnalyzerPlugin;
+const UglifyJSPlugin = require( 'uglifyjs-webpack-plugin' );
 
 module.exports = {
 
 	context: path.resolve( __dirname ),
 
 	entry: {
-		'bundle-production': './src/index'
+		'index': './src/index'
 	},
 
-	devtool: 'cheap-module-source-map',
+	mode: 'production',
 
 	resolve: {
 		alias: {
@@ -18,7 +19,9 @@ module.exports = {
 			'scss': path.resolve( __dirname, 'src/scss' ),
 			'helpers': path.resolve( __dirname, 'src/helpers' ),
 			'actions': path.resolve( __dirname, 'src/actions' ),
-			'reducers': path.resolve( __dirname, 'src/reducers' )
+			'reducers': path.resolve( __dirname, 'src/reducers' ),
+			'react': path.resolve( __dirname, './node_modules/react' ),
+			'react-dom': path.resolve( __dirname, './node_modules/react-dom' )
 		},
 		extensions: [
 			'.jsx', '.js'
@@ -32,25 +35,30 @@ module.exports = {
 		path: path.resolve( __dirname, `./dist` ),
 
 		publicPath: '/dist/',
-
-		libraryTarget: 'umd'
+		libraryTarget: 'umd',
+		umdNamedDefine: true
 
 	},
 
 	externals: {
 		react: {
-			root: 'React',
-			commonjs2: 'react',
 			commonjs: 'react',
-			amd: 'react'
+			commonjs2: 'react',
+			amd: 'React',
+			root: 'React'
 		},
-		'prop-types': {
+		"react-dom": {
+			commonjs: 'react-dom',
+			commonjs2: 'react-dom',
+			amd: 'ReactDOM',
+			root: 'ReactDOM'
+		},
+		"prop-types": {
 			root: 'PropTypes',
 			commonjs2: 'prop-types',
 			commonjs: 'prop-types',
 			amd: 'prop-types'
-		},
-		'react-dom': 'umd react-dom'
+		}
 	},
 
 	module: {
@@ -88,30 +96,13 @@ module.exports = {
 	plugins: [
 
 		new webpack.DefinePlugin( {
-			'process.env': {
-				NODE_ENV: JSON.stringify( 'production' )
-			}
+			'process.env.NODE_ENV': JSON.stringify( 'production' )
 		} ),
 
-		//	new BundleAnalyzerPlugin(),
+		new UglifyJSPlugin(),
 
-		new webpack.ProvidePlugin( { 'Promise': 'es6-promise', 'fetch': 'imports-loader?this=>global!exports-loader?global.fetch!whatwg-fetch' } ),
+		// new BundleAnalyzerPlugin(),
 
-		new webpack.optimize.UglifyJsPlugin( {
-			mangle: true,
-			compress: {
-				pure_getters: true,
-				unsafe: true,
-				unsafe_comps: true,
-				warnings: false,
-				screw_ie8: true
-			},
-			output: {
-				comments: false
-			},
-			exclude: [ /\.min\.js$/gi ],
-			sourceMap: false
-		} ),
 		new webpack.optimize.AggressiveMergingPlugin()
 
 	]

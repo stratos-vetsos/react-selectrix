@@ -6,13 +6,15 @@ module.exports = {
     context: path.resolve( __dirname ),
 
     entry: {
-        bundle: [
+        index: [
             'react-hot-loader/patch',
             'webpack-dev-server/client?http://localhost:3010',
             'webpack/hot/only-dev-server',
-            './src/gh-pages'
+            './src/development'
         ]
     },
+
+    mode: 'development',
 
     resolve: {
         extensions: [
@@ -27,7 +29,7 @@ module.exports = {
 			'scss': path.resolve( __dirname, 'src/scss' ),
 			'helpers': path.resolve( __dirname, 'src/helpers' ),
 			'actions': path.resolve( __dirname, 'src/actions' ),
-			'reducers': path.resolve( __dirname, 'src/reducers' ),
+			'reducers': path.resolve( __dirname, 'src/reducers' )
 		}
     },
     output: {
@@ -79,6 +81,11 @@ module.exports = {
         //new webpack.ProvidePlugin({ 'Promise': 'es6-promise', 'fetch': 'imports-loader?this=>global!exports-loader?global.fetch!whatwg-fetch' }),
 
         new webpack.HotModuleReplacementPlugin( ),
+
+        new webpack.DefinePlugin( {
+			'process.env.NODE_ENV': JSON.stringify( 'development' )
+		} ),
+
         // enable HMR globally
 
         new webpack.NamedModulesPlugin( ),
