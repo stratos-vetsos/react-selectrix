@@ -1,7 +1,12 @@
 # React Selectrix
 A beautiful, materialized, easy to use and flexible **Select** replacement for React.js
 ### Installing
-Stay tuned. React Selectrix will be bundled through npm soon.
+```
+npm i react-selectrix
+```
+
+### Github
+https://github.com/stratos-vetsos/react-selectrix/
 
 ### Demo
 Check out the demo and use examples [here](https://stratos-vetsos.github.io/react-selectrix/)!
