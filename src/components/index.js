@@ -2,10 +2,7 @@ import { connect } from 'react-redux';
 import { setupInstance } from 'actions';
 import Selectrix from './Selectrix';
 
-const mapStateToProps = ( state, ownProps ) => {
-    return ownProps;
-
-}
+const mapStateToProps = ( state, ownProps ) => ownProps;
 
 const mapDispatchToProps = ( dispatch ) => {
 

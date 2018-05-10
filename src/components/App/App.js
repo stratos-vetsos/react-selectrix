@@ -23,7 +23,7 @@ export default class App extends React.Component {
 		];
 
 		methods.forEach( method => this[ method ] = this[ method ].bind( this ) );
-
+		
 	}
 
 	componentDidMount() {

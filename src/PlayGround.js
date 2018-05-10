@@ -57,7 +57,7 @@ export default class PlayGround extends React.Component {
 			},
 			{
 				key: 'f',
-				label: 'Option FA'
+				label: 'Option F'
 			}
 		];
 

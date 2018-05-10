@@ -9,9 +9,7 @@ export default class Selectrix extends React.Component {
 
 		super( props );
 
-		const methods = [
-			'handleMouseMove'
-		];
+		const methods = [ 'handleMouseMove' ];
 
 		methods.forEach( method => this[ method ] = this[ method ].bind( this ) );
 

@@ -10,7 +10,7 @@
     "update:packages": "node wipe-dependencies.js && rm -rf node_modules && npm update --save-dev && npm update --save"
   },
   "author": "Stratos Vetsos",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "prop-types": "^15.6.1"
   },
@@ -37,7 +37,7 @@
     "react-dom": "^16.3.2",
     "react-hot-loader": "^3.1.3",
     "react-redux": "^5.0.7",
-    "redux": "^3.7.2",
+    "redux": "^4.0.0",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
     "rimraf": "^2.6.2",
@@ -50,7 +50,7 @@
     "webpack-dev-server": "^3.1.4"
   },
   "peerDependencies": {
-    "react": "^16.3.2",
-    "react-dom": "^16.3.2"
+    "react": "*",
+    "react-dom": "*"
   }
 }
