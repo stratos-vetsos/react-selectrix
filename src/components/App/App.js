@@ -28,10 +28,10 @@ export default class App extends React.Component {
 
 	componentDidMount() {
 
-		document.body.addEventListener( 'click', this.handleBodyClick );
-		document.body.addEventListener( 'touchstart', this.handleBodyClick );
-		document.body.addEventListener( 'keydown', this.handleKeyDown );
-		document.body.addEventListener( 'mousemove', this.handleMouseMove );
+		document.addEventListener( 'click', this.handleBodyClick );
+		document.addEventListener( 'touchstart', this.handleBodyClick );
+		document.addEventListener( 'keydown', this.handleKeyDown );
+		document.addEventListener( 'mousemove', this.handleMouseMove );
 
 		if( ( ! this.props.settings.multiple && ! this.props.settings.commaSeperated && ! this.props.settings.isDropDown ) && this.props.isOpen && this.props.checkForScroll && this.props.selected.length > 0 ) {
 			this.props.maybeScroll( this.rsBodyRef, this[ `option-${ this.props.selectedIndex[ 0 ].toString() }` ] );
@@ -40,10 +40,10 @@ export default class App extends React.Component {
 	}
 
 	componentWillUnmount() {
-		document.body.removeEventListener( 'click', this.handleBodyClick );
-		document.body.removeEventListener( 'touchstart', this.handleBodyClick );
-		document.body.removeEventListener( 'keydown', this.handleKeyDown );
-		document.body.removeEventListener( 'mousemove', this.handleMouseMove );
+		document.removeEventListener( 'click', this.handleBodyClick );
+		document.removeEventListener( 'touchstart', this.handleBodyClick );
+		document.removeEventListener( 'keydown', this.handleKeyDown );
+		document.removeEventListener( 'mousemove', this.handleMouseMove );
 	}
 
 	handleBodyClick( e ) {
