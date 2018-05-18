@@ -13,8 +13,6 @@ export default class Searchable extends React.Component {
 
 		this.calculateSize = this.calculateSize.bind( this );
 		this.onSearch = this.onSearch.bind( this );
-		this.focus = this.focus.bind( this );
-		this.removeFocus = false;
 
 	}
 
@@ -54,24 +52,6 @@ export default class Searchable extends React.Component {
 		}
 
 		if( nextProps.focused ) {
-			this.removeFocus = false;
-			if( this.input.id !== document.activeElement.id ) {
-				this.input.focus();
-			}
-
-		}
-		else {
-			this.removeFocus = true;
-			if( this.input.id === document.activeElement.id ) {
-				this.input.blur();
-			}
-		}
-
-	}
-
-	focus() {
-
-		if( ! this.removeFocus ) {
 			this.input.focus();
 		}
 
@@ -81,7 +61,7 @@ export default class Searchable extends React.Component {
 
 		let className = 'rs-searchable';
 		const multiple = this.props.settings.multiple;
-		const { focused } = this.props;
+		const { focused, queryString } = this.props;
 		let placeholder = '';
 
 		if( multiple ) {
@@ -98,6 +78,10 @@ export default class Searchable extends React.Component {
 			className += ' rs-focused';
 		}
 
+		if( queryString ) {
+			className += ' rs-active';
+		}
+
 		return (
 			<input
 				ref={ ( ref ) => this.input = ref }
@@ -107,7 +91,6 @@ export default class Searchable extends React.Component {
 				className={ className }
 				placeholder={ placeholder }
 				value={ this.props.queryString }
-				onBlur={ this.focus }
 				onChange={ e => {
 					const value = e.target.value;
 					if( this.props.ajax.fetchOnSearch ) {
