@@ -139,6 +139,7 @@ html {
 }
 
 .vertical-align {
+
 	height: 100%;
 
 	&:before {
@@ -209,6 +210,49 @@ header {
 		i.fa {
 			color: black;
 			font-size: 16px;
+		}
+	}
+}
+
+@media ( max-width: 991px ) {
+
+	header {
+		.vertical-align {
+
+			height: auto;
+
+			&:before {
+				display: none;
+			}
+
+			> * {
+				display: block;
+			}
+
+			> div {
+				display: inline-block;
+			}
+
+		}
+	}
+
+}
+
+@media ( max-width: 560px ) {
+
+	.settings .form-group {
+		width: 50%;
+	}
+
+	header {
+		.vertical-align {
+			margin-top: 30px;
+		}
+		p {
+			font-size: 15px;
+			span {
+				font-size: 12px;
+			}
 		}
 	}
 }

@@ -150,6 +150,26 @@ header {
       color: black;
       font-size: 16px; }
 
+@media (max-width: 991px) {
+  header .vertical-align {
+    height: auto; }
+    header .vertical-align:before {
+      display: none; }
+    header .vertical-align > * {
+      display: block; }
+    header .vertical-align > div {
+      display: inline-block; } }
+
+@media (max-width: 560px) {
+  .settings .form-group {
+    width: 50%; }
+  header .vertical-align {
+    margin-top: 30px; }
+  header p {
+    font-size: 15px; }
+    header p span {
+      font-size: 12px; } }
+
 /* end temp */
 .react-selectrix {
   position: relative; }
@@ -176,6 +196,8 @@ header {
       background-color: #faf7f7; }
     .react-selectrix .rs-tag-wrapper.focused {
       background-color: #faf7f7; }
+  .react-selectrix input#searchable.rs-active {
+    min-width: 30px; }
   .react-selectrix button.rs-toggle-button {
     background-color: #ffffff;
     border: none;
