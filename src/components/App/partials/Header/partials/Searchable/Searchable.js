@@ -81,7 +81,7 @@ export default class Searchable extends React.Component {
 
 		let className = 'rs-searchable';
 		const multiple = this.props.settings.multiple;
-		const { focused, tags } = this.props;
+		const { focused, queryString } = this.props;
 		let placeholder = '';
 
 		if( multiple ) {
@@ -96,6 +96,10 @@ export default class Searchable extends React.Component {
 
 		if( focused ) {
 			className += ' rs-focused';
+		}
+
+		if( queryString ) {
+			className += ' rs-active';
 		}
 
 		return (

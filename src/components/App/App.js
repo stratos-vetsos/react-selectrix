@@ -29,6 +29,7 @@ export default class App extends React.Component {
 	componentDidMount() {
 
 		document.body.addEventListener( 'click', this.handleBodyClick );
+		document.body.addEventListener( 'touchstart', this.handleBodyClick );
 		document.body.addEventListener( 'keydown', this.handleKeyDown );
 		document.body.addEventListener( 'mousemove', this.handleMouseMove );
 
@@ -40,6 +41,7 @@ export default class App extends React.Component {
 
 	componentWillUnmount() {
 		document.body.removeEventListener( 'click', this.handleBodyClick );
+		document.body.removeEventListener( 'touchstart', this.handleBodyClick );
 		document.body.removeEventListener( 'keydown', this.handleKeyDown );
 		document.body.removeEventListener( 'mousemove', this.handleMouseMove );
 	}
