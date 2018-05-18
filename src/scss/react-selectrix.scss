@@ -43,6 +43,12 @@
 		}
 	}
 
+	input#searchable {
+		&.rs-active {
+			min-width: 30px;
+		}
+	}
+
 	button.rs-toggle-button {
 		background-color: $background-color;
 		border: none;

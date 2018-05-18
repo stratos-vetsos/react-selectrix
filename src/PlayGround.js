@@ -85,7 +85,7 @@ export default class PlayGround extends React.Component {
 					multiple={ this.state.multiple }
 					stayOpen={ false }
 					commaSeperated={ false }
-					singleLine={ true }
+					singleLine={ false }
 					lifo={ false }
 					selectAllButton={ true }
 					height={ 190 }
@@ -102,7 +102,7 @@ export default class PlayGround extends React.Component {
 					// }}
 					// onRenderOption={ this.onRenderOption }
 					// onRenderSelection={ this.onRenderSelection }
-					tags={ true }
+					tags={ false }
 				/>
 			</div>
 		)
