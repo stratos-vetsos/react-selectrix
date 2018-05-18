@@ -52,5 +52,17 @@
   "peerDependencies": {
     "react": "*",
     "react-dom": "*"
-  }
+  },
+  "keywords": [
+    "select",
+    "multiselect",
+    "react-select",
+    "input",
+    "combobox",
+    "dropdown",
+    "form",
+    "tags",
+	"material-design",
+	"autocomplete"
+  ]
 }
