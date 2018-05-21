@@ -55,7 +55,7 @@ materialize | boolean | true | Whether the style of the Select should be **Mater
 defaultValue | boolean / array / string | false | If you have preselected values use this property. Use an array of option keys for multiple selections, or key as a string for single selection.
 checkBoxes | boolean | false | Set this to true if you want to render **Checkboxes** instead of list items.
 height | number | 190 | The height of the dropdown.
-placeHolderInside  | boolean | true | If the placeholder should be an option.
+placeHolderInside  | boolean | false | If the placeholder should be an option.
 placeholder | string | Please Select | The placeholder of the Select.
 isOpen | boolean | false | If the Select should be rendered open.
 arrow | boolean | true | Whether to show an arrow on Select's header.
@@ -72,6 +72,8 @@ customKeys | object / boolean | false | Pass an object to change the default opt
 ajax | boolean / object | false | Whether to enable ajax. The library supports asynchronous calls through fetch API. Available default properties of ajax object: ``{ url: '', debounce: 200, fetchOnSearch: false, q: "", nestedKey: false, searchPrompt: true, minLength: 1  }.`` You can find details for all the ajax object properties, in the next section and in our demo page.
 onRenderOption | function / boolean | false | Use this function to render custom option items
 onRenderSelection | function / boolean | false | Use this function to render custom selected items
+onOpen | function | undefined | Use this callback to catch Select's open trigger.
+onClose | function | undefined | Use this callback to catch Select's close trigger.
 
 ### ajax prop - analysis
 

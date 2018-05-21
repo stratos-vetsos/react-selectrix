@@ -50,7 +50,7 @@ Selectrix.defaultProps = {
 	height: 190,
 	className: '',
 	isOpen: false,
-	placeHolderInside: true,
+	placeHolderInside: false,
 	placeholder: 'Please Select',
 	arrow: true,
 	defaultValue: false,

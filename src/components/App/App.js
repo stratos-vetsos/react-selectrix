@@ -70,7 +70,7 @@ export default class App extends React.Component {
 
 	checkIfHovered() {
 
-		if( ! this.props.settings.stayOpen || ! this.props.checkForHover || this.props.settings.commaSeperated || this.props.settings.checkBoxes || this.props.settings.isDropDown || this.props.tags.focused ) {
+		if( ! this.props.settings.stayOpen || ! this.props.settings.multiple || ! this.props.checkForHover || this.props.settings.commaSeperated || this.props.settings.checkBoxes || this.props.settings.isDropDown || this.props.tags.focused ) {
 			return;
 		}
 
@@ -184,7 +184,7 @@ export default class App extends React.Component {
 									</div>
 								}
 								<NoResults options={ options } />
-								{ ! settings.multiple && settings.placeHolderInside && ! ajax.fetching && ajax.minLength <= queryString &&
+								{ settings.placeHolderInside && ! settings.multiple && ( ! ajax.active || ! ajax.fetching && ajax.minLength <= queryString ) &&
 									<li
 										onClick={ this.props.clearSelect }
 										className={ this.buildOptionClassName( { key: 'default' } ) }
