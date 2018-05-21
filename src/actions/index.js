@@ -523,12 +523,13 @@ export const findFocusedItem = () => {
 
 }
 
-export const closeSelect = () => {
+export const closeSelect = ( blur = false ) => {
 
 	return ( dispatch, getState ) => {
 
 		dispatch( {
-			type: CLOSE_SELECT
+			type: CLOSE_SELECT,
+			blur
 		} );
 
 		getState().onClose();

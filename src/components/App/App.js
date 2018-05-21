@@ -50,10 +50,7 @@ export default class App extends React.Component {
 
 		if( ! this.ref.contains( e.target ) ) {
 			if( this.props.isOpen ) {
-				this.props.closeSelect();
-			}
-			if( this.props.focused ) {
-				this.props.blurSelect();
+				this.props.closeSelect( this.props.focused );
 			}
 		}
 

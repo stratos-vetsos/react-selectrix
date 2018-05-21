@@ -64,8 +64,8 @@ const mapDispatchToProps = ( dispatch ) => {
 			dispatch( clearSelect( stayOpen ) );
 		},
 
-		closeSelect: () => {
-			dispatch( closeSelect() );
+		closeSelect: ( blur = false ) => {
+			dispatch( closeSelect( blur ) );
 		},
 
 		focusSelect: () => {
