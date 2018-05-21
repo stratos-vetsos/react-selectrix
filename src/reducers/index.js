@@ -167,7 +167,8 @@ const reducer = ( state = initialState, action ) => {
 				onRenderSelection: action.props.onRenderSelection,
 				tags: Object.assign( {}, state.tags, {
 					enabled: action.props.tags
-				} )
+				} ),
+				id: action.props.id
 			} );
 		}
 
@@ -243,7 +244,8 @@ const reducer = ( state = initialState, action ) => {
 				tags: Object.assign( {}, state.tags, {
 					enabled: state.tags.enabled,
 					active: false
-				} )
+				} ),
+				focused: action.blur ? false : state.focused
 			} )
 		}
 

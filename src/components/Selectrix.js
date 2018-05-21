@@ -9,9 +9,7 @@ export default class Selectrix extends React.Component {
 
 		super( props );
 
-		const methods = [
-			'handleMouseMove'
-		];
+		const methods = [ 'handleMouseMove' ];
 
 		methods.forEach( method => this[ method ] = this[ method ].bind( this ) );
 
@@ -47,6 +45,7 @@ export default class Selectrix extends React.Component {
 }
 
 Selectrix.defaultProps = {
+	id: '',
 	options: [],
 	height: 190,
 	className: '',
@@ -81,6 +80,7 @@ Selectrix.defaultProps = {
 
 Selectrix.propTypes = {
 	options: PropTypes.array.isRequired,
+	id: PropTypes.string.isRequired,
 	height: PropTypes.oneOfType( [
 		PropTypes.number,
 		PropTypes.string,

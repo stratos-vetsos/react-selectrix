@@ -26,7 +26,7 @@ export default class CustomExample extends React.Component {
 
 	onRenderOption( option ) {
 		return(
-			<li><i className="fa fa-laptop"></i>{ option.label }</li>
+			<span><i className="fa fa-laptop"></i>{ option.label }</span>
 		)
 	}
 

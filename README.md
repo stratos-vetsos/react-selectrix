@@ -1,14 +1,22 @@
 # React Selectrix
 A beautiful, materialized, easy to use and flexible **Select** replacement for React.js
 ### Installing
-`$ npm -i react-selectrix`
+```
+npm i react-selectrix
+```
+
+### Github
+https://github.com/stratos-vetsos/react-selectrix/
+
+### Demo
+Check out the demo and use examples [here](https://stratos-vetsos.github.io/react-selectrix/)!
 
 ### Import to your project
 ```
 import Selectrix from "react-selectrix";
 ```
 
-###Basic Example
+### Basic Example
 
 ```javascript
 <Selectrix
@@ -36,10 +44,10 @@ import Selectrix from "react-selectrix";
 />
 ```
 
-###Props
+### Props
 
 Name  | Type | Default Value | Description
-------------- | -------------
+--- | --- | --- | ---
 options | array | [] | An array of the available options ( Objects with "key", "label" pairs and optionally "disabled" property ).
 multiple | boolean | false | Whether the Select supports multiple values.
 searchable | boolean | true | Whether the Select is **searchable**.
@@ -65,10 +73,10 @@ ajax | boolean / object | false | Whether to enable ajax. The library supports a
 onRenderOption | function / boolean | false | Use this function to render custom option items
 onRenderSelection | function / boolean | false | Use this function to render custom selected items
 
-###ajax prop - analysis
+### ajax prop - analysis
 
 Name  | Type | Default Value | Description
-------------- | -------------
+--- | --- | --- | ---
 url | string | '' | The url which the Select going to fetch the available options.
 debounce | number | 200 | The debounce of the ajax calls in milliseconds.
 fetchOnSearch | boolean | false | Whether you don't want to have the options prepopulated, when the Select opens, but you want to query them based on user's search value.
@@ -77,9 +85,9 @@ nestedKey | string / boolean | false | If your REST API returns the actual data 
 searchPrompt | boolean | true | This property goes alongside with fetchOnSearch property and indicates the user how many more characters should type, before the ajax search will happen.
 minLength | number | 1 | This property goes alongside with fetchOnSearch property and searchPrompt setted to "true". It is the min length of characters the user should type, before the ajax call search takes place.
 
-###Ajax Example
+### Ajax Example
 Many thanks to [newsapi.org](https://newsapi.org/) for their great api.
-Check this example in action, in our [demo](https://newsapi.org/) page.
+Check this example in action, in our [demo](https://stratos-vetsos.github.io/react-selectrix/) page.
 
 ```javascript
 <Selectrix
@@ -94,8 +102,8 @@ Check this example in action, in our [demo](https://newsapi.org/) page.
 />
 ```
 
-###Ajax Example with fetchOnSearch
-Check this example in action, in our [demo](https://newsapi.org/) page.
+### Ajax Example with fetchOnSearch
+Check this example in action, in our [demo](https://stratos-vetsos.github.io/react-selectrix/) page.
 
 ```javascript
 <Selectrix
@@ -117,8 +125,8 @@ Check this example in action, in our [demo](https://newsapi.org/) page.
 />
 ```
 
-###License
+### License
 MIT Licensed. Stratos Vetsos.
 
-###Contributions
+### Contributions
 Contributions are more than welcome, when we pass the 0.1 beta stage.
