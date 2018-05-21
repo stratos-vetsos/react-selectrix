@@ -89,10 +89,12 @@ html {
     .settings .form-group label {
       padding-left: 5px;
       font-size: 14px; }
-    .settings .form-group input[type="number"] {
+    .settings .form-group input[type="number"], .settings .form-group input[type="text"] {
       width: 50px;
       font-size: 12px;
       height: 22px; }
+    .settings .form-group input[type="text"] {
+      width: 90px; }
     .settings .form-group input:disabled + label {
       opacity: 0.5; }
 

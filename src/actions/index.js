@@ -410,6 +410,10 @@ export const selectItem = ( index, isKeyboard = false ) => {
 
 	return ( dispatch, getState ) => {
 
+		if( index === -1 ) {
+			return dispatch( clearSelect() );
+		}
+
 		let state = getState();
 		let options = state.search.active ? state.search.resultSet : state.options;
 		const selected = state.ajax.fetchOnSearch ? state.selected.map( s => s.key ) : state.selected;
@@ -441,7 +445,7 @@ export const selectItem = ( index, isKeyboard = false ) => {
 
 		state = getState();
 
-		if( ! state.settings.checkBoxes && ! state.settings.commaSeperated && ! state.settings.isDropDown ) {
+		if( state.isOpen && state.settings.multiple && ! state.settings.checkBoxes && ! state.settings.commaSeperated && ! state.settings.isDropDown ) {
 
 			if( isKeyboard ) {
 				index === options.length - 1 ? dispatch( focusItem( index - 1 ) ) : dispatch( focusItem( index ) )

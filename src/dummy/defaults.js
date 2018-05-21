@@ -1,6 +1,6 @@
 const defaults = {
 	height: 190,
-	placeHolderInside: true,
+	placeHolderInside: false,
 	placeholder: 'Please Select',
 	isOpen: false,
 	arrow: true,

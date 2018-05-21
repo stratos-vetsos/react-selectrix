@@ -124,10 +124,14 @@ html {
 			font-size: 14px;
 		}
 
-		input[type="number"] {
+		input[type="number"], input[type="text"] {
 			width: 50px;
 			font-size: 12px;
 			height: 22px;
+		}
+
+		input[type="text"] {
+			width: 90px;
 		}
 
 		input:disabled {

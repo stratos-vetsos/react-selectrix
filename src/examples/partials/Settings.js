@@ -23,6 +23,8 @@ export default class Settings extends React.Component {
 			value = parseInt( value );
 		}
 
+		console.log( name, value );
+
 		ajaxKeys.includes( name )
 		? settings.ajax = Object.assign( {}, settings.ajax, {
 			[ name ]: value
@@ -76,10 +78,13 @@ export default class Settings extends React.Component {
 							if( key === 'multiple' ) return null;
 							return(
 								<div key={ `setting-${ key }` } className="form-group">
-									{ key !== 'height'
-										? <input type="checkbox" checked={ value } name={ key } onChange={ this.changeSetting } disabled={ target.includes( key ) || disabled.includes( key ) } />
-										: <input type="number" value={ value } min={ 0 } step={ 50 } name={ key } onChange={ this.changeSetting } />
+									{ key === 'placeholder'
+										? <input type="text" name={ key } value={ value } onChange={ this.changeSetting } />
+										: key !== 'height'
+											? <input type="checkbox" checked={ value } name={ key } onChange={ this.changeSetting } disabled={ target.includes( key ) || disabled.includes( key ) } />
+											: <input type="number" value={ value } min={ 0 } step={ 50 } name={ key } onChange={ this.changeSetting } />
 									}
+
 									<label>{ key }</label>
 								</div>
 							)
