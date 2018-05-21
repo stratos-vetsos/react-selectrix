@@ -1,6 +1,6 @@
 {
   "name": "react-selectrix",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "A beautiful, clean coded select replacement for React.js",
   "main": "dist/index.js",
   "scripts": {
