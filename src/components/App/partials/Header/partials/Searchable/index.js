@@ -11,8 +11,7 @@ const mapStateToProps = ( state ) => {
 		queryString: state.search.queryString,
 		focused: state.focused,
 		ajax: state.ajax,
-		tags: state.tags,
-		id: state.id
+		tags: state.tags
 	}
 
 }
