@@ -566,6 +566,18 @@ export const handleKeyDown = ( e ) => {
 		const key = e.key;
 
 		switch( key ) {
+
+			case 'Tab': {
+
+				if( state.isOpen ) {
+					dispatch( closeSelect( true ) );
+				} else if( state.focused ) {
+					dispatch( blurSelect() );
+				}
+
+				break;
+			}
+
 			case 'Enter': {
 				e.preventDefault();
 				if( state.isOpen ) {
