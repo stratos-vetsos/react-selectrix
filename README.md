@@ -9,7 +9,7 @@ npm i react-selectrix
 https://github.com/stratos-vetsos/react-selectrix/
 
 ### Demo
-Check out the demo and use examples [here](https://stratos-vetsos.github.io/react-selectrix/)!
+[Check out the demo and use examples here](https://stratos-vetsos.github.io/react-selectrix/)!
 
 ### Import to your project
 ```
@@ -89,7 +89,7 @@ minLength | number | 1 | This property goes alongside with fetchOnSearch propert
 
 ### Ajax Example
 Many thanks to [newsapi.org](https://newsapi.org/) for their great api.
-Check this example in action, in our [demo](https://stratos-vetsos.github.io/react-selectrix/) page.
+[Check this example in action, in our demo page.](https://stratos-vetsos.github.io/react-selectrix/)
 
 ```javascript
 <Selectrix
@@ -105,7 +105,7 @@ Check this example in action, in our [demo](https://stratos-vetsos.github.io/rea
 ```
 
 ### Ajax Example with fetchOnSearch
-Check this example in action, in our [demo](https://stratos-vetsos.github.io/react-selectrix/) page.
+[Check this example in action, in our demo page.](https://stratos-vetsos.github.io/react-selectrix/)
 
 ```javascript
 <Selectrix
