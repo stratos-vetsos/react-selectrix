@@ -44,7 +44,7 @@ import Selectrix from "react-selectrix";
 />
 ```
 
-# Props
+## Props
 
 Name  | Type | Default Value | Description
 --- | --- | --- | ---
@@ -76,7 +76,7 @@ onChange | function | undefined | Use this callback to catch Select's change tri
 onOpen | function | undefined | Use this callback to catch Select's open trigger.
 onClose | function | undefined | Use this callback to catch Select's close trigger.
 
-# ajax prop - breakdown
+## Ajax prop - breakdown
 
 Name  | Type | Default Value | Description
 --- | --- | --- | ---
@@ -88,7 +88,7 @@ nestedKey | string / boolean | false | If your REST API returns the actual data 
 searchPrompt | boolean | true | This property goes alongside with fetchOnSearch property and indicates the user how many more characters should type, before the ajax search will happen.
 minLength | number | 1 | This property goes alongside with fetchOnSearch property and searchPrompt setted to "true". It is the min length of characters the user should type, before the ajax call search takes place.
 
-# callbacks - breakdown
+## Callbacks - breakdown
 
 Name | Arguments | Description
 --- | --- | ---
