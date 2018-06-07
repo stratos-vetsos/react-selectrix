@@ -123,36 +123,59 @@ html {
     font-size: 1.6rem; }
 
 footer {
-  display: none; }
+  text-align: center;
+  font-size: 13px;
+  padding: 15px 0;
+  border-top: 1px solid #eee;
+  color: #666; }
 
 header {
-  padding: 80px 0;
+  padding: 60px 0 0;
   background-color: #00b2ee;
   text-align: center; }
+  header .row {
+    padding-bottom: 60px; }
+    header .row > div:first-child {
+      text-align: left; }
+  header .secondary {
+    text-align: left; }
+    header .secondary a {
+      display: inline-block;
+      text-decoration: underline;
+      color: white;
+      padding-right: 5px; }
+    header .secondary iframe {
+      position: relative;
+      top: 7px; }
   header h1 {
     color: white;
     font-size: 70px; }
-  header p {
+  header .vertical-align p {
     text-align: left;
     color: white;
     font-size: 20px;
     margin: 0; }
-    header p a {
+    header .vertical-align p a {
       color: white; }
-      header p a:hover {
+      header .vertical-align p a:hover {
         color: inherit;
         text-decoration: none; }
-    header p span {
+    header .vertical-align p span {
       padding-right: 10px;
       width: 100px;
       font-size: 14px;
       display: inline-block;
       text-align: right; }
-    header p i.fa {
+    header .vertical-align p i.fa {
       color: black;
       font-size: 16px; }
 
 @media (max-width: 991px) {
+  header .row > div:first-child {
+    text-align: center; }
+  header .secondary {
+    margin-bottom: 25px;
+    text-align: center; }
   header .vertical-align {
     height: auto; }
     header .vertical-align:before {
@@ -167,10 +190,10 @@ header {
     width: 50%; }
   header .vertical-align {
     margin-top: 30px; }
-  header p {
-    font-size: 15px; }
-    header p span {
-      font-size: 12px; } }
+    header .vertical-align p {
+      font-size: 15px; }
+      header .vertical-align p span {
+        font-size: 12px; } }
 
 /* end temp */
 .react-selectrix {

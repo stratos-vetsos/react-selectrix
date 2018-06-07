@@ -177,50 +177,89 @@ html {
 }
 
 footer {
-	display: none;
+	text-align: center;
+	font-size: 13px;
+	padding: 15px 0;
+	border-top: 1px solid #eee;
+	color: #666;
 }
 
 header {
-	padding: 80px 0;
+
+	padding: 60px 0 0;
 	background-color: #00b2ee;
 	text-align: center;
+
+	.row {
+		padding-bottom: 60px;
+
+		> div:first-child {
+			text-align: left;
+		}
+	}
+
+
+
+	.secondary {
+		text-align: left;
+		a {
+			display: inline-block;
+			text-decoration: underline;
+			color: white;
+			padding-right: 5px;
+		}
+		iframe {
+			position: relative;
+			top: 7px;
+		}
+	}
 
 	h1 {
 		color: white;
 		font-size: 70px;
 	}
 
-	p {
-		text-align: left;
-		color: white;
-		font-size: 20px;
-		margin: 0;
-		a {
+	.vertical-align {
+		p {
+			text-align: left;
 			color: white;
-			&:hover {
-				color: inherit;
-				text-decoration: none;
+			font-size: 20px;
+			margin: 0;
+			a {
+				color: white;
+				&:hover {
+					color: inherit;
+					text-decoration: none;
+				}
+			}
+
+			span {
+				padding-right: 10px;
+				width: 100px;
+				font-size: 14px;
+				display: inline-block;
+				text-align: right;
+			}
+
+			i.fa {
+				color: black;
+				font-size: 16px;
 			}
 		}
-
-		span {
-			padding-right: 10px;
-			width: 100px;
-			font-size: 14px;
-			display: inline-block;
-			text-align: right;
-		}
-
-		i.fa {
-			color: black;
-			font-size: 16px;
-		}
 	}
+
 }
 
 @media ( max-width: 991px ) {
 
 	header {
+		.row > div:first-child {
+			text-align: center;
+		}
+		.secondary {
+			margin-bottom: 25px;
+			text-align: center;
+		}
 		.vertical-align {
 
 			height: auto;
@@ -251,11 +290,11 @@ header {
 	header {
 		.vertical-align {
 			margin-top: 30px;
-		}
-		p {
-			font-size: 15px;
-			span {
-				font-size: 12px;
+			p {
+				font-size: 15px;
+				span {
+					font-size: 12px;
+				}
 			}
 		}
 	}
