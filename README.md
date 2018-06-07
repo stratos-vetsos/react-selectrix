@@ -1,15 +1,15 @@
 # React Selectrix
-A beautiful, materialized, easy to use and flexible **Select** replacement for React.js
-### Installing
-```
-npm i react-selectrix
-```
-
-### Github
-https://github.com/stratos-vetsos/react-selectrix/
-
+A beautiful, materialized, easy to use and flexible **React Select** replacement
 ### Demo
 [Check out the demo and use examples here](https://stratos-vetsos.github.io/react-selectrix/)!
+
+### Installing
+```
+npm i --save-dev react-selectrix
+```
+
+### Documentation
+https://github.com/stratos-vetsos/react-selectrix/
 
 ### Import to your project
 ```
@@ -44,7 +44,7 @@ import Selectrix from "react-selectrix";
 />
 ```
 
-### Props
+# Props
 
 Name  | Type | Default Value | Description
 --- | --- | --- | ---
@@ -76,7 +76,7 @@ onChange | function | undefined | Use this callback to catch Select's change tri
 onOpen | function | undefined | Use this callback to catch Select's open trigger.
 onClose | function | undefined | Use this callback to catch Select's close trigger.
 
-### ajax prop - analysis
+# ajax prop - breakdown
 
 Name  | Type | Default Value | Description
 --- | --- | --- | ---
@@ -87,6 +87,16 @@ q | string | '' | This property goes alongside with fetchOnSearch property, sett
 nestedKey | string / boolean | false | If your REST API returns the actual data in a deeper level, inside a nested key, let's say "articles", set nestedKey to "articles".
 searchPrompt | boolean | true | This property goes alongside with fetchOnSearch property and indicates the user how many more characters should type, before the ajax search will happen.
 minLength | number | 1 | This property goes alongside with fetchOnSearch property and searchPrompt setted to "true". It is the min length of characters the user should type, before the ajax call search takes place.
+
+# callbacks - breakdown
+
+Name | Arguments | Description
+--- | --- | ---
+onChange | value | The selected object if the Select is single and an array of objects if the Select is multiple.
+onRenderOption | option, index | The option which is going to be rendered and it's corresponding index.
+onRenderSelection | selected, settings, deselect | The selected object, the Select's settings and a callback function to use for deselection.
+onOpen | N/A |
+onClose | N/A |
 
 ### Ajax Example
 Many thanks to [newsapi.org](https://newsapi.org/) for their great api.
@@ -128,8 +138,73 @@ Many thanks to [newsapi.org](https://newsapi.org/) for their great api.
 />
 ```
 
-### License
+### Tags Example
+[Check this example in action, in our demo page.](https://stratos-vetsos.github.io/react-selectrix/)
+
+```javascript
+<Selectrix
+	multiple={true}
+	materialize={true}
+	tags={true}
+	options={[
+		{
+			key: "hotdog",
+			label: "Hot Dog"
+		},
+		{
+			key: "pizza",
+			label: "Pizza"
+		}
+	]}
+	onChange={ value => console.log( value ) }
+/>
+```
+
+### Custom Render Example
+[Check this example in action, in our demo page.](https://stratos-vetsos.github.io/react-selectrix/)
+
+```javascript
+<Selectrix
+	multiple={true}
+	materialize={true}
+	options={[
+		{
+			key: "javascript",
+			label: "Javascript"
+		},
+		{
+			key: "go",
+			label: "Go"
+		},
+		{
+			key: "ruby",
+			label: "Ruby On Rails"
+		},
+		{
+			key: "php",
+			label: "PHP"
+		}
+	]}
+	onRenderOption={onRenderOption}
+	onRenderSelection={onRenderSelection}
+	onChange={ value => console.log( value ) }
+/>
+
+const onRenderOption = ( option, index ) => (
+	<span><i className="fa fa-laptop"></i>{ option.label }</span>
+)
+
+const onRenderSelection = ( selected, settings, deselect ) => (
+	<span style={{ marginRight: 10, border: "1px solid #eee", padding: 5 }}>
+		{ selected.label }
+		<i style={{ paddingLeft: 5, cursor: "pointer" }} onClick={ deselect } className="fa fa-window-close"></i>
+	</span>
+)
+```
+
+# License
 MIT Licensed. Stratos Vetsos.
 
-### Contributions
-Contributions are more than welcome, when we pass the 0.1 beta stage.
+# Contributions
+Contributions are more than welcome. Run npm install && npm start on master and you are good to go!
+The CONTRIBUTING.md is going to be published soon.
