@@ -5,17 +5,16 @@ import { createLogger } from 'redux-logger';
 const loggerMiddleware = createLogger();
 
 export const configureStore = () => {
-	const env = process.env.NODE_ENV;
-	return env === 'development'
-	? createStore(
-		reducer,
-		window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
-		applyMiddleware(
-			thunkMiddleware,
-			loggerMiddleware
-		)
-	)
-	: createStore( reducer, applyMiddleware( thunkMiddleware ) )
-}
+  const env = process.env.NODE_ENV;
+  return env === 'development'
+    ? createStore(
+        reducer,
+        typeof window !== 'undefined' &&
+			window.__REDUX_DEVTOOLS_EXTENSION__ &&
+			window.__REDUX_DEVTOOLS_EXTENSION__(),
+        applyMiddleware(thunkMiddleware, loggerMiddleware)
+      )
+    : createStore(reducer, applyMiddleware(thunkMiddleware));
+};
 
 export default configureStore;
