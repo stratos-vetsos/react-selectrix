@@ -1,4 +1,4 @@
-import { normalizeSelected, isInViewport, isEmpty, isNumeric, isString, isArray } from 'helpers';
+import { normalizeSelected, isInViewport, isEmpty, isNumeric, isString, isArray, isObject } from 'helpers';
 
 export const SETUP_INSTANCE = 'SETUP_INSTANCE';
 export const UPDATE_INSTANCE = 'UPDATE_INSTANCE';
@@ -111,7 +111,8 @@ export const setupInstance = ( props, update = false ) => {
 			needsUpdate: true,
 			nestedKey: false,
 			searchPrompt: true,
-			minLength: 1
+			minLength: 1,
+			headers: {}
 		};
 
 		if( props.customKeys ) {
@@ -162,6 +163,10 @@ export const setupInstance = ( props, update = false ) => {
 
 			if( props.ajax.hasOwnProperty( 'minLength' ) && isNumeric( props.ajax.minLength ) && ajax.fetchOnSearch ) {
 				ajax.minLength = props.ajax.minLength;
+			}
+
+			if( props.ajax.hasOwnProperty( 'headers' ) && isObject( props.ajax.headers ) ) {
+				ajax.headers = props.ajax.headers;
 			}
 
 		}
@@ -272,14 +277,13 @@ export const fetchOptions = () => {
 
 			dispatch( { type: FETCHING_OPTIONS } );
 
-
 			let url = state.ajax.url;
 
 			if( state.ajax.fetchOnSearch ) {
 				url += state.ajax.q.replace( '{q}', state.search.queryString );
 			}
 
-			fetch( url )
+			fetch( url, { headers: state.ajax.headers } )
 			.then( res => {
 
 				if( ! res.ok ) {
