@@ -7,7 +7,7 @@ export default class PlayGround extends React.Component {
 		super( props );
 		this.state = {
 			value: '',
-			multiple: true,
+			multiple: false,
 			searchable: true
 		};
 
@@ -74,7 +74,6 @@ export default class PlayGround extends React.Component {
 					}
 				</div>
 				<Selectrix
-					options={ options }
 					onChange={ this.setValue }
 					arrow={ true }
 					placeHolderInside={ false }
@@ -87,22 +86,22 @@ export default class PlayGround extends React.Component {
 					commaSeperated={ false }
 					singleLine={ false }
 					lifo={ false }
-					selectAllButton={ true }
+					selectAllButton={ false }
 					height={ 190 }
 					checkBoxes={ false }
 					materialize={ true }
 					isDropDown={ false }
-					// customKeys={ { key: 'url', label: 'title' } }
-					// ajax={{
-					// 	url: 'https://newsapi.org/v2/everything?apiKey=9342a9a707ca49c4b2da34e9ea238ea6',
-					// 	fetchOnSearch: true,
-					// 	q: '&q={q}',
-					// 	nestedKey: 'articles',
-					// 	minLength: 3
-					// }}
+					customKeys={ { key: 'url', label: 'title' } }
+					ajax={{
+						url: 'https://newsapi.org/v2/everything?apiKey=9342a9a707ca49c4b2da34e9ea238ea6',
+						fetchOnSearch: true,
+						q: '&q={q}',
+						nestedKey: 'articles',
+						minLength: 3
+					}}
 					// onRenderOption={ this.onRenderOption }
 					// onRenderSelection={ this.onRenderSelection }
-					tags={ false }
+					tags={ true }
 				/>
 			</div>
 		)

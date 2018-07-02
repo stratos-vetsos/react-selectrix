@@ -351,6 +351,13 @@ const reducer = ( state = initialState, action ) => {
 		}
 
 		case SETUP_AJAX_OPTIONS: {
+
+			let tags = { ... state.tags };
+			if( tags.enabled ) {
+				const found = action.options.find( o => o.label === state.search.queryString ) !== undefined;
+				tags.active = found === false;
+			}
+
 			return Object.assign( {}, state, {
 				options: action.options,
 				ajax: Object.assign( {}, state.ajax, {
@@ -360,7 +367,8 @@ const reducer = ( state = initialState, action ) => {
 				search: state.ajax.fetchOnSearch ? Object.assign( {}, state.search, {}, {
 					active: true,
 					resultSet: action.options
-				} ) : state.search
+				} ) : state.search,
+				tags
 			} )
 		}
 

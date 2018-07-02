@@ -87,7 +87,6 @@ export default class Searchable extends React.Component {
 				ref={ ( ref ) => this.input = ref }
 				onFocus={ this.props.focusSelect }
 				type="text"
-				id="searchable"
 				className={ className }
 				placeholder={ placeholder }
 				value={ this.props.queryString }

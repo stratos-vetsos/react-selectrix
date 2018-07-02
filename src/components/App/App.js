@@ -165,7 +165,7 @@ export default class App extends React.Component {
 							ref={ ( ref ) => this.rsBodyRef = ref }
 							style={{ maxHeight: this.props.height }}
 						>
-							<Tags extractRef={ ( ref ) => this.tagsRef = ref } />
+							<Tags extractRef={ ref => this.tagsRef = ref } />
 							{ settings.selectAllButton &&
 								<div className="rs-toggle-wrapper">
 									<button

@@ -3,7 +3,11 @@ import { setupInstance } from 'actions';
 import Selectrix from './Selectrix';
 let index = 0;
 
-const mapStateToProps = ( state, ownProps ) => ownProps;
+const mapStateToProps = state => {
+    return {
+        id: state.id
+    }
+}
 
 const mapDispatchToProps = ( dispatch ) => {
 

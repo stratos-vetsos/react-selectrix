@@ -25,7 +25,7 @@ export const CREATE_TAG = 'CREATE_TAG';
 export const FOCUS_TAG = 'FOCUS_TAG';
 export const SET_TAG = 'SET_TAG';
 
-export const createTag = ( tag ) => {
+export const createTag = tag => {
 	return ( dispatch, getState ) => {
 
 		let state = getState();
@@ -97,10 +97,6 @@ export const setupInstance = ( props, update = false ) => {
 		let customKeys = {},
 			options = [ ... props.options ];
 
-		if( update && state.tags.tagSet.length > 0 ) {
-			options = [ ... props.options, ... state.tags.tagSet ];
-		}
-
 		const ajax = {
 			active: false,
 			url: '',
@@ -169,6 +165,10 @@ export const setupInstance = ( props, update = false ) => {
 				ajax.headers = props.ajax.headers;
 			}
 
+		}
+
+		if( update && state.tags.tagSet.length > 0 ) {
+			options = [ ... options, ... state.tags.tagSet ];
 		}
 
 		dispatch( {
