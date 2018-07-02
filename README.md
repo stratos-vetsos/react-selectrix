@@ -69,7 +69,7 @@ selectAllButton | boolean | false | Whether a "select all button" should be visi
 isDropDown | boolean | true | Set this to true if you want to use the Select as a **Dropdown**. When you select an option, the Select collapses and the header continue to have the placeholder as a value.
 tags | boolean | false | Whether to support custom tags.
 customKeys | object / boolean | false | Pass an object to change the default option keys ( key, label ). Example Syntax: ``{ key: "url", label: "title" }`` , to change the key to "url" and the label to "title".
-ajax | boolean / object | false | Whether to enable ajax. The library supports asynchronous calls through fetch API. Available default properties of ajax object: ``{ url: '', debounce: 200, fetchOnSearch: false, q: "", nestedKey: false, searchPrompt: true, minLength: 1  }.`` You can find details for all the ajax object properties, in the next section and in our demo page.
+ajax | boolean / object | false | Whether to enable ajax. The library supports asynchronous calls through fetch API. Available default properties of ajax object: ``{ url: '', headers: {}, debounce: 200, fetchOnSearch: false, q: "", nestedKey: false, searchPrompt: true, minLength: 1  }.`` You can find details for all the ajax object properties, in the next section and in our demo page.
 onRenderOption | function / boolean | false | Use this function to render custom option items
 onRenderSelection | function / boolean | false | Use this function to render custom selected items
 onChange | function | undefined | Use this callback to catch Select's change trigger.
@@ -81,6 +81,7 @@ onClose | function | undefined | Use this callback to catch Select's close trigg
 Name  | Type | Default Value | Description
 --- | --- | --- | ---
 url | string | '' | The url which the Select going to fetch the available options.
+headers | object | {} | Pass any headers you want to fetch api.
 debounce | number | 200 | The debounce of the ajax calls in milliseconds.
 fetchOnSearch | boolean | false | Whether you don't want to have the options prepopulated, when the Select opens, but you want to query them based on user's search value.
 q | string | '' | This property goes alongside with fetchOnSearch property, setted to "true". Depending the REST API providing you with options, you have to change this value accordingly. e.g. "&search={q}". Wherever you use the pseudo variable {q}, the user's search query will injected in the final request.
