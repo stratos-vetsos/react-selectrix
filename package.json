@@ -1,6 +1,6 @@
 {
   "name": "react-selectrix",
-  "version": "1.0.3",
+  "version": "1.0.13",
   "description": "A beautiful, clean coded select replacement for React.js",
   "main": "dist/index.js",
   "scripts": {
@@ -52,5 +52,17 @@
   "peerDependencies": {
     "react": "*",
     "react-dom": "*"
-  }
+  },
+  "keywords": [
+    "select",
+    "multiselect",
+    "react-select",
+    "input",
+    "combobox",
+    "dropdown",
+    "form",
+    "tags",
+    "material-design",
+    "autocomplete"
+  ]
 }

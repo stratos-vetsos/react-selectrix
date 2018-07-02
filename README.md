@@ -1,15 +1,15 @@
 # React Selectrix
-A beautiful, materialized, easy to use and flexible **Select** replacement for React.js
+A beautiful, materialized, easy to use and flexible **React Select** replacement
+### Demo
+[Check out the demo and use examples here](https://stratos-vetsos.github.io/react-selectrix/)!
+
 ### Installing
 ```
-npm i react-selectrix
+npm i --save-dev react-selectrix
 ```
 
-### Github
+### Documentation
 https://github.com/stratos-vetsos/react-selectrix/
-
-### Demo
-Check out the demo and use examples [here](https://stratos-vetsos.github.io/react-selectrix/)!
 
 ### Import to your project
 ```
@@ -44,7 +44,7 @@ import Selectrix from "react-selectrix";
 />
 ```
 
-### Props
+## Props
 
 Name  | Type | Default Value | Description
 --- | --- | --- | ---
@@ -55,7 +55,7 @@ materialize | boolean | true | Whether the style of the Select should be **Mater
 defaultValue | boolean / array / string | false | If you have preselected values use this property. Use an array of option keys for multiple selections, or key as a string for single selection.
 checkBoxes | boolean | false | Set this to true if you want to render **Checkboxes** instead of list items.
 height | number | 190 | The height of the dropdown.
-placeHolderInside  | boolean | true | If the placeholder should be an option.
+placeHolderInside  | boolean | false | If the placeholder should be an option.
 placeholder | string | Please Select | The placeholder of the Select.
 isOpen | boolean | false | If the Select should be rendered open.
 arrow | boolean | true | Whether to show an arrow on Select's header.
@@ -72,8 +72,11 @@ customKeys | object / boolean | false | Pass an object to change the default opt
 ajax | boolean / object | false | Whether to enable ajax. The library supports asynchronous calls through fetch API. Available default properties of ajax object: ``{ url: '', debounce: 200, fetchOnSearch: false, q: "", nestedKey: false, searchPrompt: true, minLength: 1  }.`` You can find details for all the ajax object properties, in the next section and in our demo page.
 onRenderOption | function / boolean | false | Use this function to render custom option items
 onRenderSelection | function / boolean | false | Use this function to render custom selected items
+onChange | function | undefined | Use this callback to catch Select's change trigger.
+onOpen | function | undefined | Use this callback to catch Select's open trigger.
+onClose | function | undefined | Use this callback to catch Select's close trigger.
 
-### ajax prop - analysis
+## Ajax prop - breakdown
 
 Name  | Type | Default Value | Description
 --- | --- | --- | ---
@@ -85,9 +88,19 @@ nestedKey | string / boolean | false | If your REST API returns the actual data 
 searchPrompt | boolean | true | This property goes alongside with fetchOnSearch property and indicates the user how many more characters should type, before the ajax search will happen.
 minLength | number | 1 | This property goes alongside with fetchOnSearch property and searchPrompt setted to "true". It is the min length of characters the user should type, before the ajax call search takes place.
 
+## Callbacks - breakdown
+
+Name | Arguments | Description
+--- | --- | ---
+onChange | value | The selected object if the Select is single and an array of objects if the Select is multiple.
+onRenderOption | option, index | The option which is going to be rendered and it's corresponding index.
+onRenderSelection | selected, settings, deselect | The selected object, the Select's settings and a callback function to use for deselection.
+onOpen | N/A |
+onClose | N/A |
+
 ### Ajax Example
 Many thanks to [newsapi.org](https://newsapi.org/) for their great api.
-Check this example in action, in our [demo](https://stratos-vetsos.github.io/react-selectrix/) page.
+[Check this example in action, in our demo page.](https://stratos-vetsos.github.io/react-selectrix/)
 
 ```javascript
 <Selectrix
@@ -103,7 +116,7 @@ Check this example in action, in our [demo](https://stratos-vetsos.github.io/rea
 ```
 
 ### Ajax Example with fetchOnSearch
-Check this example in action, in our [demo](https://stratos-vetsos.github.io/react-selectrix/) page.
+[Check this example in action, in our demo page.](https://stratos-vetsos.github.io/react-selectrix/)
 
 ```javascript
 <Selectrix
@@ -125,8 +138,73 @@ Check this example in action, in our [demo](https://stratos-vetsos.github.io/rea
 />
 ```
 
-### License
+### Tags Example
+[Check this example in action, in our demo page.](https://stratos-vetsos.github.io/react-selectrix/)
+
+```javascript
+<Selectrix
+	multiple={true}
+	materialize={true}
+	tags={true}
+	options={[
+		{
+			key: "hotdog",
+			label: "Hot Dog"
+		},
+		{
+			key: "pizza",
+			label: "Pizza"
+		}
+	]}
+	onChange={ value => console.log( value ) }
+/>
+```
+
+### Custom Render Example
+[Check this example in action, in our demo page.](https://stratos-vetsos.github.io/react-selectrix/)
+
+```javascript
+<Selectrix
+	multiple={true}
+	materialize={true}
+	options={[
+		{
+			key: "javascript",
+			label: "Javascript"
+		},
+		{
+			key: "go",
+			label: "Go"
+		},
+		{
+			key: "ruby",
+			label: "Ruby On Rails"
+		},
+		{
+			key: "php",
+			label: "PHP"
+		}
+	]}
+	onRenderOption={onRenderOption}
+	onRenderSelection={onRenderSelection}
+	onChange={ value => console.log( value ) }
+/>
+
+const onRenderOption = ( option, index ) => (
+	<span><i className="fa fa-laptop"></i>{ option.label }</span>
+)
+
+const onRenderSelection = ( selected, settings, deselect ) => (
+	<span style={{ marginRight: 10, border: "1px solid #eee", padding: 5 }}>
+		{ selected.label }
+		<i style={{ paddingLeft: 5, cursor: "pointer" }} onClick={ deselect } className="fa fa-window-close"></i>
+	</span>
+)
+```
+
+# License
 MIT Licensed. Stratos Vetsos.
 
-### Contributions
-Contributions are more than welcome, when we pass the 0.1 beta stage.
+# Contributions
+Contributions are more than welcome. Run npm install && npm start on master and you are good to go!
+The CONTRIBUTING.md is going to be published soon.

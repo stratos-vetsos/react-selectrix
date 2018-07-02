@@ -414,6 +414,10 @@ export const selectItem = ( index, isKeyboard = false ) => {
 
 	return ( dispatch, getState ) => {
 
+		if( index === -1 ) {
+			return dispatch( clearSelect() );
+		}
+
 		let state = getState();
 		let options = state.search.active ? state.search.resultSet : state.options;
 		const selected = state.ajax.fetchOnSearch ? state.selected.map( s => s.key ) : state.selected;
@@ -445,7 +449,7 @@ export const selectItem = ( index, isKeyboard = false ) => {
 
 		state = getState();
 
-		if( ! state.settings.checkBoxes && ! state.settings.commaSeperated && ! state.settings.isDropDown ) {
+		if( state.isOpen && state.settings.multiple && ! state.settings.checkBoxes && ! state.settings.commaSeperated && ! state.settings.isDropDown ) {
 
 			if( isKeyboard ) {
 				index === options.length - 1 ? dispatch( focusItem( index - 1 ) ) : dispatch( focusItem( index ) )
@@ -527,12 +531,13 @@ export const findFocusedItem = () => {
 
 }
 
-export const closeSelect = () => {
+export const closeSelect = ( blur = false ) => {
 
 	return ( dispatch, getState ) => {
 
 		dispatch( {
-			type: CLOSE_SELECT
+			type: CLOSE_SELECT,
+			blur
 		} );
 
 		getState().onClose();
@@ -569,6 +574,18 @@ export const handleKeyDown = ( e ) => {
 		const key = e.key;
 
 		switch( key ) {
+
+			case 'Tab': {
+
+				if( state.isOpen ) {
+					dispatch( closeSelect( true ) );
+				} else if( state.focused ) {
+					dispatch( blurSelect() );
+				}
+
+				break;
+			}
+
 			case 'Enter': {
 				e.preventDefault();
 				if( state.isOpen ) {
