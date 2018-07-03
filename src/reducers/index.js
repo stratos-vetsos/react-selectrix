@@ -35,7 +35,8 @@ const initialState = {
 		enabled: false,
 		active: false,
 		focused: false,
-		tagSet: []
+		tagSet: [],
+		label: 'tag'
 	},
 	scrolled: {
 		active: false,
@@ -129,7 +130,6 @@ const reducer = ( state = initialState, action ) => {
 
 		case SETUP_INSTANCE:
 		case UPDATE_INSTANCE: {
-
 			return Object.assign( {}, state, {
 				settings: Object.assign( {}, state.settings, {
 					className: action.props.className,
@@ -166,7 +166,8 @@ const reducer = ( state = initialState, action ) => {
 				onRenderOption: action.props.onRenderOption,
 				onRenderSelection: action.props.onRenderSelection,
 				tags: Object.assign( {}, state.tags, {
-					enabled: action.props.tags
+					enabled: action.props.tags,
+					label: action.props.tagsLabel
 				} ),
 				id: action.props.id
 			} );

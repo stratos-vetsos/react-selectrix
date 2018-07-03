@@ -29,7 +29,7 @@ export const createTag = tag => {
 	return ( dispatch, getState ) => {
 
 		let state = getState();
-		const tagObj = { key: `tag-${ tag }`, label: tag };
+		const tagObj = { key: `tag-${ tag }`, label: tag, isTag: true };
 		const options = [ ... state.options, tagObj ];
 		const resultSet = [ ...state.search.resultSet, tagObj ];
 

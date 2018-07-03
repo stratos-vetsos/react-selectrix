@@ -92,6 +92,7 @@ export default class PlayGround extends React.Component {
 					materialize={ true }
 					isDropDown={ false }
 					customKeys={ { key: 'url', label: 'title' } }
+					tagsLabel="person"
 					ajax={{
 						url: 'https://newsapi.org/v2/everything?apiKey=9342a9a707ca49c4b2da34e9ea238ea6',
 						fetchOnSearch: true,

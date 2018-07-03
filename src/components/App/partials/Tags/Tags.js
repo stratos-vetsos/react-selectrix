@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Tags = ( props ) => {
+const Tags = props => {
 
 	if( ! props.active ) {
 		return null;
@@ -13,7 +13,7 @@ const Tags = ( props ) => {
 			onClick={ () => props.createTag( props.tag ) }
 			ref={ ref => props.extractRef( ref ) }
 		>
-			Create tag &quot;{props.tag}&quot;
+			Create {props.label} &quot;{props.tag}&quot;
 		</div>
 	)
 
@@ -24,7 +24,8 @@ Tags.propTypes = {
 	tag: PropTypes.string,
 	createTag: PropTypes.func.isRequired,
 	focused: PropTypes.bool.isRequired,
-	extractRef: PropTypes.func.isRequired
+	extractRef: PropTypes.func.isRequired,
+	label: PropTypes.string.isRequired
 }
 
 export default Tags;

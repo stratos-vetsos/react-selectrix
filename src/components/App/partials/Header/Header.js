@@ -2,7 +2,7 @@ import React from 'react';
 import Searchable from './partials/Searchable/';
 import PropTypes from 'prop-types';
 
-const Header = ( props ) => {
+const Header = props => {
 
 	const { settings, isOpen, selected, focused, onRenderSelection, tags } = props;
 

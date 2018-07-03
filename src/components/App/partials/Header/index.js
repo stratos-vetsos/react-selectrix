@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { toggleSelect, clearSelect } from 'actions';
 import Header from './Header';
 
-const mapStateToProps = ( state ) => {
+const mapStateToProps = state => {
 
     return {
 		settings: state.settings,

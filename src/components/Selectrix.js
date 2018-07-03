@@ -75,6 +75,7 @@ Selectrix.defaultProps = {
 	onRenderOption: false,
 	onRenderSelection: false,
 	tags: false,
+	tagsLabel: 'tags',
 	updateInstance: () => {}
 }
 

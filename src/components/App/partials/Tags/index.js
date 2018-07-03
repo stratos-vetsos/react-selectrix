@@ -2,21 +2,22 @@ import { connect } from 'react-redux';
 import Tags from './Tags';
 import { createTag } from 'actions';
 
-const mapStateToProps = ( state ) => {
+const mapStateToProps = state => {
 
     return {
 		active: state.tags.enabled && state.tags.active,
 		tag: state.search.queryString,
-		focused: state.tags.focused
+		focused: state.tags.focused,
+        label: state.tags.label
 	}
 
 }
 
-const mapDispatchToProps = ( dispatch ) => {
+const mapDispatchToProps = dispatch => {
 
     return {
 
-		createTag: ( tag ) => {
+		createTag: tag => {
 			dispatch( createTag( tag ) );
 		}
 
