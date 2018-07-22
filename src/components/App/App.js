@@ -212,7 +212,11 @@ export default class App extends React.Component {
 									return(
 										<li
 											ref={ ( ref ) => this[ `option-${ index }` ] = ref }
-											onClick={ () => this.props.selectItem( index ) }
+											onClick={ e => {
+												e.stopPropagation();
+												e.nativeEvent.stopImmediatePropagation();
+												this.props.selectItem( index );
+											} }
 											key={ `li-${index}` }
 											className={ this.buildOptionClassName( o, index ) }
 											onMouseOver={ () => {
