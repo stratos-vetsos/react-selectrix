@@ -36,11 +36,11 @@ export default class PlayGround extends React.Component {
 
 		let options = [
 			{
-				key: 'a',
-				label: 'Option A'
+				key: 'a10',
+				label: 'Option A 10'
 			},
 			{
-				key: 'b',
+				key: 'b10',
 				label: 'Option B'
 			},
 			{
@@ -87,6 +87,7 @@ export default class PlayGround extends React.Component {
 					commaSeperated={ false }
 					singleLine={ false }
 					lifo={ false }
+					searchIndex={ false }
 					selectAllButton={ true }
 					height={ 190 }
 					checkBoxes={ false }

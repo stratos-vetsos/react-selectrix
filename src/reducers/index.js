@@ -8,6 +8,7 @@ const initialState = {
 		arrow: true,
 		multiple: false,
 		disabled: false,
+		searchIndex: true,
 		customScrollbar: false,
 		searchable: true,
 		commaSeperated: false,
@@ -138,6 +139,7 @@ const reducer = ( state = initialState, action ) => {
 					arrow: action.props.arrow,
 					multiple: action.props.multiple,
 					disabled: action.props.disabled,
+					searchIndex: action.props.searchIndex,
 					customScrollbar: action.props.customScrollbar,
 					searchable: action.props.searchable,
 					stayOpen: action.props.hasOwnProperty( 'stayOpen' )
@@ -197,7 +199,7 @@ const reducer = ( state = initialState, action ) => {
 					active: true,
 					queryString: action.queryString,
 					resultSet: state.ajax.active && state.ajax.fetchOnSearch ? action.queryString.length < state.ajax.minLength ? [] : state.options : state.options.filter( o =>
-						o.label.toLowerCase().includes( queryString ) || o.key.toString().toLowerCase().includes( queryString )
+						o.label.toLowerCase().includes( queryString ) || (state.settings.searchIndex && o.key.toString().toLowerCase().includes( queryString ))
 					)
 				} ),
 				focusedItem: null,
