@@ -27,11 +27,11 @@ export default class Selectrix extends React.Component {
 		} )
 	}
 
-	componentWillMount() {
+	UNSAFE_componentWillMount() {
 		this.props.setupInstance( this.props );
 	}
 
-	componentWillReceiveProps( nextProps ) {
+	UNSAFE_componentWillReceiveProps( nextProps ) {
 		this.props.updateInstance( nextProps );
 	}
 
