@@ -199,7 +199,7 @@ const reducer = ( state = initialState, action ) => {
 					active: true,
 					queryString: action.queryString,
 					resultSet: state.ajax.active && state.ajax.fetchOnSearch ? action.queryString.length < state.ajax.minLength ? [] : state.options : state.options.filter( o =>
-						o.label.toLowerCase().includes( queryString ) || (state.settings.searchIndex && o.key.toString().toLowerCase().includes( queryString ))
+						o.label.toLowerCase().includes( queryString ) || ( state.settings.searchIndex && o.key.toString().toLowerCase().includes( queryString ) )
 					)
 				} ),
 				focusedItem: null,
