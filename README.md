@@ -65,6 +65,7 @@ stayOpen | boolean | false | If the Select should stay open or not.
 commaSeperated | boolean | false | If you want the selected values to be a comma seperated string, turn this to "true".  ( Available only with multiple prop set to "true". )
 singleLine | boolean | false | Where the selected values ( Select's Header ) should be contained to one line.
 lifo | boolean | false | **Last In First Out Mode**. The user's last selection, goes first. ( Available only with multiple prop set to "true". )
+searchIndex | boolean | true | Enable search by both Index and Value fields
 selectAllButton | boolean | false | Whether a "select all button" should be visible on Select's header.
 isDropDown | boolean | true | Set this to true if you want to use the Select as a **Dropdown**. When you select an option, the Select collapses and the header continue to have the placeholder as a value.
 tags | boolean | false | Whether to support custom tags.
