@@ -36,27 +36,27 @@ export default class PlayGround extends React.Component {
 
 		let options = [
 			{
-				key: 'a10',
+				value: 'a10',
 				label: 'Option A 10'
 			},
 			{
-				key: 'b10',
+				value: 'b10',
 				label: 'Option B'
 			},
 			{
-				key: 'c',
+				value: 'c',
 				label: 'Option C'
 			},
 			{
-				key: 'd',
+				value: 'd',
 				label: 'Option D'
 			},
 			{
-				key: 'e',
+				value: 'e',
 				label: 'Option E'
 			},
 			{
-				key: 'f',
+				value: 'f',
 				label: 'Option F'
 			}
 		];
@@ -93,7 +93,8 @@ export default class PlayGround extends React.Component {
 					checkBoxes={ false }
 					materialize={ true }
 					isDropDown={ false }
-					// customKeys={ { key: 'url', label: 'title' } }
+					// defaultValue={ [ 'b10', 'c', 'f' ] }
+					customKeys={ { key: 'value', label: 'label' } }
 					// ajax={{
 					// 	url: 'https://newsapi.org/v2/everything?apiKey=9342a9a707ca49c4b2da34e9ea238ea6',
 					// 	fetchOnSearch: true,

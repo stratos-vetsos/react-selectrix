@@ -90,9 +90,6 @@ export const setupInstance = ( props, update = false ) => {
 	return ( dispatch, getState ) => {
 
 		const state = getState();
-		let { selected, selectedIndex } = props.defaultValue
-		? normalizeSelected( props.defaultValue, [ ... props.options ] )
-		: { selected: state.selected, selectedIndex: state.selectedIndex };
 
 		let customKeys = {},
 			options = [ ... props.options ];
@@ -137,6 +134,10 @@ export const setupInstance = ( props, update = false ) => {
 				return null;
 			} ).filter( x => x );
 		}
+
+		let { selected, selectedIndex } = props.defaultValue
+		? normalizeSelected( props.defaultValue, [ ... options ] )
+		: { selected: state.selected, selectedIndex: state.selectedIndex };
 
 		if( props.ajax && props.ajax.hasOwnProperty( 'url' ) && props.ajax.url !== '' ) {
 

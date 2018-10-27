@@ -1,2 +1,2 @@
-import ReduxStore from 'store/';
+import ReduxStore from 'store/productionStore';
 export default ReduxStore;
