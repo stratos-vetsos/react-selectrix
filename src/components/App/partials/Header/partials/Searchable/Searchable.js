@@ -41,11 +41,11 @@ export default class Searchable extends React.Component {
 
 	}
 
-	UNSAFE_componentWillMount() {
+	componentWillMount() {
 		this.calculateSize( this.props );
 	}
 
-	UNSAFE_componentWillReceiveProps( nextProps ) {
+	componentWillReceiveProps( nextProps ) {
 
 		if( nextProps.settings.multiple && ( this.props.queryString !== nextProps.queryString || this.props.selected.length !== nextProps.selected.length ) || this.props.settings.placeholder.length !== nextProps.settings.placeholder.length ) {
 			this.calculateSize( nextProps );
