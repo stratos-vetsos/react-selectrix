@@ -94,10 +94,6 @@ export const setupInstance = ( props, update = false ) => {
 		let customKeys = {},
 			options = [ ... props.options ];
 
-		if( update && state.tags.tagSet.length > 0 ) {
-			options = [ ... props.options, ... state.tags.tagSet ];
-		}
-
 		const ajax = {
 			active: false,
 			url: '',
@@ -133,6 +129,10 @@ export const setupInstance = ( props, update = false ) => {
 				}
 				return null;
 			} ).filter( x => x );
+		}
+
+		if( update && state.tags.tagSet.length > 0 ) {
+			options = [ ... options, ... state.tags.tagSet ];
 		}
 
 		let { selected, selectedIndex } = props.defaultValue
