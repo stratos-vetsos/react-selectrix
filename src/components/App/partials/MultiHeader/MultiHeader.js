@@ -1,5 +1,5 @@
 import React from 'react';
-import Searchable from './../Header/partials/Searchable/';
+import Searchable from '../Searchable/';
 import PropTypes from 'prop-types';
 
 export default class MultiHeader extends React.Component {
@@ -57,7 +57,7 @@ export default class MultiHeader extends React.Component {
 
 		}
 
-		if( settings.searchable || tags.enabled ) {
+		if( !settings.searchBoxInside && ( settings.searchable || tags.enabled )) {
 			jsx.push( <Searchable key="searchable" /> );
 		}
 

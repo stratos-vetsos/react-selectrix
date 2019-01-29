@@ -3,6 +3,7 @@ import { buildClassName } from 'helpers';
 import PropTypes from 'prop-types';
 import Header from './partials/Header/';
 import MultiHeader from './partials/MultiHeader/';
+import Searchable from './partials/Searchable/';
 import SearchPrompt from './partials/SearchPrompt/';
 import Tags from './partials/Tags/';
 import NoResults from './partials/NoResults/';
@@ -127,8 +128,10 @@ export default class App extends React.Component {
 	}
 
 	buildOptionClassName( option ) {
-
 		let className = 'rs-option';
+		if( option.hasOwnProperty( 'classes' ) ) {
+			className += ' '+option.classes.join(' ');
+		}
 		if( option.hasOwnProperty( 'disabled' ) && option.disabled === true ) {
 			className += ' disabled';
 		}
@@ -184,7 +187,15 @@ export default class App extends React.Component {
 									</div>
 								}
 								<NoResults options={ options } />
-								{ settings.placeHolderInside && ! settings.multiple && ( ! ajax.active || ! ajax.fetching && ajax.minLength <= queryString ) &&
+								{ settings.searchBoxInside && ( ! ajax.active || ! ajax.fetching && ajax.minLength <= queryString ) &&
+								<li
+									className={ this.buildOptionClassName( { key: 'default', classes: ['rs-searchable-box'] } ) }
+									onMouseEnter={ () => ! this.props.mouseEventLocked ? this.props.focusItem( -1, true ) : '' }
+								>
+									{ <Searchable /> }
+								</li>
+								}
+								{ settings.placeHolderInside && ! settings.searchBoxInside && ! settings.multiple && ( ! ajax.active || ! ajax.fetching && ajax.minLength <= queryString ) &&
 									<li
 										onClick={ this.props.clearSelect }
 										className={ this.buildOptionClassName( { key: 'default' } ) }

@@ -675,6 +675,7 @@ export const moveFocus = ( direction ) => {
 
 		const state = getState();
 		const placeHolderInside = ! state.settings.multiple && state.settings.placeHolderInside;
+		const searchBoxInside = state.settings.searchBoxInside;
 		let options = state.search.active ? state.search.resultSet : state.options;
 
 		if( state.settings.multiple && ! state.settings.commaSeperated && ! state.settings.checkBoxes ) {
@@ -707,7 +708,7 @@ export const moveFocus = ( direction ) => {
 					targetIndex = 'tag';
 				}
 				else {
-					targetIndex = index > 0 || placeHolderInside ? index - 1 : 0;
+					targetIndex = index > 0 || (placeHolderInside || searchBoxInside) ? index - 1 : 0;
 				}
 			}
 			else {
@@ -719,7 +720,7 @@ export const moveFocus = ( direction ) => {
 				targetIndex = 'tag';
 			}
 			else {
-				targetIndex = direction === 'up' ? options.length - 1 : placeHolderInside ? -1 : 0;
+				targetIndex = direction === 'up' ? options.length - 1 : (placeHolderInside || searchBoxInside) ? -1 : 0;
 			}
 		}
 
@@ -765,7 +766,7 @@ export const focusItem = ( index, mouseEvent ) => {
 			options = [ ... options ].filter( o => ! selected.includes( o.key ) );
 		}
 
-		if( options[ index ] || ( index === -1 && state.settings.placeHolderInside ) ) {
+		if( options[ index ] || ( index === -1 && (state.settings.placeHolderInside || state.settings.searchBoxInside) ) ) {
 			dispatch( {
 				type: FOCUS_ITEM,
 				item: index !== -1 ? options[ index ] : { key: 'default' },

@@ -1,5 +1,5 @@
 import React from 'react';
-import Searchable from './partials/Searchable/';
+import Searchable from '../Searchable/';
 import PropTypes from 'prop-types';
 
 const Header = ( props ) => {
@@ -7,7 +7,7 @@ const Header = ( props ) => {
 	const { settings, isOpen, selected, focused, onRenderSelection, tags } = props;
 
 	let jsx = (
-		settings.searchable || tags.enabled
+		! settings.searchBoxInside && ( settings.searchable || tags.enabled )
 			? <Searchable />
 			: <div tabIndex="0" className={ `rs-toggle${ focused ? ' rs-focused' : '' }` }>
 				{ ( selected === null || settings.isDropDown ) ? settings.placeholder : selected.label }
@@ -21,7 +21,7 @@ const Header = ( props ) => {
 
 	return (
 		<div className="rs-header" onClick={ props.toggleSelect }>
-			{ ! settings.placeHolderInside && ! settings.isDropDown && selected !== null &&
+			{ ! settings.searchBoxInside && ! settings.placeHolderInside && ! settings.isDropDown && selected !== null &&
 				<span className="rs-reset-wrapper vertical-align">
 					<span className="rs-reset" onClick={ ( e ) => props.clearSelect( e ) }>×</span>
 				</span>

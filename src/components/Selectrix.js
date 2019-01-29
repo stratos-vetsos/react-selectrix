@@ -52,6 +52,7 @@ Selectrix.defaultProps = {
 	isOpen: false,
 	placeHolderInside: false,
 	placeholder: 'Please Select',
+	searchBoxInside: false,
 	arrow: true,
 	defaultValue: false,
 	multiple: false,
@@ -90,6 +91,7 @@ Selectrix.propTypes = {
 	isOpen: PropTypes.bool,
 	placeHolderInside: PropTypes.bool,
 	placeholder: PropTypes.string,
+	searchBoxInside: PropTypes.bool,
 	arrow: PropTypes.bool,
 	defaultValue: PropTypes.oneOfType( [
 		PropTypes.string,

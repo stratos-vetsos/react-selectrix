@@ -57,6 +57,7 @@ checkBoxes | boolean | false | Set this to true if you want to render **Checkbox
 height | number | 190 | The height of the dropdown.
 placeHolderInside  | boolean | false | If the placeholder should be an option.
 placeholder | string | Please Select | The placeholder of the Select.
+searchBoxInside  | boolean | false | If the searchbox should be an option.
 isOpen | boolean | false | If the Select should be rendered open.
 arrow | boolean | true | Whether to show an arrow on Select's header.
 disabled | boolean | false | Whether the Select should be disabled.
