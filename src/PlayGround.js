@@ -8,7 +8,33 @@ export default class PlayGround extends React.Component {
 		this.state = {
 			value: '',
 			multiple: true,
-			searchable: true
+			searchable: true,
+			options: [
+				{
+					value: 'a10',
+					label: 'Option A 10'
+				},
+				{
+					value: 'b10',
+					label: 'Option B'
+				},
+				{
+					value: 'c',
+					label: 'Option C'
+				},
+				{
+					value: 'd',
+					label: 'Option D'
+				},
+				{
+					value: 'e',
+					label: 'Option E'
+				},
+				{
+					value: 'f',
+					label: 'Option F'
+				}
+			],
 		};
 
 		this.setValue = this.setValue.bind( this );
@@ -20,6 +46,15 @@ export default class PlayGround extends React.Component {
 		this.setState( { value } );
 	}
 
+	appendTag = ( tag ) => {
+		const { options } = this.state;
+		return new Promise(( resolve, rejects) => {
+			setTimeout(() => {
+				this.setState( { options: [ ...options, { value: tag, label: tag } ] } );
+				resolve();
+			}, 500 );
+		});
+	}
 	onRenderOption( option ) {
 		return(
 			<li>{ option.label }</li>
@@ -33,34 +68,7 @@ export default class PlayGround extends React.Component {
 	}
 
 	render() {
-
-		let options = [
-			{
-				value: 'a10',
-				label: 'Option A 10'
-			},
-			{
-				value: 'b10',
-				label: 'Option B'
-			},
-			{
-				value: 'c',
-				label: 'Option C'
-			},
-			{
-				value: 'd',
-				label: 'Option D'
-			},
-			{
-				value: 'e',
-				label: 'Option E'
-			},
-			{
-				value: 'f',
-				label: 'Option F'
-			}
-		];
-
+		const { options, searchable, multiple } = this.state;
 		return(
 			<div className="container" style={{ padding: 15 }}>
 				<div>Current value is :
@@ -76,13 +84,14 @@ export default class PlayGround extends React.Component {
 				<Selectrix
 					options={ options }
 					onChange={ this.setValue }
+					onAppendTag={ this.appendTag }
 					arrow={ true }
 					placeHolderInside={ false }
 					disabled={ false }
 					className="selectrix"
 					isOpen={ false }
-					searchable={ this.state.searchable }
-					multiple={ this.state.multiple }
+					searchable={ searchable }
+					multiple={ multiple }
 					stayOpen={ false }
 					commaSeperated={ false }
 					singleLine={ false }
@@ -104,7 +113,7 @@ export default class PlayGround extends React.Component {
 					// }}
 					// onRenderOption={ this.onRenderOption }
 					// onRenderSelection={ this.onRenderSelection }
-					tags={ false }
+					tags={ true }
 				/>
 			</div>
 		)

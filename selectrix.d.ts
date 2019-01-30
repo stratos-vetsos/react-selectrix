@@ -20,6 +20,7 @@ declare module "react-selectrix" {
     materialize?: boolean;
     multiple?: boolean;
     onChange?: Function;
+    onAppendTag?: Function;
     onClose?: Function;
     onOpen?: Function;
     onRenderOption?: boolean | Function;
