@@ -28,6 +28,7 @@ declare module "react-selectrix" {
     options?: SelectrixOption[];
     placeHolderInside?: boolean;
     placeholder?: string;
+    searchBoxInside?: boolean;
     searchable?: boolean;
     selectAllButton?: boolean;
     singleLine?: boolean;

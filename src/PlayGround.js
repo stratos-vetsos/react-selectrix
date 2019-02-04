@@ -87,6 +87,7 @@ export default class PlayGround extends React.Component {
 					onAppendTag={ this.appendTag }
 					arrow={ true }
 					placeHolderInside={ false }
+					searchBoxInside={ true }
 					disabled={ false }
 					className="selectrix"
 					isOpen={ false }

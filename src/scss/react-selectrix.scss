@@ -321,6 +321,13 @@
 				background-color: $selected-color;
 			}
 		}
+		&.rs-searchable-box {
+			padding: 5px 20px;
+			.rs-searchable {
+				border: solid 1px $border-color;
+				width: 100%;
+			}
+		}
 	}
 
 	.rs-no-results {

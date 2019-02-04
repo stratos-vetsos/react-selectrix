@@ -75,6 +75,7 @@ export const createTag = ( tag ) => {
 			if( state.settings.commaSeperated || state.settings.checkBoxes ) {
 				dataSet = dataSet.filter( o => ! state.selected.includes( o .key ) );
 			}
+
 			dispatch( selectItem( dataSet.length - 1 ) );
 			dispatch( {
 				type: CLEAR_SEARCH
@@ -122,6 +123,7 @@ export const setupInstance = ( props, update = false ) => {
 
 		let customKeys = {},
 			options = [ ... props.options ];
+
 		const ajax = {
 			active: false,
 			url: '',
@@ -229,7 +231,6 @@ export const setQueryString = ( queryString ) => {
 
 
 export const setTag = ( queryString ) => {
-
 	return ( dispatch, getState ) => {
 		if( ! getState().isOpen ) {
 			dispatch( openSelect() );
@@ -443,6 +444,7 @@ export const selectAll = () => {
 export const selectItem = ( index, isKeyboard = false, newTag = false ) => {
 
 	return ( dispatch, getState ) => {
+
 		if( index === -1 ) {
 			return dispatch( clearSelect() );
 		}
@@ -450,9 +452,11 @@ export const selectItem = ( index, isKeyboard = false, newTag = false ) => {
 		let state = getState();
 		let options = state.search.active && !newTag ? state.search.resultSet : state.options;
 		const selected = state.ajax.fetchOnSearch ? state.selected.map( s => s.key ) : state.selected;
+
 		if( !newTag && state.settings.multiple && ! state.settings.commaSeperated && ! state.settings.checkBoxes ) {
 			options = [ ... options ].filter( o => ! selected.includes( o.key ) );
 		}
+
 		const targetIndex = !newTag && ( state.search.active || ( state.settings.multiple && ! state.settings.commaSeperated && ! state.settings.checkBoxes ) )
 			? state.options.findIndex( o => o.key === options[ index ].key )
 			: index;
@@ -671,6 +675,7 @@ export const moveFocus = ( direction ) => {
 
 		const state = getState();
 		const placeHolderInside = ! state.settings.multiple && state.settings.placeHolderInside;
+		const searchBoxInside = state.settings.searchBoxInside;
 		let options = state.search.active ? state.search.resultSet : state.options;
 
 		if( state.settings.multiple && ! state.settings.commaSeperated && ! state.settings.checkBoxes ) {
@@ -703,7 +708,7 @@ export const moveFocus = ( direction ) => {
 					targetIndex = 'tag';
 				}
 				else {
-					targetIndex = index > 0 || placeHolderInside ? index - 1 : 0;
+					targetIndex = index > 0 || (placeHolderInside || searchBoxInside) ? index - 1 : 0;
 				}
 			}
 			else {
@@ -715,7 +720,7 @@ export const moveFocus = ( direction ) => {
 				targetIndex = 'tag';
 			}
 			else {
-				targetIndex = direction === 'up' ? options.length - 1 : placeHolderInside ? -1 : 0;
+				targetIndex = direction === 'up' ? options.length - 1 : (placeHolderInside || searchBoxInside) ? -1 : 0;
 			}
 		}
 
@@ -761,7 +766,7 @@ export const focusItem = ( index, mouseEvent ) => {
 			options = [ ... options ].filter( o => ! selected.includes( o.key ) );
 		}
 
-		if( options[ index ] || ( index === -1 && state.settings.placeHolderInside ) ) {
+		if( options[ index ] || ( index === -1 && (state.settings.placeHolderInside || state.settings.searchBoxInside) ) ) {
 			dispatch( {
 				type: FOCUS_ITEM,
 				item: index !== -1 ? options[ index ] : { key: 'default' },
