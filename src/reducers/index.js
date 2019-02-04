@@ -50,7 +50,7 @@ const initialState = {
 	ajax: false,
 	onChange: () => {},
 	onOpen: () => {},
-	onClose: () => {}
+	onClose: () => {},
 };
 
 const reducer = ( state = initialState, action ) => {
@@ -130,7 +130,6 @@ const reducer = ( state = initialState, action ) => {
 
 		case SETUP_INSTANCE:
 		case UPDATE_INSTANCE: {
-
 			return Object.assign( {}, state, {
 				settings: Object.assign( {}, state.settings, {
 					className: action.props.className,
@@ -153,7 +152,9 @@ const reducer = ( state = initialState, action ) => {
 					materialize: action.props.materialize,
 					isDropDown: action.props.isDropDown && ! action.props.multiple
 				} ),
-				options: action.type === UPDATE_INSTANCE && state.ajax.active && state.settings.multiple === action.props.multiple ? state.options : action.options,
+				options: action.type === UPDATE_INSTANCE && state.ajax.active && state.settings.multiple === action.props.multiple  && !action.props.onAppendTag
+					? state.options
+					: action.options,
 				height: action.props.height,
 				isOpen: action.props.isOpen ? action.props.isOpen : action.type === UPDATE_INSTANCE ? state.isOpen : false,
 				selected: action.type === UPDATE_INSTANCE && state.ajax.active && state.settings.multiple === action.props.multiple ? state.selected : action.selected,
@@ -164,6 +165,7 @@ const reducer = ( state = initialState, action ) => {
 				onChange: action.props.onChange,
 				onOpen: action.props.onOpen,
 				onClose: action.props.onClose,
+				onAppendTag: action.props.onAppendTag,
 				checkForScroll: action.type === UPDATE_INSTANCE ? state.isOpen : action.props.isOpen,
 				onRenderOption: action.props.onRenderOption,
 				onRenderSelection: action.props.onRenderSelection,

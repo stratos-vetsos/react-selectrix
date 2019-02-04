@@ -29,28 +29,57 @@ export const createTag = ( tag ) => {
 	return ( dispatch, getState ) => {
 
 		let state = getState();
-		const tagObj = { key: `tag-${ tag }`, label: tag };
-		const options = [ ... state.options, tagObj ];
-		const resultSet = [ ...state.search.resultSet, tagObj ];
+		const { onAppendTag } = state;
 
-		dispatch( {
-			type: CREATE_TAG,
-			tag: tagObj,
-			options,
-			resultSet
-		} );
+		if ( onAppendTag ) {
+			const resolve = () => {
+				state = getState();
+				const index = state.options.findIndex( item => {
+					return item.label === tag
+				} );
+				if ( index >= 0 ) {
+					dispatch( selectItem( index, false, true ) );
+					dispatch( {
+						type: CLEAR_SEARCH
+					} );
+				}
 
-		state = getState();
-		let dataSet = [ ... state.settings.searchable ? state.search.resultSet : state.options ];
-		if( state.settings.commaSeperated || state.settings.checkBoxes ) {
-			dataSet = dataSet.filter( o => ! state.selected.includes( o .key ) );
+			};
+
+			const reject = () => {
+				dispatch( {
+					type: CLEAR_SEARCH
+				} );
+			};
+
+			const onAppendTagResult = onAppendTag(tag, resolve, reject);
+			if ( onAppendTagResult && onAppendTagResult.then ) {
+				onAppendTagResult
+					.then( resolve )
+					.catch( reject );
+			}
+		} else {
+			const tagObj = { key: `tag-${ tag }`, label: tag };
+			const options = [ ... state.options, tagObj ];
+			const resultSet = [ ...state.search.resultSet, tagObj ];
+
+			dispatch( {
+				type: CREATE_TAG,
+				tag: tagObj,
+				options,
+				resultSet
+			} );
+
+			state = getState();
+			let dataSet = [ ... state.settings.searchable ? state.search.resultSet : state.options ];
+			if( state.settings.commaSeperated || state.settings.checkBoxes ) {
+				dataSet = dataSet.filter( o => ! state.selected.includes( o .key ) );
+			}
+			dispatch( selectItem( dataSet.length - 1 ) );
+			dispatch( {
+				type: CLEAR_SEARCH
+			} );
 		}
-
-		dispatch( selectItem( dataSet.length - 1 ) );
-		dispatch( {
-			type: CLEAR_SEARCH
-		} );
-
 	}
 }
 
@@ -93,7 +122,6 @@ export const setupInstance = ( props, update = false ) => {
 
 		let customKeys = {},
 			options = [ ... props.options ];
-
 		const ajax = {
 			active: false,
 			url: '',
@@ -201,6 +229,7 @@ export const setQueryString = ( queryString ) => {
 
 
 export const setTag = ( queryString ) => {
+
 	return ( dispatch, getState ) => {
 		if( ! getState().isOpen ) {
 			dispatch( openSelect() );
@@ -411,23 +440,20 @@ export const selectAll = () => {
 	}
 }
 
-export const selectItem = ( index, isKeyboard = false ) => {
+export const selectItem = ( index, isKeyboard = false, newTag = false ) => {
 
 	return ( dispatch, getState ) => {
-
 		if( index === -1 ) {
 			return dispatch( clearSelect() );
 		}
 
 		let state = getState();
-		let options = state.search.active ? state.search.resultSet : state.options;
+		let options = state.search.active && !newTag ? state.search.resultSet : state.options;
 		const selected = state.ajax.fetchOnSearch ? state.selected.map( s => s.key ) : state.selected;
-
-		if( state.settings.multiple && ! state.settings.commaSeperated && ! state.settings.checkBoxes ) {
+		if( !newTag && state.settings.multiple && ! state.settings.commaSeperated && ! state.settings.checkBoxes ) {
 			options = [ ... options ].filter( o => ! selected.includes( o.key ) );
 		}
-
-		const targetIndex = state.search.active || ( state.settings.multiple && ! state.settings.commaSeperated && ! state.settings.checkBoxes )
+		const targetIndex = !newTag && ( state.search.active || ( state.settings.multiple && ! state.settings.commaSeperated && ! state.settings.checkBoxes ) )
 			? state.options.findIndex( o => o.key === options[ index ].key )
 			: index;
 

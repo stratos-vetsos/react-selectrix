@@ -3,7 +3,6 @@ import Tags from './Tags';
 import { createTag } from 'actions';
 
 const mapStateToProps = ( state ) => {
-
     return {
 		active: state.tags.enabled && state.tags.active,
 		tag: state.search.queryString,

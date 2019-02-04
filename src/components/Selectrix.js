@@ -100,6 +100,7 @@ Selectrix.propTypes = {
 	disabled: PropTypes.bool,
 	searchIndex: PropTypes.bool,
 	onChange: PropTypes.func,
+	onAppendTag: PropTypes.func,
 	customScrollbar: PropTypes.bool,
 	searchable: PropTypes.bool,
 	stayOpen: PropTypes.bool,
