@@ -13,7 +13,7 @@ const Tags = ( props ) => {
 			onClick={ () => props.createTag( props.tag ) }
 			ref={ ref => props.extractRef( ref ) }
 		>
-			Create tag &quot;{props.tag}&quot;
+			{props.appendTagPrompt} &quot;{props.tag}&quot;
 		</div>
 	)
 
@@ -24,7 +24,8 @@ Tags.propTypes = {
 	tag: PropTypes.string,
 	createTag: PropTypes.func.isRequired,
 	focused: PropTypes.bool.isRequired,
-	extractRef: PropTypes.func.isRequired
+	extractRef: PropTypes.func.isRequired,
+	appendTagPrompt: PropTypes.string,
 }
 
 export default Tags;

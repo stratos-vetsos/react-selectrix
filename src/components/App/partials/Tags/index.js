@@ -6,7 +6,8 @@ const mapStateToProps = ( state ) => {
     return {
 		active: state.tags.enabled && state.tags.active,
 		tag: state.search.queryString,
-		focused: state.tags.focused
+		focused: state.tags.focused,
+		appendTagPrompt: state.settings.appendTagPrompt,
 	}
 
 }

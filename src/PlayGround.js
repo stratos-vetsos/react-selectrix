@@ -7,7 +7,7 @@ export default class PlayGround extends React.Component {
 		super( props );
 		this.state = {
 			value: '',
-			multiple: true,
+			multiple: false,
 			searchable: true,
 			options: [
 				{
@@ -85,6 +85,7 @@ export default class PlayGround extends React.Component {
 					options={ options }
 					onChange={ this.setValue }
 					onAppendTag={ this.appendTag }
+					//appendTagPrompt="Add new item"
 					arrow={ true }
 					placeHolderInside={ false }
 					searchBoxInside={ true }

@@ -21,6 +21,7 @@ declare module "react-selectrix" {
     multiple?: boolean;
     onChange?: Function;
     onAppendTag?: Function;
+    appendTagPrompt?: string;
     onClose?: Function;
     onOpen?: Function;
     onRenderOption?: boolean | Function;

@@ -5,6 +5,7 @@ const initialState = {
 		className: '',
 		placeHolderInside: true,
 		placeholder: 'Please Select',
+		appendTagPrompt: 'Create tag',
 		searchBoxInside: false,
 		arrow: true,
 		multiple: false,
@@ -137,6 +138,9 @@ const reducer = ( state = initialState, action ) => {
 					placeHolderInside: ! action.props.multiple && action.props.placeHolderInside,
 					placeholder: action.props.placeholder,
 					searchBoxInside: action.props.searchBoxInside,
+					appendTagPrompt: action.props.appendTagPrompt
+						? action.props.appendTagPrompt
+						: state.settings.appendTagPrompt,
 					arrow: action.props.arrow,
 					multiple: action.props.multiple,
 					disabled: action.props.disabled,
