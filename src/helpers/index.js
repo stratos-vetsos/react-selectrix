@@ -8,15 +8,15 @@ export const isNumeric = n => ! isNaN( parseFloat( n ) ) && isFinite( n );
 
 export const isEmpty = variable => {
 
-    if( variable.constructor === String ) {
-        return variable === '' ? true : false;
-    }
-    else if( variable.constructor === Object && ! Array.isArray( variable ) ) {
-        return Object.keys( variable ).length === 0 ? true : false;
-    }
-    else if( variable.constructor === Array ) {
-        return variable.length === 0 ? true : false;
-    }
+	if( variable.constructor === String ) {
+		return variable === '' ? true : false;
+	}
+	else if( variable.constructor === Object && ! Array.isArray( variable ) ) {
+		return Object.keys( variable ).length === 0 ? true : false;
+	}
+	else if( variable.constructor === Array ) {
+		return variable.length === 0 ? true : false;
+	}
 
 	return false;
 

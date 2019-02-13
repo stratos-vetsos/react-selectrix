@@ -1,29 +1,24 @@
 import { connect } from 'react-redux';
 import { setupInstance } from 'actions';
 import Selectrix from './Selectrix';
-let index = 0;
 
 const mapStateToProps = ( state, ownProps ) => ownProps;
 
 const mapDispatchToProps = ( dispatch ) => {
 
-    return {
+	return {
 
-        setupInstance: ( props ) => {
+		setupInstance: ( props ) => {
 
-            dispatch( setupInstance( Object.assign( {}, props, {
-				id: `selectrix_instance_${ index }`
-			} ) ) );
+			dispatch( setupInstance( Object.assign( {}, props ) ) );
 
-			index++;
-
-        },
+		},
 
 		updateInstance: ( props ) => {
 			dispatch( setupInstance( props, true ) );
 		}
 
-    }
+	}
 }
 
 export default connect( mapStateToProps, mapDispatchToProps )( Selectrix );

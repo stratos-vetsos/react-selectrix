@@ -29,28 +29,58 @@ export const createTag = ( tag ) => {
 	return ( dispatch, getState ) => {
 
 		let state = getState();
-		const tagObj = { key: `tag-${ tag }`, label: tag };
-		const options = [ ... state.options, tagObj ];
-		const resultSet = [ ...state.search.resultSet, tagObj ];
+		const { onAppendTag } = state;
 
-		dispatch( {
-			type: CREATE_TAG,
-			tag: tagObj,
-			options,
-			resultSet
-		} );
+		if ( onAppendTag ) {
+			const resolve = () => {
+				state = getState();
+				const index = state.options.findIndex( item => {
+					return item.label === tag
+				} );
+				if ( index >= 0 ) {
+					dispatch( selectItem( index, false, true ) );
+					dispatch( {
+						type: CLEAR_SEARCH
+					} );
+				}
 
-		state = getState();
-		let dataSet = [ ... state.settings.searchable ? state.search.resultSet : state.options ];
-		if( state.settings.commaSeperated || state.settings.checkBoxes ) {
-			dataSet = dataSet.filter( o => ! state.selected.includes( o .key ) );
+			};
+
+			const reject = () => {
+				dispatch( {
+					type: CLEAR_SEARCH
+				} );
+			};
+
+			const onAppendTagResult = onAppendTag( tag, resolve, reject );
+			if ( onAppendTagResult && onAppendTagResult.then ) {
+				onAppendTagResult
+					.then( resolve )
+					.catch( reject );
+			}
+		} else {
+			const tagObj = { key: `tag-${ tag }`, label: tag };
+			const options = [ ... state.options, tagObj ];
+			const resultSet = [ ...state.search.resultSet, tagObj ];
+
+			dispatch( {
+				type: CREATE_TAG,
+				tag: tagObj,
+				options,
+				resultSet
+			} );
+
+			state = getState();
+			let dataSet = [ ... state.settings.searchable ? state.search.resultSet : state.options ];
+			if( state.settings.commaSeperated || state.settings.checkBoxes ) {
+				dataSet = dataSet.filter( o => ! state.selected.includes( o .key ) );
+			}
+
+			dispatch( selectItem( dataSet.length - 1 ) );
+			dispatch( {
+				type: CLEAR_SEARCH
+			} );
 		}
-
-		dispatch( selectItem( dataSet.length - 1 ) );
-		dispatch( {
-			type: CLEAR_SEARCH
-		} );
-
 	}
 }
 
@@ -67,7 +97,6 @@ export const removeItem = ( index ) => {
 		if( ! state.isOpen ) {
 			dispatch( openSelect() );
 		}
-
 		state.onChange( [ ... state.selectedIndex ].map( i => {
 			return state.customKeys ? Object.assign( {}, {
 				[ state.customKeys.key ]: state.options[ i ].key,
@@ -93,10 +122,6 @@ export const setupInstance = ( props, update = false ) => {
 
 		let customKeys = {},
 			options = [ ... props.options ];
-
-		if( update && state.tags.tagSet.length > 0 ) {
-			options = [ ... props.options, ... state.tags.tagSet ];
-		}
 
 		const ajax = {
 			active: false,
@@ -135,9 +160,13 @@ export const setupInstance = ( props, update = false ) => {
 			} ).filter( x => x );
 		}
 
-		let { selected, selectedIndex } = props.defaultValue
-		? normalizeSelected( props.defaultValue, [ ... options ] )
-		: { selected: state.selected, selectedIndex: state.selectedIndex };
+		if( update && state.tags.tagSet.length > 0 ) {
+			options = [ ... options, ... state.tags.tagSet ];
+		}
+
+		let { selected, selectedIndex } = props.defaultValue || state.settings.disableStateVal
+			? normalizeSelected( props.defaultValue, [ ... options ] )
+			: { selected: state.selected, selectedIndex: state.selectedIndex };
 
 		if( props.ajax && props.ajax.hasOwnProperty( 'url' ) && props.ajax.url !== '' ) {
 
@@ -229,8 +258,8 @@ export const searchOptions = ( queryString ) => {
 			if( state.ajax.active && state.ajax.fetchOnSearch && queryString.length >= state.ajax.minLength ) {
 				dispatch( clearOptions() );
 				return dispatch( fetchOptions() )
-				.then( dispatch( findFocusedItem() ) )
-				.catch( err => console.error( err ) )
+					.then( dispatch( findFocusedItem() ) )
+					.catch( err => console.error( err ) )
 			}
 
 			dispatch( {
@@ -255,7 +284,7 @@ export const searchOptions = ( queryString ) => {
 			return dispatch( focusItem( 0 ) );
 		}
 
-		state.search.active ? dispatch( focusItem( 0 ) ) : dispatch( checkForScroll() );
+		state.search.active || state.settings.searchBoxInside ? dispatch( focusItem( 0 ) ) : dispatch( checkForScroll() );
 
 	}
 }
@@ -285,39 +314,39 @@ export const fetchOptions = () => {
 			}
 
 			fetch( url, { headers: state.ajax.headers } )
-			.then( res => {
+				.then( res => {
 
-				if( ! res.ok ) {
-					throw `Your ajax url ${ state.ajax.url } failed with a status ${ res.status }`;
-				}
+					if( ! res.ok ) {
+						throw `Your ajax url ${ state.ajax.url } failed with a status ${ res.status }`;
+					}
 
-				const contentType = res.headers.get( 'content-type' );
-				if( contentType && contentType.includes( 'application/json' ) ) {
-					return res.json();
-				}
-				else {
-					throw `Your ajax url ${ state.ajax.url } response was not a json`;
-				}
-
-			} )
-			.then( data => {
-				if( state.ajax.nestedKey ) {
-					if( ! data.hasOwnProperty( state.ajax.nestedKey ) ) {
-						throw `Invalid nested key on ${ state.ajax.url } response`;
+					const contentType = res.headers.get( 'content-type' );
+					if( contentType && contentType.includes( 'application/json' ) ) {
+						return res.json();
 					}
 					else {
-						data = data[ state.ajax.nestedKey ];
+						throw `Your ajax url ${ state.ajax.url } response was not a json`;
 					}
-				}
-				if( ! isArray( data ) ) {
-					throw `Invalid data type on ${ state.ajax.url } response. Expected array.`;
-				}
-				dispatch( setupAjaxOptions( data ) );
-				resolve( data );
-			} )
-			.catch( err => {
-				reject( err );
-			} )
+
+				} )
+				.then( data => {
+					if( state.ajax.nestedKey ) {
+						if( ! data.hasOwnProperty( state.ajax.nestedKey ) ) {
+							throw `Invalid nested key on ${ state.ajax.url } response`;
+						}
+						else {
+							data = data[ state.ajax.nestedKey ];
+						}
+					}
+					if( ! isArray( data ) ) {
+						throw `Invalid data type on ${ state.ajax.url } response. Expected array.`;
+					}
+					dispatch( setupAjaxOptions( data ) );
+					resolve( data );
+				} )
+				.catch( err => {
+					reject( err );
+				} )
 
 		} )
 
@@ -379,17 +408,28 @@ export const toggleSelect = () => {
 export const returnValue = () => {
 	return ( dispatch, getState ) => {
 		const state = getState();
-		const { selected, selectedIndex, ajax, options } = state;
+		const { selected, selectedIndex, ajax } = state;
 		const multiple = state.settings.multiple;
 
 		if( multiple ) {
 			if( ajax.fetchOnSearch ) {
 				return state.onChange( selected );
 			}
-			state.onChange( [ ... selectedIndex ].map( i => options[ i ] ) );
+			state.onChange( [ ... selectedIndex ].map( i => {
+				return state.customKeys ? Object.assign( {}, {
+					[ state.customKeys.key ]: state.options[ i ].key,
+					[ state.customKeys.label ]: state.options[ i ].label
+				} ) : state.options[ i ];
+			} ) );
 		}
 		else {
-			state.onChange( options[ selectedIndex[ 0 ] ] );
+			const returnValue = [ ... selectedIndex ].map( i => {
+				return state.customKeys ? Object.assign( {}, {
+					[ state.customKeys.key ]: state.options[ i ].key,
+					[ state.customKeys.label ]: state.options[ i ].label
+				} ) : state.options[ i ];
+			} )[ 0 ];
+			state.onChange( returnValue );
 		}
 	}
 }
@@ -411,7 +451,7 @@ export const selectAll = () => {
 	}
 }
 
-export const selectItem = ( index, isKeyboard = false ) => {
+export const selectItem = ( index, isKeyboard = false, newTag = false ) => {
 
 	return ( dispatch, getState ) => {
 
@@ -420,14 +460,14 @@ export const selectItem = ( index, isKeyboard = false ) => {
 		}
 
 		let state = getState();
-		let options = state.search.active ? state.search.resultSet : state.options;
+		let options = state.search.active && !newTag ? state.search.resultSet : state.options;
 		const selected = state.ajax.fetchOnSearch ? state.selected.map( s => s.key ) : state.selected;
 
-		if( state.settings.multiple && ! state.settings.commaSeperated && ! state.settings.checkBoxes ) {
+		if( !newTag && state.settings.multiple && ! state.settings.commaSeperated && ! state.settings.checkBoxes ) {
 			options = [ ... options ].filter( o => ! selected.includes( o.key ) );
 		}
 
-		const targetIndex = state.search.active || ( state.settings.multiple && ! state.settings.commaSeperated && ! state.settings.checkBoxes )
+		const targetIndex = !newTag && ( state.search.active || ( state.settings.multiple && ! state.settings.commaSeperated && ! state.settings.checkBoxes ) )
 			? state.options.findIndex( o => o.key === options[ index ].key )
 			: index;
 
@@ -454,8 +494,7 @@ export const selectItem = ( index, isKeyboard = false ) => {
 
 			if( isKeyboard ) {
 				index === options.length - 1 ? dispatch( focusItem( index - 1 ) ) : dispatch( focusItem( index ) )
-			}
-			else {
+			} else {
 				index === options.length - 1 ? dispatch( focusItem( index - 1 ) ) : '';
 			}
 
@@ -473,7 +512,7 @@ export const clearSelect = ( stayOpen = false ) => {
 		const state = getState();
 		dispatch( { type: CLEAR_SELECT, stayOpen } )
 		state.onChange( '' );
-		if( ! state.settings.stayOpen ) {
+		if( ! state.settings.stayOpen && !stayOpen ) {
 			dispatch( closeSelect() );
 		}
 
@@ -493,8 +532,8 @@ export const openSelect = () => {
 
 		if( state.ajax.active && ! state.ajax.fetchOnSearch && state.ajax.needsUpdate ) {
 			dispatch( fetchOptions() )
-			.then( () => dispatch( findFocusedItem() ) )
-			.catch( err => console.error( err ) )
+				.then( () => dispatch( findFocusedItem() ) )
+				.catch( err => console.error( err ) )
 			return;
 		}
 
@@ -576,64 +615,64 @@ export const handleKeyDown = ( e ) => {
 
 		switch( key ) {
 
-			case 'Tab': {
+		case 'Tab': {
 
-				if( state.isOpen ) {
-					dispatch( closeSelect( true ) );
-				} else if( state.focused ) {
-					dispatch( blurSelect() );
-				}
-
-				break;
+			if( state.isOpen ) {
+				dispatch( closeSelect( true ) );
+			} else if( state.focused ) {
+				dispatch( blurSelect() );
 			}
 
-			case 'Enter': {
-				e.preventDefault();
-				if( state.isOpen ) {
-					if( state.focusedItem !== null ) {
-						dispatch( selectItem( state.focusedItemIndex, true ) );
-					}
-					else {
-						if( state.tags.active ) {
-							return dispatch( createTag( state.search.queryString ) );
-						}
-						dispatch( closeSelect() );
-					}
+			break;
+		}
+
+		case 'Enter': {
+			e.preventDefault();
+			if( state.isOpen ) {
+				if( state.focusedItem !== null ) {
+					dispatch( selectItem( state.focusedItemIndex, true ) );
 				}
 				else {
-					dispatch( openSelect() );
+					if( state.tags.active ) {
+						return dispatch( createTag( state.search.queryString ) );
+					}
+					dispatch( closeSelect() );
 				}
-
-				break;
 			}
-			case 'Esc':
-			case 'Escape': {
-				dispatch( closeSelect() );
-				break;
-			}
-			case 'Up':
-			case 'Left':
-			case 'ArrowUp':
-			case 'ArrowLeft': {
-				if( state.search.active && state.search.queryString.length > 0 && [ 'Left', 'ArrowLeft' ].includes( key ) ) {
-					return;
-				}
-				e.preventDefault();
-				dispatch( moveFocus( 'up' ) );
-				break;
+			else {
+				dispatch( openSelect() );
 			}
 
-			case 'Down':
-			case 'Right':
-			case 'ArrowDown':
-			case 'ArrowRight': {
-				if( state.search.active && state.search.queryString.length > 0 && [ 'Right', 'ArrowRight' ].includes( key ) ) {
-					return;
-				}
-				e.preventDefault();
-				dispatch( moveFocus( 'down' ) );
-				break;
+			break;
+		}
+		case 'Esc':
+		case 'Escape': {
+			dispatch( closeSelect() );
+			break;
+		}
+		case 'Up':
+		case 'Left':
+		case 'ArrowUp':
+		case 'ArrowLeft': {
+			if( state.search.active && state.search.queryString.length > 0 && [ 'Left', 'ArrowLeft' ].includes( key ) ) {
+				return;
 			}
+			e.preventDefault();
+			dispatch( moveFocus( 'up' ) );
+			break;
+		}
+
+		case 'Down':
+		case 'Right':
+		case 'ArrowDown':
+		case 'ArrowRight': {
+			if( state.search.active && state.search.queryString.length > 0 && [ 'Right', 'ArrowRight' ].includes( key ) ) {
+				return;
+			}
+			e.preventDefault();
+			dispatch( moveFocus( 'down' ) );
+			break;
+		}
 
 		}
 	}
@@ -645,6 +684,7 @@ export const moveFocus = ( direction ) => {
 
 		const state = getState();
 		const placeHolderInside = ! state.settings.multiple && state.settings.placeHolderInside;
+		const searchBoxInside = state.settings.searchBoxInside;
 		let options = state.search.active ? state.search.resultSet : state.options;
 
 		if( state.settings.multiple && ! state.settings.commaSeperated && ! state.settings.checkBoxes ) {
@@ -677,7 +717,7 @@ export const moveFocus = ( direction ) => {
 					targetIndex = 'tag';
 				}
 				else {
-					targetIndex = index > 0 || placeHolderInside ? index - 1 : 0;
+					targetIndex = index > 0 || ( placeHolderInside || searchBoxInside ) ? index - 1 : 0;
 				}
 			}
 			else {
@@ -689,7 +729,7 @@ export const moveFocus = ( direction ) => {
 				targetIndex = 'tag';
 			}
 			else {
-				targetIndex = direction === 'up' ? options.length - 1 : placeHolderInside ? -1 : 0;
+				targetIndex = direction === 'up' ? options.length - 1 : ( placeHolderInside ) ? -1 : 0;
 			}
 		}
 
@@ -735,7 +775,7 @@ export const focusItem = ( index, mouseEvent ) => {
 			options = [ ... options ].filter( o => ! selected.includes( o.key ) );
 		}
 
-		if( options[ index ] || ( index === -1 && state.settings.placeHolderInside ) ) {
+		if( options[ index ] || ( index === -1 && ( state.settings.placeHolderInside || state.settings.searchBoxInside ) ) ) {
 			dispatch( {
 				type: FOCUS_ITEM,
 				item: index !== -1 ? options[ index ] : { key: 'default' },
@@ -745,6 +785,15 @@ export const focusItem = ( index, mouseEvent ) => {
 		}
 
 	}
+}
+
+export const focusKey = ( key, mouseEvent ) => dispatch => {
+	dispatch( {
+		type: FOCUS_ITEM,
+		item: { key },
+		index: -1,
+		mouseEvent
+	} )
 }
 
 export const unlockMouseFocus = () => {

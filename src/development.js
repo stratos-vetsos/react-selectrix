@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
+import 'main.scss';
 
 import ReduxStore from 'store/devStore';
 import configureStore from 'store/configureStore';
@@ -11,9 +12,9 @@ const store = configureStore();
 const render = () => {
 	ReactDOM.render(
 		<AppContainer>
-            <ReduxStore
-                store={ store }
-            />
+			<ReduxStore
+				store={ store }
+			/>
 		</AppContainer>,
 		elRoot
 	)

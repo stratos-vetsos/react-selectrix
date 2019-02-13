@@ -4,7 +4,7 @@ import Header from './Header';
 
 const mapStateToProps = ( state ) => {
 
-    return {
+	return {
 		settings: state.settings,
 		selected: state.selected.length > 0 ? state.options[ state.selectedIndex ] : null,
 		isOpen: state.isOpen,
@@ -17,7 +17,7 @@ const mapStateToProps = ( state ) => {
 
 const mapDispatchToProps = ( dispatch ) => {
 
-    return {
+	return {
 
 		toggleSelect: () => {
 			dispatch( toggleSelect() );
@@ -31,7 +31,7 @@ const mapDispatchToProps = ( dispatch ) => {
 			dispatch( clearSelect() );
 		}
 
-    }
+	}
 }
 
 export default connect( mapStateToProps, mapDispatchToProps )( Header );
