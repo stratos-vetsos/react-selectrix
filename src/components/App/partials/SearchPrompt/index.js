@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import SearchPrompt from './SearchPrompt';
 
 const mapStateToProps = ( state ) => {
-    return {
+	return {
 		active: state.ajax.active
 		&& state.ajax.fetchOnSearch
 		&& state.ajax.searchPrompt

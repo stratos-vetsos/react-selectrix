@@ -1,26 +1,33 @@
 {
-    parser: "babel-eslint",
-    "plugins": [
-        "react"
-    ],
-    "env": {
-        "es6": true,
-        "node": true,
-        "browser": true
-    },
-    "rules": {
-        "space-in-parens": [ 1, "always" ],
-        "no-console": 0,
-        "no-unused-vars": 1,
-        "object-curly-spacing": [ 1, "always" ],
-        "array-bracket-spacing": [ 1, "always" ],
-        "comma-spacing": [2, { "before": false, "after": true }],
-        "computed-property-spacing": [ 1, "always" ]
-    },
-    "extends": [ "eslint:recommended", "plugin:react/recommended" ],
-    "globals": {
-        "document": true,
-        "window": true,
-        "module": true
-    }
+	"parser": "babel-eslint",
+	"plugins": [
+		"react"
+	],
+	"env": {
+		"es6": true,
+		"node": true,
+		"browser": true
+	},
+	"rules": {
+		"space-in-parens": [ 1, "always" ],
+		"no-console": 0,
+		"no-unused-vars": 1,
+		"object-curly-spacing": [ 1, "always" ],
+		"array-bracket-spacing": [ 1, "always" ],
+		"comma-spacing": [2, { "before": false, "after": true }],
+		"computed-property-spacing": [ 1, "always" ],
+		"indent": ["error", "tab"],
+		"no-mixed-spaces-and-tabs": ["error"]
+	},
+	"extends": [ "eslint:recommended", "plugin:react/recommended" ],
+	"globals": {
+		"document": true,
+		"window": true,
+		"module": true
+	},
+	"settings": {
+		"react": {
+			"version": "detect"
+		},
+	}
 }

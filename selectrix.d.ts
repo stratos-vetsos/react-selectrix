@@ -20,6 +20,9 @@ declare module "react-selectrix" {
     materialize?: boolean;
     multiple?: boolean;
     onChange?: Function;
+    onAppendTag?: Function;
+    appendTagPrompt?: string;
+    notFoundPrompt?: string;
     onClose?: Function;
     onOpen?: Function;
     onRenderOption?: boolean | Function;
@@ -27,12 +30,15 @@ declare module "react-selectrix" {
     options?: SelectrixOption[];
     placeHolderInside?: boolean;
     placeholder?: string;
+    inputPlaceholder?: string;
+    searchBoxInside?: boolean;
     searchable?: boolean;
     selectAllButton?: boolean;
     singleLine?: boolean;
     stayOpen?: boolean;
     tags?: boolean;
     updateInstance?: Function;
+    disableStateVal?: boolean;
   }
 
   interface SelectrixOption {

@@ -1,0 +1,18 @@
+body {
+  width: 100%;
+  background: #92a2b9;
+  #root {
+	width: 100%;
+  }
+  .container {
+	width: 100%;
+  }
+  .selectrix-wrapper {
+	width: 100%;
+	display: flex;
+	flex-flow: row nowrap;
+	&>div {
+	  flex: 1 1 50%
+	}
+  }
+}

@@ -1,19 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
-
-import ReduxStore from 'store/devStore';
-import configureStore from 'store/configureStore';
+import 'main.scss';
+import PlayGround from 'PlayGround';
 
 const elRoot = document.getElementById( 'root' );
-const store = configureStore();
 
 const render = () => {
 	ReactDOM.render(
 		<AppContainer>
-            <ReduxStore
-                store={ store }
-            />
+			<PlayGround/>
 		</AppContainer>,
 		elRoot
 	)

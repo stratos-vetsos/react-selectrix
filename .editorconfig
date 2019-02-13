@@ -1,0 +1,8 @@
+root = true
+
+[*]
+end_of_line = lf
+
+[*.js]
+charset = utf-8
+indent_style = tab

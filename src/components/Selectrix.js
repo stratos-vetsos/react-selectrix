@@ -52,6 +52,7 @@ Selectrix.defaultProps = {
 	isOpen: false,
 	placeHolderInside: false,
 	placeholder: 'Please Select',
+	searchBoxInside: false,
 	arrow: true,
 	defaultValue: false,
 	multiple: false,
@@ -76,7 +77,8 @@ Selectrix.defaultProps = {
 	onRenderOption: false,
 	onRenderSelection: false,
 	tags: false,
-	updateInstance: () => {}
+	updateInstance: () => {},
+	disableStateVal: false,
 }
 
 Selectrix.propTypes = {
@@ -90,6 +92,8 @@ Selectrix.propTypes = {
 	isOpen: PropTypes.bool,
 	placeHolderInside: PropTypes.bool,
 	placeholder: PropTypes.string,
+	inputPlaceholder: PropTypes.string,
+	searchBoxInside: PropTypes.bool,
 	arrow: PropTypes.bool,
 	defaultValue: PropTypes.oneOfType( [
 		PropTypes.string,
@@ -100,6 +104,9 @@ Selectrix.propTypes = {
 	disabled: PropTypes.bool,
 	searchIndex: PropTypes.bool,
 	onChange: PropTypes.func,
+	onAppendTag: PropTypes.func,
+	appendTagPrompt: PropTypes.string,
+	notFoundPrompt: PropTypes.string,
 	customScrollbar: PropTypes.bool,
 	searchable: PropTypes.bool,
 	stayOpen: PropTypes.bool,
@@ -128,5 +135,6 @@ Selectrix.propTypes = {
 	] ),
 	tags: PropTypes.bool,
 	setupInstance: PropTypes.func.isRequired,
-	updateInstance: PropTypes.func.isRequired
+	updateInstance: PropTypes.func.isRequired,
+	disableStateVal: PropTypes.bool,
 }

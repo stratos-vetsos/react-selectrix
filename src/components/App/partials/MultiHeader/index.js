@@ -4,7 +4,7 @@ import MultiHeader from './MultiHeader';
 
 const mapStateToProps = ( state ) => {
 
-    return {
+	return {
 		settings: state.settings,
 		selected: state.selected,
 		selectedIndex: state.selectedIndex,
@@ -20,7 +20,7 @@ const mapStateToProps = ( state ) => {
 
 const mapDispatchToProps = ( dispatch ) => {
 
-    return {
+	return {
 
 		clearSelect: ( event = false ) => {
 			if( event ) {
@@ -42,7 +42,7 @@ const mapDispatchToProps = ( dispatch ) => {
 			dispatch( toggleSelect() );
 		}
 
-    }
+	}
 }
 
 export default connect( mapStateToProps, mapDispatchToProps )( MultiHeader );

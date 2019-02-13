@@ -3,6 +3,7 @@ import { buildClassName } from 'helpers';
 import PropTypes from 'prop-types';
 import Header from './partials/Header/';
 import MultiHeader from './partials/MultiHeader/';
+import Searchable from './partials/Searchable/';
 import SearchPrompt from './partials/SearchPrompt/';
 import Tags from './partials/Tags/';
 import NoResults from './partials/NoResults/';
@@ -58,14 +59,17 @@ export default class App extends React.Component {
 
 	}
 
-	handleKeyDown( e ) {
-
+	handleKeyDown = ( e ) => {
 		if( ! this.props.focused ) {
 			return;
 		}
 
 		this.props.handleKeyDown( e );
 
+	}
+
+	handleFocusSelect = () => {
+		this.props.focusSelect();
 	}
 
 	checkIfHovered() {
@@ -80,8 +84,8 @@ export default class App extends React.Component {
 			if( option && option.parentNode.querySelector( ':hover' ) === option ) {
 
 				const scrollTop = this.rsBodyRef.scrollTop;
-                const innerHeight = this.rsBodyRef.clientHeight;
-                const scrollHeight = this.rsBodyRef.scrollHeight;
+				const innerHeight = this.rsBodyRef.clientHeight;
+				const scrollHeight = this.rsBodyRef.scrollHeight;
 
 				if( this.props.options[ i ] && scrollTop !== 0 && scrollTop + innerHeight >= scrollHeight ) {
 					this.props.focusItem( i - 1, true );
@@ -127,8 +131,10 @@ export default class App extends React.Component {
 	}
 
 	buildOptionClassName( option ) {
-
 		let className = 'rs-option';
+		if( option.hasOwnProperty( 'classes' ) ) {
+			className += ' '+option.classes.join( ' ' );
+		}
 		if( option.hasOwnProperty( 'disabled' ) && option.disabled === true ) {
 			className += ' disabled';
 		}
@@ -144,9 +150,14 @@ export default class App extends React.Component {
 		return className.trim();
 	}
 
+	onMouseEnterDefault = () => ! this.props.mouseEventLocked ? this.props.focusKey( 'default', true ) : '';
+	onMouseEnterTag = () => {
+		return ! this.props.mouseEventLocked ? this.props.focusTag() : '';
+	}
+
 	render() {
 
-		const { options, settings, isOpen, selected, originalCount, ajax, onRenderOption, tags, queryString } = this.props;
+		const { options, settings, isOpen, selected, originalCount, ajax, onRenderOption, tags, queryString, id } = this.props;
 		const className = buildClassName( settings, isOpen, selected, tags );
 
 		return(
@@ -154,9 +165,9 @@ export default class App extends React.Component {
 			<div
 				className={ `react-selectrix${ className }` }
 				ref={ ( ref ) => this.ref = ref }
-				onFocus={ this.props.focusSelect }
+				onFocus={ this.handleFocusSelect }
 			>
-				<input type="hidden" value={ JSON.stringify( selected ) } />
+				<input type="hidden" value={ JSON.stringify( selected ) } {...( id && { id } )} />
 				<div className="rs-wrapper">
 					{ settings.multiple ? <MultiHeader /> : <Header /> }
 					{ ( isOpen || settings.materialize ) &&
@@ -165,7 +176,22 @@ export default class App extends React.Component {
 							ref={ ( ref ) => this.rsBodyRef = ref }
 							style={{ maxHeight: this.props.height }}
 						>
-							<Tags extractRef={ ( ref ) => this.tagsRef = ref } />
+							{ settings.searchBoxInside && ( ! ajax.active || ! ajax.fetching && ajax.minLength <= queryString ) &&
+							<div
+								className={ this.buildOptionClassName( { key: 'search', classes: [ 'rs-searchable-box' ] } ) }
+							>
+								{ <Searchable /> }
+								{ queryString && ! settings.placeHolderInside && ! settings.isDropDown && selected !== null &&
+								<span className="rs-reset-option">
+									<span className="rs-reset" onClick={ this.props.clearSearchInput }>×</span>
+								</span>
+								}
+							</div>
+							}
+							<Tags
+								extractRef={ ( ref ) => this.tagsRef = ref }
+								onMouseOver={ this.onMouseEnterTag }
+							/>
 							{ settings.selectAllButton &&
 								<div className="rs-toggle-wrapper">
 									<button
@@ -184,11 +210,11 @@ export default class App extends React.Component {
 									</div>
 								}
 								<NoResults options={ options } />
-								{ settings.placeHolderInside && ! settings.multiple && ( ! ajax.active || ! ajax.fetching && ajax.minLength <= queryString ) &&
+								{ settings.placeHolderInside && ! settings.searchBoxInside && ! settings.multiple && ( ! ajax.active || ! ajax.fetching && ajax.minLength <= queryString ) &&
 									<li
 										onClick={ this.props.clearSelect }
 										className={ this.buildOptionClassName( { key: 'default' } ) }
-										onMouseEnter={ () => ! this.props.mouseEventLocked ? this.props.focusItem( -1, true ) : '' }
+										onMouseEnter={ this.onMouseEnterDefault }
 									>
 										{ settings.placeholder }
 									</li>
@@ -249,6 +275,8 @@ App.propTypes = {
 	selectedIndex: PropTypes.array.isRequired,
 	selectItem: PropTypes.func.isRequired,
 	focusItem: PropTypes.func.isRequired,
+	focusKey: PropTypes.func.isRequired,
+	focusTag: PropTypes.func.isRequired,
 	focusedItem: PropTypes.string,
 	focusedItemIndex: PropTypes.number,
 	clearSelect: PropTypes.func.isRequired,
@@ -270,5 +298,7 @@ App.propTypes = {
 		PropTypes.bool
 	] ),
 	tags: PropTypes.object.isRequired,
-	queryString: PropTypes.string.isRequired
+	queryString: PropTypes.string.isRequired,
+	clearSearchInput: PropTypes.func.isRequired,
+	id: PropTypes.string,
 }

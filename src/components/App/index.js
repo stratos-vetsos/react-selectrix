@@ -1,5 +1,20 @@
 import { connect } from 'react-redux';
-import { toggleSelect, selectItem, focusItem, clearSelect, openSelect, closeSelect, focusSelect, blurSelect, handleKeyDown, maybeScroll, unlockMouseFocus, selectAll } from 'actions';
+import {
+	toggleSelect,
+	selectItem,
+	focusItem,
+	clearSelect,
+	openSelect,
+	closeSelect,
+	focusSelect,
+	blurSelect,
+	handleKeyDown,
+	maybeScroll,
+	unlockMouseFocus,
+	selectAll,
+	searchOptions,
+	focusTag
+} from 'actions';
 import App from './App';
 
 const mapStateToProps = state => {
@@ -14,7 +29,7 @@ const mapStateToProps = state => {
 		options = options.filter( o => ! selected.includes( o.key ) );
 	}
 
-    return {
+	return {
 		settings: state.settings,
 		selected,
 		selectedIndex: state.selectedIndex,
@@ -31,14 +46,15 @@ const mapStateToProps = state => {
 		ajax: state.ajax,
 		onRenderOption: state.onRenderOption,
 		tags: state.tags,
-		queryString
+		queryString,
+		id: state.id,
 	}
 
 }
 
 const mapDispatchToProps = ( dispatch ) => {
 
-    return {
+	return {
 
 		toggleSelect: () => {
 			dispatch( toggleSelect() );
@@ -51,7 +67,12 @@ const mapDispatchToProps = ( dispatch ) => {
 		focusItem: ( index, mouseEvent = false ) => {
 			dispatch( focusItem( index, mouseEvent ) );
 		},
-
+		focusKey: ( key, mouseEvent = false ) => {
+			dispatch( focusItem( key, mouseEvent ) );
+		},
+		focusTag: () => {
+			dispatch( focusTag() );
+		},
 		openSelect: () => {
 			dispatch( openSelect() );
 		},
@@ -90,9 +111,13 @@ const mapDispatchToProps = ( dispatch ) => {
 
 		selectAll: () => {
 			dispatch( selectAll() );
+		},
+
+		clearSearchInput: () => {
+			dispatch( searchOptions( '' ) );
 		}
 
-    }
+	}
 }
 
 export default connect( mapStateToProps, mapDispatchToProps )( App );

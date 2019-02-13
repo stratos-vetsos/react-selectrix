@@ -43,7 +43,7 @@
 		}
 	}
 
-	input#searchable {
+	input.searchable {
 		&.rs-active {
 			min-width: 30px;
 		}
@@ -320,6 +320,27 @@
 			&.selected {
 				background-color: $selected-color;
 			}
+		}
+		&.rs-searchable-box {
+			padding: 5px 20px 8px 20px;
+			.rs-searchable {
+				border: solid 1px $border-color;
+				width: 100%;
+			}
+		}
+	  	.rs-reset-option {
+		  border: none;
+		  outline: none;
+		  width: 100%;
+		  cursor: pointer;
+		  color: #6a7f9d;
+		  position: relative;
+		  right: 20px;
+		  top: 3px;
+		  .rs-reset {
+			cursor: pointer;
+			top: unset;
+		  }
 		}
 	}
 
