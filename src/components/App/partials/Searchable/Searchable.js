@@ -103,6 +103,7 @@ export default class Searchable extends React.Component {
 				value={ this.props.queryString }
 				onChange={ this.onChange }
 				size={ this.state.size }
+				maxLength={this.props.maxTagLength.toString()}
 			/>
 		)
 
@@ -125,5 +126,6 @@ Searchable.propTypes = {
 	ajax: PropTypes.object.isRequired,
 	setQueryString: PropTypes.func.isRequired,
 	setTag: PropTypes.func.isRequired,
-	tags: PropTypes.object.isRequired
+	tags: PropTypes.object.isRequired,
+	maxTagLength: PropTypes.number.isRequired
 }
