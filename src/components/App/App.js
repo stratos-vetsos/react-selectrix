@@ -170,13 +170,12 @@ export default class App extends React.Component {
 				<input type="hidden" value={ JSON.stringify( selected ) } {...( id && { id } )} />
 				<div className="rs-wrapper">
 					{ settings.multiple ? <MultiHeader /> : <Header /> }
-					{ ( isOpen || settings.materialize ) &&
-						<div
-							className={ `rs-body${ isOpen ? '' : ' hidden' }` }
-							ref={ ( ref ) => this.rsBodyRef = ref }
-							style={{ maxHeight: this.props.height }}
-						>
-							{ settings.searchBoxInside && ( ! ajax.active || ! ajax.fetching && ajax.minLength <= queryString ) &&
+					<div
+						className={ `rs-body${ isOpen ? '' : ' hidden' }` }
+						ref={ ( ref ) => this.rsBodyRef = ref }
+						style={{ maxHeight: this.props.height }}
+					>
+						{ settings.searchBoxInside && ( ! ajax.active || ! ajax.fetching && ajax.minLength <= queryString ) &&
 							<div
 								className={ this.buildOptionClassName( { key: 'search', classes: [ 'rs-searchable-box' ] } ) }
 							>
@@ -187,12 +186,12 @@ export default class App extends React.Component {
 								</span>
 								}
 							</div>
-							}
-							<Tags
-								extractRef={ ( ref ) => this.tagsRef = ref }
-								onMouseOver={ this.onMouseEnterTag }
-							/>
-							{ settings.selectAllButton &&
+						}
+						<Tags
+							extractRef={ ( ref ) => this.tagsRef = ref }
+							onMouseOver={ this.onMouseEnterTag }
+						/>
+						{ settings.selectAllButton &&
 								<div className="rs-toggle-wrapper">
 									<button
 										type="button"
@@ -201,16 +200,16 @@ export default class App extends React.Component {
 										{ originalCount > selected.length || ajax.fetchOnSearch ? 'Select All' : 'Deselect All' }
 									</button>
 								</div>
-							}
-							<SearchPrompt />
-							<ul>
-								{ ajax.active && ajax.fetching &&
+						}
+						<SearchPrompt />
+						<ul>
+							{ ajax.active && ajax.fetching &&
 									<div className="rs-loader">
 										Loading...
 									</div>
-								}
-								<NoResults options={ options } />
-								{ settings.placeHolderInside && ! settings.searchBoxInside && ! settings.multiple && ( ! ajax.active || ! ajax.fetching && ajax.minLength <= queryString ) &&
+							}
+							<NoResults options={ options } />
+							{ settings.placeHolderInside && ! settings.searchBoxInside && ! settings.multiple && ( ! ajax.active || ! ajax.fetching && ajax.minLength <= queryString ) &&
 									<li
 										onClick={ this.props.clearSelect }
 										className={ this.buildOptionClassName( { key: 'default' } ) }
@@ -218,46 +217,45 @@ export default class App extends React.Component {
 									>
 										{ settings.placeholder }
 									</li>
+							}
+							{ options.map( ( o, index ) => {
+
+								let jsx = (
+									settings.checkBoxes ?
+										<span className="rs-checkbox-wrapper">
+											<input type="checkbox" checked={ this.props.selected.includes( o.key ) } readOnly />
+											<label>{ o.label }</label>
+										</span> :
+										o.label
+								);
+
+								if( onRenderOption !== false ) {
+									const html = onRenderOption( o, index );
+									if( html ) jsx = html;
 								}
-								{ options.map( ( o, index ) => {
 
-									let jsx = (
-										settings.checkBoxes ?
-											<span className="rs-checkbox-wrapper">
-												<input type="checkbox" checked={ this.props.selected.includes( o.key ) } readOnly />
-												<label>{ o.label }</label>
-											</span> :
-											o.label
-									);
-
-									if( onRenderOption !== false ) {
-										const html = onRenderOption( o, index );
-										if( html ) jsx = html;
-									}
-
-									return(
-										<li
-											ref={ ( ref ) => this[ `option-${ index }` ] = ref }
-											onClick={ e => {
-												e.stopPropagation();
-												e.nativeEvent.stopImmediatePropagation();
-												this.props.selectItem( index );
-											} }
-											key={ `li-${index}` }
-											className={ this.buildOptionClassName( o, index ) }
-											onMouseOver={ () => {
-												! this.props.mouseEventLocked
-													? this.props.focusItem( index, true )
-													: settings.stayOpen ? this.props.unlockMouseFocus() : ''
-											} }
-										>
-											{ jsx }
-										</li>
-									)
-								} ) }
-							</ul>
-						</div>
-					}
+								return(
+									<li
+										ref={ ( ref ) => this[ `option-${ index }` ] = ref }
+										onClick={ e => {
+											e.stopPropagation();
+											e.nativeEvent.stopImmediatePropagation();
+											this.props.selectItem( index );
+										} }
+										key={ `li-${index}` }
+										className={ this.buildOptionClassName( o, index ) }
+										onMouseOver={ () => {
+											! this.props.mouseEventLocked
+												? this.props.focusItem( index, true )
+												: settings.stayOpen ? this.props.unlockMouseFocus() : ''
+										} }
+									>
+										{ jsx }
+									</li>
+								)
+							} ) }
+						</ul>
+					</div>
 				</div>
 			</div>
 		)
