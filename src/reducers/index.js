@@ -42,6 +42,7 @@ const initialState = {
 		focused: false,
 		tagSet: []
 	},
+	maxTagLength: NaN,
 	scrolled: {
 		active: false,
 		scroll: 0
@@ -186,6 +187,7 @@ const reducer = ( state = initialState, action ) => {
 			tags: Object.assign( {}, state.tags, {
 				enabled: action.props.tags
 			} ),
+			maxTagLength: action.props.maxTagLength,
 			id: action.props.id
 		} );
 	}
