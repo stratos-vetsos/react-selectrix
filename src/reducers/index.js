@@ -43,6 +43,7 @@ const initialState = {
 		tagSet: []
 	},
 	maxTagLength: NaN,
+	validationWithRegisterCase: false,
 	scrolled: {
 		active: false,
 		scroll: 0
@@ -188,6 +189,7 @@ const reducer = ( state = initialState, action ) => {
 				enabled: action.props.tags
 			} ),
 			maxTagLength: action.props.maxTagLength,
+			validationWithRegisterCase: action.props.validationWithRegisterCase,
 			id: action.props.id
 		} );
 	}
@@ -227,7 +229,9 @@ const reducer = ( state = initialState, action ) => {
 				active: state.tags.enabled
 					&& action.queryString.length > 0
 					&& action.queryString.trim()
-					&& state.options.find( o => o.label === action.queryString ) === undefined
+					&& state.validationWithRegisterCase ?
+					state.options.find( o => o.label.toLowerCase() === queryString ) === undefined
+					: state.options.find( o => o.label === action.queryString ) === undefined
 			} )
 		} )
 	}

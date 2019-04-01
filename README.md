@@ -70,6 +70,7 @@ selectAllButton | boolean | false | Whether a "select all button" should be visi
 isDropDown | boolean | true | Set this to true if you want to use the Select as a **Dropdown**. When you select an option, the Select collapses and the header continue to have the placeholder as a value.
 tags | boolean | false | Whether to support custom tags.
 maxTagLength | number | NaN | Max size for tag.
+validationWithRegisterCase | boolean | false | Set this to true if you want validate new tag with dependency by register case.
 customKeys | object / boolean | false | Pass an object to change the default option keys ( key, label ). Example Syntax: ``{ key: "url", label: "title" }`` , to change the key to "url" and the label to "title".
 ajax | boolean / object | false | Whether to enable ajax. The library supports asynchronous calls through fetch API. Available default properties of ajax object: ``{ url: '', headers: {}, debounce: 200, fetchOnSearch: false, q: "", nestedKey: false, searchPrompt: true, minLength: 1  }.`` You can find details for all the ajax object properties, in the next section and in our demo page.
 onRenderOption | function / boolean | false | Use this function to render custom option items

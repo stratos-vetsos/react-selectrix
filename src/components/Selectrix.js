@@ -78,6 +78,7 @@ Selectrix.defaultProps = {
 	onRenderSelection: false,
 	tags: false,
 	maxTagLength: NaN,
+	validationWithRegisterCase: false,
 	updateInstance: () => {},
 	disableStateVal: false,
 }
@@ -136,6 +137,7 @@ Selectrix.propTypes = {
 	] ),
 	tags: PropTypes.bool,
 	maxTagLength: PropTypes.number,
+	validationWithRegisterCase: PropTypes.bool,
 	setupInstance: PropTypes.func.isRequired,
 	updateInstance: PropTypes.func.isRequired,
 	disableStateVal: PropTypes.bool,
