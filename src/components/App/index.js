@@ -113,7 +113,11 @@ const mapDispatchToProps = ( dispatch ) => {
 			dispatch( selectAll() );
 		},
 
-		clearSearchInput: () => {
+		clearSearchInput: (event = false) => {
+			if( event ) {
+				event.stopPropagation();
+				event.nativeEvent.stopImmediatePropagation();
+			}
 			dispatch( searchOptions( '' ) );
 		}
 
