@@ -113,7 +113,7 @@ const mapDispatchToProps = ( dispatch ) => {
 			dispatch( selectAll() );
 		},
 
-		clearSearchInput: (event = false) => {
+		clearSearchInput: ( event = false ) => {
 			if( event ) {
 				event.stopPropagation();
 				event.nativeEvent.stopImmediatePropagation();

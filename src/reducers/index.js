@@ -229,9 +229,9 @@ const reducer = ( state = initialState, action ) => {
 				active: state.tags.enabled
 					&& action.queryString.length > 0
 					&& action.queryString.trim()
-					&& state.validationWithRegisterCase ?
-					state.options.find( o => o.label.toLowerCase() === queryString ) === undefined
-					: state.options.find( o => o.label === action.queryString ) === undefined
+					&& ( state.validationWithRegisterCase ?
+						state.options.find( o => o.label.toLowerCase() === queryString ) === undefined
+						: state.options.find( o => o.label === action.queryString ) === undefined )
 			} )
 		} )
 	}
