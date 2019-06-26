@@ -172,7 +172,7 @@ export default class App extends React.Component {
 					{ settings.multiple ? <MultiHeader /> : <Header /> }
 					<div
 						className={ `rs-body${ isOpen ? '' : ' hidden' }` }
-						ref={ ( ref ) => this.rsBodyRef = ref }
+						ref={ ( ref ) => !settings.searchBoxInside ? this.rsBodyRef = ref : null}
 						style={{ maxHeight: this.props.height }}
 					>
 						{ settings.searchBoxInside && ( ! ajax.active || ! ajax.fetching && ajax.minLength <= queryString ) &&
@@ -202,7 +202,7 @@ export default class App extends React.Component {
 								</div>
 						}
 						<SearchPrompt />
-						<ul>
+						<ul ref={ ( ref ) => settings.searchBoxInside ? this.rsBodyRef = ref : null}>
 							{ ajax.active && ajax.fetching &&
 									<div className="rs-loader">
 										Loading...
