@@ -8,12 +8,13 @@ const NoResults = ( props ) => {
 	}
 
 	return(
-		<li className="rs-no-results">No results match &quot;{ props.queryString }&quot;</li>
+		<li className="rs-no-results">{ props.settings.noResultsMessage } &quot;{ props.queryString }&quot;</li>
 	)
 
 }
 
 NoResults.propTypes = {
+	settings: PropTypes.object.isRequired,
 	active: PropTypes.bool.isRequired,
 	queryString: PropTypes.string
 }

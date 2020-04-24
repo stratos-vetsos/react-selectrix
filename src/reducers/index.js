@@ -11,6 +11,7 @@ const initialState = {
 		searchIndex: true,
 		customScrollbar: false,
 		searchable: true,
+		noResultsMessage: 'No results match',
 		commaSeperated: false,
 		singleLine: false,
 		lifo: false,
@@ -142,6 +143,7 @@ const reducer = ( state = initialState, action ) => {
 					searchIndex: action.props.searchIndex,
 					customScrollbar: action.props.customScrollbar,
 					searchable: action.props.searchable,
+					noResultsMessage: action.props.noResultsMessage,
 					stayOpen: action.props.hasOwnProperty( 'stayOpen' )
 					? action.props.stayOpen && ! action.props.isDropDown
 					: action.props.multiple ? true : false,
