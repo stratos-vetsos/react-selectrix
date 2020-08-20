@@ -3,7 +3,8 @@ import NoResults from './NoResults';
 
 const mapStateToProps = ( state, ownProps ) => {
 
-    return {
+	return {
+		settings: state.settings,
 		active: ownProps.options.length === 0
 			&& state.search.queryString.length > 0
 			&& ( ! state.ajax.active || ( state.ajax.minLength <= state.search.queryString.length && ! state.ajax.fetching ) )

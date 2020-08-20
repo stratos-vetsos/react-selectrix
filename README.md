@@ -51,6 +51,7 @@ Name  | Type | Default Value | Description
 options | array | [] | An array of the available options ( Objects with "key", "label" pairs and optionally "disabled" property ).
 multiple | boolean | false | Whether the Select supports multiple values.
 searchable | boolean | true | Whether the Select is **searchable**.
+noResultsMessage | string | No results match | The message of the **no results match**.
 materialize | boolean | true | Whether the style of the Select should be **Materialized** or default.
 defaultValue | boolean / array / string | false | If you have preselected values use this property. Use an array of option keys for multiple selections, or key as a string for single selection.
 checkBoxes | boolean | false | Set this to true if you want to render **Checkboxes** instead of list items.
