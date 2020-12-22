@@ -5,7 +5,7 @@ A beautiful, materialized, easy to use and flexible **React Select** replacement
 
 ### Installing
 ```
-npm i --save-dev react-selectrix
+npm i react-selectrix
 ```
 
 ### Documentation
